@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NEXUS RPG - Cosmic Multiplayer Online</title>
-  <link rel="stylesheet" href="/css/style.css?v=3.1">
+  <link rel="stylesheet" href="/css/style.css?v=3.2">
 </head>
 <body>
-  <div id="particles"></div>
+  <canvas id="space-canvas"></canvas>
 
   <!-- ================= AUTH SCREEN ================= -->
   <div id="auth-screen" class="screen">
@@ -175,6 +175,16 @@
                 <span class="btn-title">Heal</span>
                 <span class="btn-desc">Pulihkan Darah Penuh</span>
               </button>
+              <button class="game-btn btn-training" data-action="training" style="border-bottom: 3px solid #ffaa00;">
+                <span class="btn-emoji">🎯</span>
+                <span class="btn-title">Training</span>
+                <span class="btn-desc">Latih ATK & DEF</span>
+              </button>
+              <button class="game-btn btn-miniboss" data-action="miniboss" style="border-bottom: 3px solid #ff0055;">
+                <span class="btn-emoji">👹</span>
+                <span class="btn-title">Miniboss</span>
+                <span class="btn-desc">Tantangan Berhadiah Elite</span>
+              </button>
             </div>
           </div>
 
@@ -286,23 +296,33 @@
             <div class="action-grid-4">
               <button class="game-btn btn-inventory" data-action="inventory">
                 <span class="btn-emoji">🎒</span>
-                <span class="btn-title">Inventory</span>
-                <span class="btn-desc">Buka Tas & Pakai Item</span>
+                <span class="btn-title">Inventory & Jual</span>
+                <span class="btn-desc">Buka Tas, Pakai & Jual Item</span>
               </button>
-              <button class="game-btn btn-crate" data-action="crate">
-                <span class="btn-emoji">📦</span>
-                <span class="btn-title">Buka Lootbox</span>
-                <span class="btn-desc">Buka Peti Hadiah</span>
+              <button class="game-btn btn-enchant" data-action="enchant" style="border-bottom: 3px solid #b055ff;">
+                <span class="btn-emoji">✨</span>
+                <span class="btn-title">Altar Enchant</span>
+                <span class="btn-desc">Tingkatkan Senjata & Zirah</span>
               </button>
               <button class="game-btn btn-craft" data-action="craft">
                 <span class="btn-emoji">🔨</span>
                 <span class="btn-title">Mystic Forge</span>
                 <span class="btn-desc">Tempa Senjata & Zirah</span>
               </button>
+              <button class="game-btn btn-crate" data-action="crate">
+                <span class="btn-emoji">📦</span>
+                <span class="btn-title">Buka Lootbox</span>
+                <span class="btn-desc">Buka Peti Hadiah</span>
+              </button>
               <button class="game-btn btn-shop" data-action="shop">
                 <span class="btn-emoji">🛒</span>
                 <span class="btn-title">Cosmic Shop</span>
                 <span class="btn-desc">Toko Potion & Crate</span>
+              </button>
+              <button class="game-btn btn-rewards" data-action="rewards" style="border-bottom: 3px solid #ffd700;">
+                <span class="btn-emoji">🎁</span>
+                <span class="btn-title">Hadiah Harian</span>
+                <span class="btn-desc">Daily & Weekly Reward</span>
               </button>
             </div>
             <div style="margin-top: 10px;">
@@ -469,6 +489,6 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="/js/app.js?v=3.1"></script>
+  <script src="/js/app.js?v=3.2"></script>
 </body>
 </html>

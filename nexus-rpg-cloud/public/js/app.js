@@ -473,6 +473,14 @@
       armor: 'cloth_armor',
       accessory: null
     },
+    enchants: {
+      weapon: null,
+      armor: null
+    },
+    rewards: {
+      dailyClaimedAt: 0,
+      weeklyClaimedAt: 0
+    },
     skills: [],
     stats: {
       monstersKilled: 0,
@@ -529,6 +537,22 @@
       if (eqAcc.stats.def) def += eqAcc.stats.def;
       if (eqAcc.stats.maxHp) maxHp += eqAcc.stats.maxHp;
       if (eqAcc.stats.crit) crit += eqAcc.stats.crit;
+    }
+
+    // Apply Enchantment Multipliers & Perks
+    if (state.enchants) {
+      if (state.enchants.weapon) {
+        const wEnc = state.enchants.weapon;
+        atk = Math.floor(atk * (1 + (wEnc.bonus || 0) / 100));
+        if (wEnc.flatAtk) atk += wEnc.flatAtk;
+        if (wEnc.critBonus) crit += wEnc.critBonus;
+      }
+      if (state.enchants.armor) {
+        const aEnc = state.enchants.armor;
+        def = Math.floor(def * (1 + (aEnc.bonus || 0) / 100));
+        if (aEnc.flatDef) def += aEnc.flatDef;
+        if (aEnc.maxHpBonus) maxHp += aEnc.maxHpBonus;
+      }
     }
 
     if (state.buffs && state.buffs.battlesLeft > 0) {
@@ -623,8 +647,10 @@
       const wItem = ITEMS[state.equipment.weapon];
       const aItem = ITEMS[state.equipment.armor];
       const accItem = ITEMS[state.equipment.accessory];
-      document.getElementById('side-weapon').textContent = wItem ? `${wItem.emoji} ${wItem.name}` : 'None';
-      document.getElementById('side-armor').textContent = aItem ? `${aItem.emoji} ${aItem.name}` : 'None';
+      const wEnc = state.enchants?.weapon;
+      const aEnc = state.enchants?.armor;
+      document.getElementById('side-weapon').textContent = wItem ? `${wItem.emoji} ${wItem.name}${wEnc ? ` [${wEnc.tier} +${wEnc.bonus}%]` : ''}` : 'None';
+      document.getElementById('side-armor').textContent = aItem ? `${aItem.emoji} ${aItem.name}${aEnc ? ` [${aEnc.tier} +${aEnc.bonus}%]` : ''}` : 'None';
       document.getElementById('side-accessory').textContent = accItem ? `${accItem.emoji} ${accItem.name}` : 'None';
     }
 
@@ -710,23 +736,21 @@
   }
 
   /* ============================================================
-     5. COMBAT & EXPEDITIONS
+     5. COMBAT & EXPEDITIONS (CARD-BASED VISUAL CLASH)
      ============================================================ */
   function executeBattle(monster, isBoss = false) {
     const pStats = getComputedStats();
     let mHp = monster.hp;
     let pHp = state.hp;
     let round = 1;
-    let battleLog = [];
     let absorbedHit = false;
+    let vampHealed = 0;
 
     const unlocked = state.skills.map(id => SKILLS.find(s => s.id === id)).filter(Boolean);
     const offensiveSkills = unlocked.filter(s => s.mult);
     const hasShieldBlock = state.skills.includes('shield_block');
     const hasHealLight = state.skills.includes('heal_light');
     const hasMysticShield = state.skills.includes('mystic_shield');
-
-    battleLog.push(`⚔️ <strong>PERTARUNGAN:</strong> Berhadapan dengan <strong>${monster.emoji} ${monster.name}</strong> [HP: ${monster.hp} | ATK: ${monster.atk} | DEF: ${monster.def}]`);
 
     while (mHp > 0 && pHp > 0 && round <= 14) {
       let skillUsed = null;
@@ -743,12 +767,11 @@
       mHp -= pDmg;
       state.stats.totalDamageDealt += pDmg;
 
-      if (skillUsed) {
-        battleLog.push(`✨ <strong>${skillUsed.emoji} ${skillUsed.name}!</strong> Tebasan mematikan menghasilkan <strong>${pDmg}</strong> DMG!`);
-      } else if (isCrit) {
-        battleLog.push(`💥 <strong>CRITICAL HIT!</strong> Anda menghantam ${monster.name} sebesar <strong>${pDmg}</strong> DMG!`);
-      } else {
-        battleLog.push(`🗡️ Anda menebas ${monster.name} sebesar <strong>${pDmg}</strong> DMG.`);
+      // Lifesteal Perk from Enchant
+      if (state.enchants?.weapon?.lifesteal) {
+        const healAmt = Math.max(1, Math.floor(pDmg * state.enchants.weapon.lifesteal));
+        vampHealed += healAmt;
+        pHp = Math.min(pStats.maxHp, pHp + healAmt);
       }
 
       if (mHp <= 0) break;
@@ -756,19 +779,21 @@
       if (hasHealLight && pHp < pStats.maxHp * 0.3 && Math.random() < 0.6) {
         const healAmt = Math.floor(pStats.maxHp * 0.25);
         pHp = Math.min(pStats.maxHp, pHp + healAmt);
-        battleLog.push(`💚 <strong>Heal Light</strong> memulihkan <strong>+${healAmt} HP</strong>.`);
       }
 
       let mDmg = calculateDamage(monster.atk, pStats.def, false);
-      if (hasMysticShield && !absorbedHit && Math.random() < 0.45) {
+      if (state.enchants?.armor?.dodge && Math.random() < state.enchants.armor.dodge) {
+        mDmg = 0;
+      } else if (hasMysticShield && !absorbedHit && Math.random() < 0.45) {
         absorbedHit = true;
         mDmg = 0;
-        battleLog.push(`🔮 <strong>Mystic Shield</strong> menangkis mutlak pukulan ${monster.name}!`);
       } else if (hasShieldBlock && Math.random() < 0.4) {
         mDmg = Math.floor(mDmg * 0.5);
-        battleLog.push(`🛡️ <strong>Shield Block</strong> menahan separuh pukulan! Terkena <strong>${mDmg}</strong> DMG.`);
-      } else {
-        battleLog.push(`🩸 ${monster.name} membalas dan melukai Anda sebesar <strong>${mDmg}</strong> DMG.`);
+      }
+
+      // Thorns Reflect from Armor Enchant
+      if (state.enchants?.armor?.reflect && mDmg > 0) {
+        mHp -= Math.max(1, Math.floor(mDmg * state.enchants.armor.reflect));
       }
 
       pHp -= mDmg;
@@ -782,12 +807,14 @@
       if (state.buffs.battlesLeft === 0) {
         state.buffs.atkMultiplier = 1;
         state.buffs.defMultiplier = 1;
-        addLog(`⌛ Efek ramuan kekuatan telah habis.`, 'system');
       }
     }
 
     if (mHp <= 0) {
-      const earnedGold = Math.floor(monster.gold * (1 + Math.random() * 0.3));
+      let earnedGold = Math.floor(monster.gold * (1 + Math.random() * 0.3));
+      if (state.enchants?.weapon?.goldBonus) {
+        earnedGold = Math.floor(earnedGold * (1 + state.enchants.weapon.goldBonus));
+      }
       const earnedXp = monster.xp;
       state.gold += earnedGold;
       state.xp += earnedXp;
@@ -796,26 +823,86 @@
       if (isBoss) state.stats.bossesKilled += 1;
       else state.stats.monstersKilled += 1;
 
-      battleLog.push(`🏆 <strong>MENANG!</strong> Sukses menumbangkan ${monster.emoji} ${monster.name}!`);
-      battleLog.push(`🎁 <strong>Hadiah:</strong> +${earnedXp} EXP, +${earnedGold} 💰 Gold.`);
-
+      let dropsEarned = [];
       if (monster.drops && monster.drops.length > 0) {
         monster.drops.forEach(drop => {
           if (Math.random() < drop.chance) {
             state.inventory[drop.id] = (state.inventory[drop.id] || 0) + 1;
             const item = ITEMS[drop.id];
-            battleLog.push(`💎 <strong>Drop:</strong> ${item ? `${item.emoji} ${item.name}` : drop.id} x1!`);
+            dropsEarned.push(item ? `${item.emoji} ${item.name}` : drop.id);
           }
         });
       }
 
-      addLog(battleLog.join('<br>'), isBoss ? 'victory' : 'combat');
+      const dropPills = dropsEarned.map(d => `<span class="reward-tag drop">🎁 ${d}</span>`).join(' ');
+      const vampPill = vampHealed > 0 ? `<span class="reward-tag perk">🩸 +${vampHealed} HP Lifesteal</span>` : '';
+
+      const cardHtml = `
+        <div class="combat-card-result victory">
+          <div class="combat-card-header">
+            <span class="combat-badge victory">${isBoss ? '👑 BOSS SLAIN' : '⚔️ VICTORY'}</span>
+            <span class="combat-enemy-title">${monster.emoji} ${monster.name}</span>
+          </div>
+          <div class="combat-clash-row">
+            <div class="clash-side">
+              <div class="clash-icon">🧙‍♂️</div>
+              <div class="clash-meta">
+                <span class="clash-name">${state.characterName || 'Hero'}</span>
+                <span class="clash-hp">❤️ ${pHp}/${pStats.maxHp} HP</span>
+              </div>
+            </div>
+            <div class="clash-vs">VS</div>
+            <div class="clash-side">
+              <div class="clash-icon">${monster.emoji}</div>
+              <div class="clash-meta">
+                <span class="clash-name">${monster.name}</span>
+                <span class="clash-hp" style="color:var(--text-sub)">☠️ KO</span>
+              </div>
+            </div>
+          </div>
+          <div class="combat-rewards-pill">
+            <span class="reward-tag gold">💰 +${earnedGold} Gold</span>
+            <span class="reward-tag exp">⭐ +${earnedXp} EXP</span>
+            ${dropPills}
+            ${vampPill}
+          </div>
+        </div>
+      `;
+
+      addLog(cardHtml, isBoss ? 'victory' : 'combat');
       checkLevelUp();
       return true;
     } else {
       state.stats.deaths += 1;
-      battleLog.push(`💀 <strong>TEWAS!</strong> Anda gugur melawan ${monster.name}. Gunakan ❤️ Heal untuk pulih!`);
-      addLog(battleLog.join('<br>'), 'danger');
+      const cardHtml = `
+        <div class="combat-card-result defeat">
+          <div class="combat-card-header">
+            <span class="combat-badge defeat">💀 DEFEATED</span>
+            <span class="combat-enemy-title">${monster.emoji} ${monster.name}</span>
+          </div>
+          <div class="combat-clash-row">
+            <div class="clash-side">
+              <div class="clash-icon">🧙‍♂️</div>
+              <div class="clash-meta">
+                <span class="clash-name">${state.characterName || 'Hero'}</span>
+                <span class="clash-hp" style="color:var(--accent-red)">💀 0 HP</span>
+              </div>
+            </div>
+            <div class="clash-vs">VS</div>
+            <div class="clash-side">
+              <div class="clash-icon">${monster.emoji}</div>
+              <div class="clash-meta">
+                <span class="clash-name">${monster.name}</span>
+                <span class="clash-hp">❤️ ${Math.max(1, mHp)} HP</span>
+              </div>
+            </div>
+          </div>
+          <div class="combat-rewards-pill">
+            <span class="reward-tag" style="background:rgba(255,71,109,0.2); color:var(--accent-red)">❤️ HP Habis - Gunakan Heal!</span>
+          </div>
+        </div>
+      `;
+      addLog(cardHtml, 'danger');
       return false;
     }
   }
@@ -1441,7 +1528,7 @@
   }
 
   function showInventory() {
-    openModal('🎒 Tas Hero & Perlengkapan', () => {
+    openModal('🎒 Tas Hero & Perlengkapan (Inventory & Jual)', () => {
       const keys = Object.keys(state.inventory).filter(k => state.inventory[k] > 0);
       if (keys.length === 0) return `<p style="text-align:center; padding:20px; color:var(--text-sub);">Tas Anda kosong melompong.</p>`;
 
@@ -1451,16 +1538,38 @@
             const item = ITEMS[itemId];
             if (!item) return '';
             const qty = state.inventory[itemId];
+            const sellVal = item.sellPrice || 10;
             let actionBtn = '';
 
             if (item.type === 'consumable') {
-              actionBtn = `<button class="glow-button" style="padding:6px 12px; margin-top:6px;" onclick="window.NexusRPG.useItem('${itemId}')">Gunakan</button>`;
+              actionBtn = `
+                <div class="inv-actions-row">
+                  <button class="glow-button" style="padding:6px 10px;" onclick="window.NexusRPG.useItem('${itemId}')">Gunakan</button>
+                  <button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', 1)">💰 Jual (+${sellVal} 💰)</button>
+                </div>
+              `;
             } else if (item.type === 'crate') {
-              actionBtn = `<button class="glow-button" style="padding:6px 12px; margin-top:6px;" onclick="window.NexusRPG.openCrate('${itemId}')">Buka Peti</button>`;
+              actionBtn = `
+                <div class="inv-actions-row">
+                  <button class="glow-button" style="padding:6px 10px;" onclick="window.NexusRPG.openCrate('${itemId}')">Buka</button>
+                  <button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', 1)">💰 Jual (+${sellVal} 💰)</button>
+                  ${qty > 1 ? `<button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', ${qty})">Semua (+${sellVal * qty} 💰)</button>` : ''}
+                </div>
+              `;
             } else if (item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory') {
-              actionBtn = `<button class="glow-button" style="padding:6px 12px; margin-top:6px;" onclick="window.NexusRPG.equipItem('${itemId}')">Pakai</button>`;
+              actionBtn = `
+                <div class="inv-actions-row">
+                  <button class="glow-button" style="padding:6px 10px;" onclick="window.NexusRPG.equipItem('${itemId}')">⚔️ Pakai</button>
+                  <button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', 1)">💰 Jual (+${sellVal} 💰)</button>
+                </div>
+              `;
             } else {
-              actionBtn = `<button class="sub-btn" style="width:100%; margin-top:6px;" onclick="window.NexusRPG.sellItem('${itemId}', 1)">Jual (+${item.sellPrice} 💰)</button>`;
+              actionBtn = `
+                <div class="inv-actions-row">
+                  <button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', 1)">💰 Jual 1 (+${sellVal} 💰)</button>
+                  ${qty > 1 ? `<button class="sub-btn btn-sell-item" style="padding:6px 10px;" onclick="window.NexusRPG.sellItem('${itemId}', ${qty})">Jual Semua (+${sellVal * qty} 💰)</button>` : ''}
+                </div>
+              `;
             }
 
             return `
@@ -1754,6 +1863,358 @@
   }
 
   /* ============================================================
+     8.1. ENCHANTING ALTAR SYSTEM (EPIC RPG AREA 2+)
+     ============================================================ */
+  const ENCHANT_TIERS = [
+    { name: 'Normie', bonus: 1, chance: 0.30, class: 'tier-Normie' },
+    { name: 'Good', bonus: 3, chance: 0.23, class: 'tier-Good' },
+    { name: 'Great', bonus: 6, chance: 0.17, class: 'tier-Great' },
+    { name: 'Mega', bonus: 10, chance: 0.12, class: 'tier-Mega' },
+    { name: 'Epic', bonus: 15, chance: 0.08, class: 'tier-Epic' },
+    { name: 'Hyper', bonus: 21, chance: 0.045, class: 'tier-Hyper' },
+    { name: 'Ultimate', bonus: 28, chance: 0.025, class: 'tier-Ultimate' },
+    { name: 'Perfect', bonus: 36, chance: 0.015, class: 'tier-Perfect' },
+    { name: 'EDGY', bonus: 45, chance: 0.008, class: 'tier-EDGY' },
+    { name: 'ULTRA-EDGY', bonus: 55, chance: 0.005, class: 'tier-ULTRA-EDGY' },
+    { name: 'OMEGA', bonus: 125, chance: 0.0015, class: 'tier-OMEGA' },
+    { name: 'GODLY', bonus: 200, chance: 0.0005, class: 'tier-GODLY' }
+  ];
+
+  const WEAPON_ABILITIES = [
+    { name: 'Sharpness', desc: '+10 Flat ATK', flatAtk: 10 },
+    { name: 'Vampiric', desc: 'Pulihkan 8% HP dari serangan (Lifesteal)', lifesteal: 0.08 },
+    { name: 'Thunderstrike', desc: '+6% Critical Chance', critBonus: 6 },
+    { name: 'Greed', desc: '+20% Gold dari monster', goldBonus: 0.20 }
+  ];
+
+  const ARMOR_ABILITIES = [
+    { name: 'Fortress', desc: '+8 Flat DEF', flatDef: 8 },
+    { name: 'Vitality', desc: '+60 Max HP', maxHpBonus: 60 },
+    { name: 'Thorns', desc: 'Memantulkan 15% damage musuh', reflect: 0.15 },
+    { name: 'Aegis', desc: '10% peluang menangkis serangan', dodge: 0.10 }
+  ];
+
+  let selectedEnchantTarget = 'weapon';
+
+  function showEnchantModal() {
+    if (!state.enchants) state.enchants = { weapon: null, armor: null };
+    const areaNum = parseInt((state.currentArea || 'area_1').replace('area_', '')) || 1;
+    const costGold = Math.max(80, areaNum * 80);
+    const hasRuby = (state.inventory.ruby || 0) >= 1;
+
+    const wItem = ITEMS[state.equipment.weapon];
+    const aItem = ITEMS[state.equipment.armor];
+    const wEnc = state.enchants.weapon;
+    const aEnc = state.enchants.armor;
+
+    openModal('✨ Altar Enchant Kuno (Epic RPG)', () => {
+      return `
+        <div class="enchant-container">
+          <p style="color:var(--text-sub); font-size:12px; margin-bottom:8px;">
+            Tingkatkan kekuatan senjata atau zirah Anda dengan sihir rune kuno! Semakin tinggi tier enchant, semakin dahsyat bonus multiplier stat dan ability pasifnya.
+          </p>
+
+          <div class="enchant-target-grid">
+            <div class="enchant-card-choice ${selectedEnchantTarget === 'weapon' ? 'active' : ''}" onclick="window.NexusRPG.selectEnchantTarget('weapon')">
+              <div style="font-size:26px;">🗡️</div>
+              <strong>${wItem ? wItem.name : 'Weapon'}</strong>
+              <div>
+                ${wEnc ? `<span class="enchant-badge-tier ${wEnc.tierClass}">[${wEnc.tier} +${wEnc.bonus}%]</span><div style="font-size:10px; color:#da9fff; margin-top:2px;">✨ ${wEnc.ability}</div>` : '<span style="font-size:11px; opacity:0.6;">Belum di-enchant</span>'}
+              </div>
+            </div>
+
+            <div class="enchant-card-choice ${selectedEnchantTarget === 'armor' ? 'active' : ''}" onclick="window.NexusRPG.selectEnchantTarget('armor')">
+              <div style="font-size:26px;">🛡️</div>
+              <strong>${aItem ? aItem.name : 'Armor'}</strong>
+              <div>
+                ${aEnc ? `<span class="enchant-badge-tier ${aEnc.tierClass}">[${aEnc.tier} +${aEnc.bonus}%]</span><div style="font-size:10px; color:#da9fff; margin-top:2px;">✨ ${aEnc.ability}</div>` : '<span style="font-size:11px; opacity:0.6;">Belum di-enchant</span>'}
+              </div>
+            </div>
+          </div>
+
+          <div class="altar-rune-wheel">🔮 ⚡ 🌀 💎 ✨</div>
+
+          <div class="enchant-cost-box">
+            Biaya Enchant: <strong>${costGold} 💰 Gold</strong> + <strong>1 💎 Ruby</strong> (Ruby Anda: ${state.inventory.ruby || 0})
+            ${!hasRuby ? '<br><span style="color:var(--accent-red); font-size:11px;">⚠️ Membutuhkan 1 Ruby (Bisa didapat dari pancing ikan, peti, atau berburu monster Area 3+)!</span>' : ''}
+          </div>
+
+          <button class="glow-button" style="padding:12px; font-size:14px; background:linear-gradient(135deg, #b055ff, #00ffcc);" onclick="window.NexusRPG.executeEnchant()">
+            ✨ Enchant ${selectedEnchantTarget === 'weapon' ? 'Senjata' : 'Zirah'} Sekarang!
+          </button>
+        </div>
+      `;
+    });
+  }
+
+  function selectEnchantTarget(target) {
+    selectedEnchantTarget = target;
+    showEnchantModal();
+  }
+
+  function executeEnchant() {
+    const areaNum = parseInt((state.currentArea || 'area_1').replace('area_', '')) || 1;
+    const costGold = Math.max(80, areaNum * 80);
+    if (state.gold < costGold) { showToast('❌ Gold tidak cukup untuk enchant!'); return; }
+    if ((state.inventory.ruby || 0) < 1) { showToast('❌ Membutuhkan minimal 1 Ruby untuk bahan enchant!'); return; }
+
+    state.gold -= costGold;
+    state.inventory.ruby -= 1;
+    if (state.inventory.ruby <= 0) delete state.inventory.ruby;
+
+    // Roll tier with weighted probability
+    const rand = Math.random();
+    let cumulative = 0;
+    let chosenTier = ENCHANT_TIERS[0];
+    for (const t of ENCHANT_TIERS) {
+      cumulative += t.chance;
+      if (rand <= cumulative) {
+        chosenTier = t;
+        break;
+      }
+    }
+
+    // Roll ability
+    const pool = selectedEnchantTarget === 'weapon' ? WEAPON_ABILITIES : ARMOR_ABILITIES;
+    const chosenPerk = pool[Math.floor(Math.random() * pool.length)];
+
+    if (!state.enchants) state.enchants = { weapon: null, armor: null };
+    state.enchants[selectedEnchantTarget] = {
+      tier: chosenTier.name,
+      bonus: chosenTier.bonus,
+      tierClass: chosenTier.class,
+      ability: chosenPerk.name,
+      desc: chosenPerk.desc,
+      ...chosenPerk
+    };
+
+    showToast(`🎉 Sukses! Mendapatkan [${chosenTier.name} +${chosenTier.bonus}%]!`);
+    addLog(`✨ <strong>ENCHANT ALTAR:</strong> Menempa rune pada ${selectedEnchantTarget === 'weapon' ? 'Senjata' : 'Zirah'} ➔ <strong>[${chosenTier.name} +${chosenTier.bonus}%]</strong> dengan Ability: <strong>${chosenPerk.name}</strong> (${chosenPerk.desc})!`, 'victory');
+
+    updateUI();
+    autoSaveInstant();
+    showEnchantModal();
+  }
+
+  /* ============================================================
+     8.2. REWARDS, TRAINING & MINIBOSS
+     ============================================================ */
+  function showRewardsModal() {
+    const now = Date.now();
+    const lastDaily = state.rewards?.dailyClaimedAt || 0;
+    const lastWeekly = state.rewards?.weeklyClaimedAt || 0;
+
+    const dailyAvailable = now - lastDaily >= 24 * 60 * 60 * 1000;
+    const weeklyAvailable = now - lastWeekly >= 7 * 24 * 60 * 60 * 1000;
+
+    const dailyRemHours = Math.max(0, Math.ceil((24 * 60 * 60 * 1000 - (now - lastDaily)) / (60 * 60 * 1000)));
+    const weeklyRemDays = Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (now - lastWeekly)) / (24 * 60 * 60 * 1000)));
+
+    openModal('🎁 Hadiah Harian & Mingguan (Epic Rewards)', () => {
+      return `
+        <div class="shop-grid">
+          <div class="item-card">
+            <div class="item-name">☀️ Hadiah Harian (Daily)</div>
+            <div class="item-desc">Klaim setiap 24 jam sekali: +500 💰 Gold, +2 📦 Common Crate, +1 💎 Ruby</div>
+            <div class="item-stats">${dailyAvailable ? '🟢 Tersedia Sekarang!' : `⏳ Siap dalam ${dailyRemHours} jam`}</div>
+            <button class="glow-button" style="margin-top:8px; padding:8px;" ${!dailyAvailable ? 'disabled style="opacity:0.5"' : ''} onclick="window.NexusRPG.claimReward('daily')">
+              ${dailyAvailable ? '🎁 Klaim Hadiah Harian' : 'Telah Diklaim'}
+            </button>
+          </div>
+
+          <div class="item-card">
+            <div class="item-name">🌟 Hadiah Mingguan (Weekly)</div>
+            <div class="item-desc">Klaim setiap 7 hari sekali: +2,500 💰 Gold, +1 🎁 Epic Crate, +3 💎 Ruby</div>
+            <div class="item-stats">${weeklyAvailable ? '🟢 Tersedia Sekarang!' : `⏳ Siap dalam ${weeklyRemDays} hari`}</div>
+            <button class="glow-button" style="margin-top:8px; padding:8px;" ${!weeklyAvailable ? 'disabled style="opacity:0.5"' : ''} onclick="window.NexusRPG.claimReward('weekly')">
+              ${weeklyAvailable ? '👑 Klaim Hadiah Mingguan' : 'Telah Diklaim'}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function claimReward(type) {
+    if (!state.rewards) state.rewards = { dailyClaimedAt: 0, weeklyClaimedAt: 0 };
+    const now = Date.now();
+
+    if (type === 'daily') {
+      if (now - (state.rewards.dailyClaimedAt || 0) < 24 * 60 * 60 * 1000) {
+        showToast('⏳ Hadiah harian belum siap!'); return;
+      }
+      state.rewards.dailyClaimedAt = now;
+      state.gold += 500;
+      state.inventory.crate_common = (state.inventory.crate_common || 0) + 2;
+      state.inventory.ruby = (state.inventory.ruby || 0) + 1;
+      showToast('🎁 Klaim Harian: +500 Gold, 2 Peti, 1 Ruby!');
+      addLog(`🎁 <strong>KLAIM HARIAN:</strong> Menerima <strong>+500 💰 Gold</strong>, <strong>2x 📦 Common Crate</strong>, dan <strong>1x 💎 Ruby</strong>!`, 'loot');
+    } else if (type === 'weekly') {
+      if (now - (state.rewards.weeklyClaimedAt || 0) < 7 * 24 * 60 * 60 * 1000) {
+        showToast('⏳ Hadiah mingguan belum siap!'); return;
+      }
+      state.rewards.weeklyClaimedAt = now;
+      state.gold += 2500;
+      state.inventory.crate_epic = (state.inventory.crate_epic || 0) + 1;
+      state.inventory.ruby = (state.inventory.ruby || 0) + 3;
+      showToast('👑 Klaim Mingguan: +2,500 Gold, 1 Epic Crate, 3 Ruby!');
+      addLog(`👑 <strong>KLAIM MINGGUAN:</strong> Menerima <strong>+2,500 💰 Gold</strong>, <strong>1x 🎁 Epic Crate</strong>, dan <strong>3x 💎 Ruby</strong>!`, 'loot');
+    }
+
+    updateUI();
+    autoSaveInstant();
+    showRewardsModal();
+  }
+
+  function handleTraining() {
+    if (!checkCooldown('training', 45000)) return; // 45s cooldown
+    const isAtk = Math.random() < 0.5;
+    const pStats = getComputedStats();
+    const gainXp = Math.floor(pStats.atk * 3);
+    state.xp += gainXp;
+
+    if (isAtk) {
+      state.baseAtk += 1;
+      showToast(`🎯 Latihan Berhasil! +1 Base ATK & +${gainXp} EXP!`);
+      addLog(`🎯 <strong>TRAINING SELESAI:</strong> Melatih ketajaman serangan! Mendapatkan <strong>+1 Base ATK</strong> dan <strong>+${gainXp} EXP</strong>.`, 'victory');
+    } else {
+      state.baseDef += 1;
+      showToast(`🛡️ Latihan Berhasil! +1 Base DEF & +${gainXp} EXP!`);
+      addLog(`🛡️ <strong>TRAINING SELESAI:</strong> Melatih pertahanan tubuh! Mendapatkan <strong>+1 Base DEF</strong> dan <strong>+${gainXp} EXP</strong>.`, 'victory');
+    }
+    checkLevelUp();
+    updateUI();
+    autoSaveInstant();
+  }
+
+  function handleMiniboss() {
+    if (!checkCooldown('miniboss', 120000)) return; // 2 mins cooldown
+    if (state.hp <= 0) { showToast('💀 Anda pingsan! Gunakan ❤️ Heal terlebih dahulu.'); return; }
+
+    const areaMonsters = MONSTERS[state.currentArea] || MONSTERS.area_1;
+    const baseMob = areaMonsters[Math.floor(Math.random() * areaMonsters.length)];
+    const miniboss = {
+      name: `Elite Corrupted ${baseMob.name}`,
+      emoji: '👹',
+      hp: Math.floor(baseMob.hp * 1.8),
+      atk: Math.floor(baseMob.atk * 1.4),
+      def: Math.floor(baseMob.def * 1.3),
+      xp: baseMob.xp * 3,
+      gold: baseMob.gold * 3,
+      drops: [
+        ...(baseMob.drops || []),
+        { id: 'crate_rare', chance: 0.6 },
+        { id: 'ruby', chance: 0.4 }
+      ]
+    };
+
+    executeBattle(miniboss, true);
+    updateUI();
+    autoSaveInstant();
+  }
+
+  /* ============================================================
+     8.3. COSMIC SPACE ANIMATION CANVAS
+     ============================================================ */
+  function initSpaceBackground() {
+    const canvas = document.getElementById('space-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const STAR_COUNT = 90;
+    const stars = [];
+    const colors = ['#ffffff', '#00ffcc', '#b055ff', '#ffcc00', '#3a88fe'];
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.6 + 0.4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.8 + 0.2,
+        speed: Math.random() * 0.35 + 0.05,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleDir: Math.random() < 0.5 ? 1 : -1
+      });
+    }
+
+    let shootingStar = null;
+    function maybeSpawnShootingStar() {
+      if (!shootingStar && Math.random() < 0.015) {
+        shootingStar = {
+          x: Math.random() * width * 0.7,
+          y: Math.random() * height * 0.4,
+          length: Math.random() * 80 + 40,
+          speed: Math.random() * 9 + 6,
+          angle: Math.PI / 4,
+          alpha: 1
+        };
+      }
+    }
+
+    function renderSpace() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render Stars
+      for (let s of stars) {
+        s.y -= s.speed;
+        if (s.y < 0) {
+          s.y = height;
+          s.x = Math.random() * width;
+        }
+
+        s.alpha += s.twinkleSpeed * s.twinkleDir;
+        if (s.alpha > 0.95) { s.alpha = 0.95; s.twinkleDir = -1; }
+        else if (s.alpha < 0.2) { s.alpha = 0.2; s.twinkleDir = 1; }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = s.alpha;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = s.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      ctx.globalAlpha = 1;
+
+      // Shooting Star
+      maybeSpawnShootingStar();
+      if (shootingStar) {
+        ctx.beginPath();
+        ctx.moveTo(shootingStar.x, shootingStar.y);
+        const endX = shootingStar.x + Math.cos(shootingStar.angle) * shootingStar.length;
+        const endY = shootingStar.y + Math.sin(shootingStar.angle) * shootingStar.length;
+        const sGrad = ctx.createLinearGradient(shootingStar.x, shootingStar.y, endX, endY);
+        sGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        sGrad.addColorStop(1, `rgba(0, 255, 204, ${shootingStar.alpha})`);
+        ctx.strokeStyle = sGrad;
+        ctx.lineWidth = 2;
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        shootingStar.x += Math.cos(shootingStar.angle) * shootingStar.speed;
+        shootingStar.y += Math.sin(shootingStar.angle) * shootingStar.speed;
+        shootingStar.alpha -= 0.02;
+        if (shootingStar.alpha <= 0 || shootingStar.x > width || shootingStar.y > height) {
+          shootingStar = null;
+        }
+      }
+
+      requestAnimationFrame(renderSpace);
+    }
+
+    renderSpace();
+  }
+
+  /* ============================================================
      9. AUTH & CLOUD INITIALIZATION
      ============================================================ */
   async function loadCloudSave() {
@@ -2021,6 +2482,8 @@
           case 'adventure': handleAdventure(); break;
           case 'dungeon': handleDungeon(); break;
           case 'heal': handleHeal(); break;
+          case 'training': handleTraining(); break;
+          case 'miniboss': handleMiniboss(); break;
           case 'chop': handleChop(); break;
           case 'fish': handleFish(); break;
           case 'crate': showCratesModal(); break;
@@ -2028,6 +2491,8 @@
           case 'inventory': showInventory(); break;
           case 'shop': showShop(); break;
           case 'craft': showCraft(); break;
+          case 'enchant': showEnchantModal(); break;
+          case 'rewards': showRewardsModal(); break;
         }
       });
     });
@@ -2048,6 +2513,13 @@
     adjustBet,
     toggleLanguage,
     applyLanguage,
+    showEnchantModal,
+    selectEnchantTarget,
+    executeEnchant,
+    showRewardsModal,
+    claimReward,
+    handleTraining,
+    handleMiniboss,
     openSocialModal,
     closeSocialModal,
     addFriend,
@@ -2056,6 +2528,7 @@
   };
 
   document.addEventListener('DOMContentLoaded', () => {
+    initSpaceBackground();
     setupEvents();
     applyLanguage(currentLang);
     checkSession();
