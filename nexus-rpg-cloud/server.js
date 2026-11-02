@@ -250,7 +250,7 @@ const server = http.createServer(async (req, res) => {
   // POST /api/login
   if (method === 'POST' && pathname === '/api/login') {
     try {
-      const { username, password } = await parseJSONBody(req);
+      const { username, password, fallbackVault } = await parseJSONBody(req);
       const cleanUser = (username || '').trim().toLowerCase();
 
       let user = null;
@@ -258,6 +258,42 @@ const server = http.createServer(async (req, res) => {
         try { user = db.prepare('SELECT id, username, password_hash, salt FROM users WHERE username = ?').get(cleanUser); } catch {}
       }
       if (!user && memoryStore.users[cleanUser]) user = memoryStore.users[cleanUser];
+
+      // Self-Healing Vault: Jika server baru restart dan user belum ada di DB,
+      // tetapi client membawa data akun yang sah dari vault lokal mereka:
+      if (!user && fallbackVault && fallbackVault.password === password) {
+        const { hash, salt } = hashPassword(password);
+        let userId = Date.now();
+        if (db) {
+          try {
+            const insertStmt = db.prepare('INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)');
+            const resDb = insertStmt.run(cleanUser, hash, salt);
+            userId = Number(resDb.lastInsertRowid);
+          } catch {}
+        }
+        memoryStore.users[cleanUser] = { id: userId, username: cleanUser, password_hash: hash, salt };
+
+        if (fallbackVault.gameState) {
+          const dataStr = typeof fallbackVault.gameState === 'string' ? fallbackVault.gameState : JSON.stringify(fallbackVault.gameState);
+          if (db) {
+            try {
+              db.prepare('INSERT INTO saves (user_id, save_data, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(user_id) DO UPDATE SET save_data = excluded.save_data').run(userId, dataStr);
+            } catch {}
+          }
+          memoryStore.saves[cleanUser] = { userId, saveData: dataStr, updatedAt: Date.now() };
+        }
+        persistBackup();
+
+        const token = generateAuthToken(userId, cleanUser);
+        return sendJSON(res, 200, {
+          success: true,
+          token,
+          username: cleanUser,
+          rehydrated: true
+        }, {
+          'Set-Cookie': `nexus_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`
+        });
+      }
 
       if (!user) {
         return sendJSON(res, 401, { success: false, error: 'Username not found' });
@@ -278,6 +314,69 @@ const server = http.createServer(async (req, res) => {
       });
     } catch (err) {
       return sendJSON(res, 500, { success: false, error: 'Server error during login' });
+    }
+  }
+
+  // POST /api/rehydrate (Pemulihan akun instan dari vault client saat server restart)
+  if (method === 'POST' && pathname === '/api/rehydrate') {
+    try {
+      const { username, password, characterName, gameState } = await parseJSONBody(req);
+      const cleanUser = (username || '').trim().toLowerCase();
+      if (!cleanUser || !password) {
+        return sendJSON(res, 400, { success: false, error: 'Invalid rehydrate payload' });
+      }
+
+      let user = null;
+      if (db) {
+        try { user = db.prepare('SELECT id, username, password_hash, salt FROM users WHERE username = ?').get(cleanUser); } catch {}
+      }
+      if (!user && memoryStore.users[cleanUser]) user = memoryStore.users[cleanUser];
+
+      let userId;
+      if (!user) {
+        // Buat ulang akun di server
+        const { hash, salt } = hashPassword(password);
+        userId = Date.now();
+        if (db) {
+          try {
+            const insertStmt = db.prepare('INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)');
+            const resDb = insertStmt.run(cleanUser, hash, salt);
+            userId = Number(resDb.lastInsertRowid);
+          } catch {}
+        }
+        memoryStore.users[cleanUser] = { id: userId, username: cleanUser, password_hash: hash, salt };
+      } else {
+        userId = user.id;
+      }
+
+      // Restore save data
+      if (gameState) {
+        const dataStr = typeof gameState === 'string' ? gameState : JSON.stringify(gameState);
+        if (db) {
+          try {
+            db.prepare(`
+              INSERT INTO saves (user_id, save_data, updated_at)
+              VALUES (?, ?, CURRENT_TIMESTAMP)
+              ON CONFLICT(user_id) DO UPDATE SET save_data = excluded.save_data
+            `).run(userId, dataStr);
+          } catch {}
+        }
+        memoryStore.saves[cleanUser] = { userId, saveData: dataStr, updatedAt: Date.now() };
+      }
+      persistBackup();
+
+      const token = generateAuthToken(userId, cleanUser);
+      return sendJSON(res, 200, {
+        success: true,
+        token,
+        username: cleanUser,
+        characterName: characterName || cleanUser
+      }, {
+        'Set-Cookie': `nexus_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`
+      });
+    } catch (err) {
+      console.error('Rehydrate error:', err);
+      return sendJSON(res, 500, { success: false, error: 'Rehydrate failed' });
     }
   }
 

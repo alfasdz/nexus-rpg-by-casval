@@ -5,6 +5,253 @@
   'use strict';
 
   /* ============================================================
+     0. I18N BILINGUAL SYSTEM (INDONESIAN & ENGLISH)
+     ============================================================ */
+  let currentLang = localStorage.getItem('nexus_lang') || 'id';
+
+  const I18N = {
+    id: {
+      auth_tagline: 'EPIC MULTIPLAYER COSMIC REALM',
+      btn_login_tab: 'LOGIN',
+      btn_reg_tab: 'DAFTAR BARU',
+      lbl_username: 'Username',
+      lbl_password: 'Password',
+      btn_login_submit: '⚔️ MASUK KE PERMAINAN',
+      lbl_reg_username: 'Pilih Username',
+      lbl_reg_password: 'Pilih Password',
+      lbl_reg_char: 'Nama Gelar Hero',
+      btn_reg_submit: '✨ BUAT KARAKTER',
+      auth_vault_hint: '☁️ Auto-Save Cloud Aktif • Lintas HP & Desktop',
+
+      tab_combat: '⚔️ Pertarungan',
+      tab_farming: '🌲 Panen Kayu & Ikan',
+      tab_gambling: '🎰 Kasino / Judi',
+      tab_bag: '🎒 Tas & Pasar',
+      tab_profile: '👤 Profil & Stats',
+
+      m_nav_combat: 'Combat',
+      m_nav_farming: 'Panen',
+      m_nav_gambling: 'Judi',
+      m_nav_bag: 'Tas/Toko',
+      m_nav_profile: 'Profil',
+
+      btn_hunt_title: 'Hunt',
+      btn_hunt_desc: 'Lawan Monster Area',
+      btn_adv_title: 'Adventure',
+      btn_adv_desc: 'Ekspedisi 3 Ronde (+50%)',
+      btn_dung_title: 'Dungeon',
+      btn_dung_desc: 'Tantang Boss Area',
+      btn_heal_title: 'Heal',
+      btn_heal_desc: 'Pulihkan Darah Penuh',
+
+      btn_chop_title: 'Chop Wood',
+      btn_chop_desc: 'Tebang Kayu, Apel & Peti',
+      btn_fish_title: 'Fish Net',
+      btn_fish_desc: 'Pancing Ikan Emas & Ruby',
+
+      btn_inv_title: 'Inventory',
+      btn_inv_desc: 'Buka Tas & Pakai Item',
+      btn_crate_title: 'Buka Lootbox',
+      btn_crate_desc: 'Buka Peti Hadiah',
+      btn_craft_title: 'Mystic Forge',
+      btn_craft_desc: 'Tempa Senjata & Zirah',
+      btn_shop_title: 'Cosmic Shop',
+      btn_shop_desc: 'Toko Potion & Crate',
+      btn_trade_market: '⚖️ Pasar Tukar Kayu / Ikan / Ruby',
+
+      casino_title: '🎰 KASINO KOSMIK (JUDI KOIN)',
+      casino_desc: 'Lipatgandakan koin Anda dengan keberuntungan! Hati-hati jangan sampai bangkrut!',
+      coinflip_title: '🪙 COINFLIP (2X MULTIPLIER)',
+      coinflip_info: 'Pilih Kepala atau Ekor (50% Chance menang 2x lipat)',
+      btn_heads: 'Kepala',
+      btn_tails: 'Ekor',
+      slots_title: '🎰 COSMIC SLOTS (UP TO 10X)',
+      slots_info: 'Putar 3 rel kosmik! 3 simbol sama = 10x, 2 simbol = 3x jackpot!',
+      btn_spin_slot: '🎰 Putar Mesin Slot!',
+      dice_title: '🎲 DADU DUEL (2.5X)',
+      dice_info: 'Adu lempar dadu lawan bandar! Dadu Anda lebih tinggi = menang 2.5x!',
+      btn_roll_dice: 'Lempar Dadu Duel!',
+
+      prof_combat_stat: '⚔️ STATISTIK TEMPUR',
+      prof_m_kills: 'Total Monster Dibunuh:',
+      prof_b_kills: 'Boss Dungeon Dikalahkan:',
+      prof_dmg: 'Total Damage Diberikan:',
+      prof_deaths: 'Pernah Tumbang / Mati:',
+      prof_farm_stat: '🌲 STATISTIK PANEN & PETI',
+      prof_chops: 'Penebangan Kayu (Chop):',
+      prof_fish: 'Menangkap Ikan (Fish):',
+      prof_crates: 'Peti Hadiah Dibuka:',
+      prof_earned: 'Total Gold Diperoleh:',
+      prof_zone_info: '🗺️ INFORMASI ZONA TERKINI',
+      prof_boss_guard: '🏰 Boss Penjaga Dungeon:',
+
+      feed_header: '📜 COMBAT LOG & AKTIVITAS DUNIA'
+    },
+    en: {
+      auth_tagline: 'EPIC MULTIPLAYER COSMIC REALM',
+      btn_login_tab: 'LOGIN',
+      btn_reg_tab: 'REGISTER',
+      lbl_username: 'Username',
+      lbl_password: 'Password',
+      btn_login_submit: '⚔️ ENTER GAME',
+      lbl_reg_username: 'Choose Username',
+      lbl_reg_password: 'Choose Password',
+      lbl_reg_char: 'Hero Title / Name',
+      btn_reg_submit: '✨ CREATE CHARACTER',
+      auth_vault_hint: '☁️ Cloud Auto-Save Active • Mobile & Desktop',
+
+      tab_combat: '⚔️ Combat',
+      tab_farming: '🌲 Wood & Fishing',
+      tab_gambling: '🎰 Casino / Gamble',
+      tab_bag: '🎒 Bag & Market',
+      tab_profile: '👤 Profile & Stats',
+
+      m_nav_combat: 'Combat',
+      m_nav_farming: 'Farm',
+      m_nav_gambling: 'Casino',
+      m_nav_bag: 'Bag/Shop',
+      m_nav_profile: 'Profile',
+
+      btn_hunt_title: 'Hunt',
+      btn_hunt_desc: 'Fight Area Monsters',
+      btn_adv_title: 'Adventure',
+      btn_adv_desc: '3-Round Expedition (+50%)',
+      btn_dung_title: 'Dungeon',
+      btn_dung_desc: 'Challenge Area Boss',
+      btn_heal_title: 'Heal',
+      btn_heal_desc: 'Restore Full Health',
+
+      btn_chop_title: 'Chop Wood',
+      btn_chop_desc: 'Chop Trees, Apples & Crates',
+      btn_fish_title: 'Fish Net',
+      btn_fish_desc: 'Catch Golden Fish & Rubies',
+
+      btn_inv_title: 'Inventory',
+      btn_inv_desc: 'Open Bag & Equip Gear',
+      btn_crate_title: 'Open Lootbox',
+      btn_crate_desc: 'Open Reward Crates',
+      btn_craft_title: 'Mystic Forge',
+      btn_craft_desc: 'Craft Weapons & Armor',
+      btn_shop_title: 'Cosmic Shop',
+      btn_shop_desc: 'Potions & Crates Store',
+      btn_trade_market: '⚖️ Trade Market for Wood / Fish / Rubies',
+
+      casino_title: '🎰 COSMIC CASINO (COIN GAMBLING)',
+      casino_desc: 'Multiply your coins with luck! Beware of bankruptcy!',
+      coinflip_title: '🪙 COINFLIP (2X MULTIPLIER)',
+      coinflip_info: 'Pick Heads or Tails (50% Chance to win 2x)',
+      btn_heads: 'Heads',
+      btn_tails: 'Tails',
+      slots_title: '🎰 COSMIC SLOTS (UP TO 10X)',
+      slots_info: 'Spin 3 cosmic reels! 3 matching = 10x, 2 matching = 3x jackpot!',
+      btn_spin_slot: '🎰 Spin Slot Machine!',
+      dice_title: '🎲 DICE DUEL (2.5X)',
+      dice_info: 'Duel roll against dealer! Higher roll = 2.5x win!',
+      btn_roll_dice: 'Roll Dice Duel!',
+
+      prof_combat_stat: '⚔️ COMBAT STATISTICS',
+      prof_m_kills: 'Total Monsters Killed:',
+      prof_b_kills: 'Dungeon Bosses Defeated:',
+      prof_dmg: 'Total Damage Dealt:',
+      prof_deaths: 'Times Fallen / Died:',
+      prof_farm_stat: '🌲 GATHERING & CRATES STATS',
+      prof_chops: 'Wood Chopped (Chop):',
+      prof_fish: 'Fish Caught (Fish):',
+      prof_crates: 'Reward Crates Opened:',
+      prof_earned: 'Total Gold Earned:',
+      prof_zone_info: '🗺️ CURRENT ZONE INTEL',
+      prof_boss_guard: '🏰 Dungeon Guardian Boss:',
+
+      feed_header: '📜 COMBAT LOG & REALM ACTIVITY'
+    }
+  };
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('nexus_lang', lang);
+    const dict = I18N[lang] || I18N.id;
+
+    // Update current lang indicators
+    document.querySelectorAll('.lang-current').forEach(el => {
+      el.textContent = lang.toUpperCase();
+    });
+
+    // Update data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    // Update Desktop Nav Tabs
+    const tabKeys = {
+      combat: dict.tab_combat,
+      farming: dict.tab_farming,
+      gambling: dict.tab_gambling,
+      bag: dict.tab_bag,
+      profile: dict.tab_profile
+    };
+    document.querySelectorAll('.d-tab').forEach(b => {
+      const t = b.dataset.tab;
+      if (tabKeys[t]) b.textContent = tabKeys[t];
+    });
+
+    // Update Mobile Bottom Bar Items
+    const mKeys = {
+      combat: dict.m_nav_combat,
+      farming: dict.m_nav_farming,
+      gambling: dict.m_nav_gambling,
+      bag: dict.m_nav_bag,
+      profile: dict.m_nav_profile
+    };
+    document.querySelectorAll('.m-nav-item').forEach(b => {
+      const t = b.dataset.tab;
+      const txt = b.querySelector('.m-text');
+      if (txt && mKeys[t]) txt.textContent = mKeys[t];
+    });
+
+    // Update Game Action Buttons
+    const gBtns = {
+      hunt: { title: dict.btn_hunt_title, desc: dict.btn_hunt_desc },
+      adventure: { title: dict.btn_adv_title, desc: dict.btn_adv_desc },
+      dungeon: { title: dict.btn_dung_title, desc: dict.btn_dung_desc },
+      heal: { title: dict.btn_heal_title, desc: dict.btn_heal_desc },
+      chop: { title: dict.btn_chop_title, desc: dict.btn_chop_desc },
+      fish: { title: dict.btn_fish_title, desc: dict.btn_fish_desc },
+      inventory: { title: dict.btn_inv_title, desc: dict.btn_inv_desc },
+      crate: { title: dict.btn_crate_title, desc: dict.btn_crate_desc },
+      craft: { title: dict.btn_craft_title, desc: dict.btn_craft_desc },
+      shop: { title: dict.btn_shop_title, desc: dict.btn_shop_desc },
+      trade: { title: dict.btn_trade_market, desc: '' }
+    };
+    document.querySelectorAll('.game-btn').forEach(b => {
+      const act = b.dataset.action;
+      if (gBtns[act]) {
+        const tEl = b.querySelector('.btn-title');
+        if (tEl) tEl.textContent = gBtns[act].title;
+        const dEl = b.querySelector('.btn-desc');
+        if (dEl && gBtns[act].desc) dEl.textContent = gBtns[act].desc;
+      }
+    });
+
+    // Update Profile Statistics Card Headers
+    const pBoxes = document.querySelectorAll('.profile-sub-grid .p-box');
+    if (pBoxes && pBoxes.length >= 2) {
+      const hCombat = pBoxes[0].querySelector('h4');
+      if (hCombat) hCombat.textContent = dict.prof_combat_stat;
+      const hFarm = pBoxes[1].querySelector('h4');
+      if (hFarm) hFarm.textContent = dict.prof_farm_stat;
+    }
+    const pArea = document.querySelector('.area-preview-box h4');
+    if (pArea) pArea.textContent = dict.prof_zone_info;
+  }
+
+  function toggleLanguage() {
+    const nextLang = currentLang === 'id' ? 'en' : 'id';
+    applyLanguage(nextLang);
+    showToast(nextLang === 'en' ? '🌐 Language switched to English!' : '🌐 Bahasa dialihkan ke Bahasa Indonesia!');
+  }
+
+  /* ============================================================
      1. COMPLETE EPIC RPG DATABASE
      ============================================================ */
   const AREAS = [
@@ -751,27 +998,85 @@
   }
 
   /* ============================================================
-     6. GAMBLING CASINO (JUDI KOIN)
+     6. GAMBLING CASINO (JUDI KOIN & FREE-TEXT BETTING)
      ============================================================ */
+  function parseBet(rawStr) {
+    if (!rawStr) return 0;
+    let clean = String(rawStr).trim().toLowerCase().replace(/,/g, '').replace(/\s+/g, '');
+    let mult = 1;
+    if (clean.endsWith('k')) {
+      mult = 1000;
+      clean = clean.slice(0, -1);
+    } else if (clean.endsWith('m')) {
+      mult = 1000000;
+      clean = clean.slice(0, -1);
+    }
+    const val = Number(clean);
+    if (isNaN(val) || val <= 0) return 0;
+    return Math.floor(val * mult);
+  }
+
+  function adjustBet(game, action) {
+    const inputEl = document.getElementById(`bet-${game}`);
+    if (!inputEl) return;
+    let current = parseBet(inputEl.value) || 0;
+    const maxGold = Math.max(0, state.gold);
+
+    if (action === 'min') {
+      current = Math.min(10, maxGold);
+    } else if (action === '+50') {
+      current = Math.min(current + 50, maxGold);
+    } else if (action === '+100') {
+      current = Math.min(current + 100, maxGold);
+    } else if (action === '+500') {
+      current = Math.min(current + 500, maxGold);
+    } else if (action === 'half') {
+      current = Math.max(10, Math.floor(current / 2));
+    } else if (action === 'double') {
+      current = Math.min(Math.max(10, current * 2), maxGold);
+    } else if (action === 'max') {
+      current = maxGold;
+    }
+    inputEl.value = current;
+  }
+
   function playCoinflip(playerChoice) {
     const betInput = document.getElementById('bet-coinflip');
-    const bet = Math.floor(Number(betInput.value));
-    if (isNaN(bet) || bet <= 0) { showToast('Jumlah taruhan tidak valid!'); return; }
-    if (state.gold < bet) { showToast('❌ Gold tidak cukup!'); return; }
+    const bet = parseBet(betInput ? betInput.value : 0);
+    if (bet <= 0) {
+      showToast(currentLang === 'en' ? 'Invalid bet amount!' : 'Jumlah taruhan tidak valid!');
+      return;
+    }
+    if (state.gold < bet) {
+      showToast(currentLang === 'en' ? '❌ Not enough gold!' : '❌ Gold tidak cukup!');
+      return;
+    }
 
     state.gold -= bet;
     const result = Math.random() < 0.5 ? 'heads' : 'tails';
     const isWin = playerChoice === result;
-    const label = result === 'heads' ? '🪙 Kepala' : '🪙 Ekor';
+    const label = result === 'heads' 
+      ? (currentLang === 'en' ? '🪙 Heads' : '🪙 Kepala')
+      : (currentLang === 'en' ? '🪙 Tails' : '🪙 Ekor');
 
     if (isWin) {
       const winGain = bet * 2;
       state.gold += winGain;
-      addLog(`🪙 <strong>COINFLIP MENANG!</strong> Koin mendarat di ${label}! Anda menang <strong>+${winGain} 💰</strong>!`, 'victory');
-      showToast(`Menang +${winGain} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🪙 <strong>COINFLIP VICTORY!</strong> Landed on ${label}! You won <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Won +${winGain} Gold!`);
+      } else {
+        addLog(`🪙 <strong>COINFLIP MENANG!</strong> Koin mendarat di ${label}! Anda menang <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Menang +${winGain} Gold!`);
+      }
     } else {
-      addLog(`🪙 <strong>COINFLIP KALAH!</strong> Koin mendarat di ${label}. Anda kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-      showToast(`Kalah -${bet} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🪙 <strong>COINFLIP LOSS:</strong> Landed on ${label}. You lost <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Lost -${bet} Gold!`);
+      } else {
+        addLog(`🪙 <strong>COINFLIP KALAH!</strong> Koin mendarat di ${label}. Anda kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Kalah -${bet} Gold!`);
+      }
     }
 
     updateUI();
@@ -780,9 +1085,15 @@
 
   function playSlots() {
     const betInput = document.getElementById('bet-slot');
-    const bet = Math.floor(Number(betInput.value));
-    if (isNaN(bet) || bet <= 0) { showToast('Jumlah taruhan tidak valid!'); return; }
-    if (state.gold < bet) { showToast('❌ Gold tidak cukup!'); return; }
+    const bet = parseBet(betInput ? betInput.value : 0);
+    if (bet <= 0) {
+      showToast(currentLang === 'en' ? 'Invalid bet amount!' : 'Jumlah taruhan tidak valid!');
+      return;
+    }
+    if (state.gold < bet) {
+      showToast(currentLang === 'en' ? '❌ Not enough gold!' : '❌ Gold tidak cukup!');
+      return;
+    }
 
     state.gold -= bet;
     const symbols = ['🍒', '💎', '🔔', '🍇', '⭐', '7️⃣'];
@@ -797,17 +1108,32 @@
       // 3 of a kind = 10x jackpot
       const winGain = bet * 10;
       state.gold += winGain;
-      addLog(`🎰 <strong>JACKPOT SUPER 10X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang telak <strong>+${winGain} 💰</strong>!`, 'victory');
-      showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🎰 <strong>SUPER JACKPOT 10X!</strong> [ ${r1} | ${r2} | ${r3} ] Hit the jackpot <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
+      } else {
+        addLog(`🎰 <strong>JACKPOT SUPER 10X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang telak <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
+      }
     } else if (r1 === r2 || r2 === r3 || r1 === r3) {
       // 2 of a kind = 3x
       const winGain = bet * 3;
       state.gold += winGain;
-      addLog(`🎰 <strong>SLOT MENANG 3X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang <strong>+${winGain} 💰</strong>!`, 'victory');
-      showToast(`Menang 3x! +${winGain} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🎰 <strong>SLOT 3X WIN!</strong> [ ${r1} | ${r2} | ${r3} ] Won <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Won 3x! +${winGain} Gold!`);
+      } else {
+        addLog(`🎰 <strong>SLOT MENANG 3X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Menang 3x! +${winGain} Gold!`);
+      }
     } else {
-      addLog(`🎰 <strong>SLOT GAGAL:</strong> [ ${r1} | ${r2} | ${r3} ] Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-      showToast(`Kalah -${bet} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🎰 <strong>SLOT LOSS:</strong> [ ${r1} | ${r2} | ${r3} ] Lost <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Lost -${bet} Gold!`);
+      } else {
+        addLog(`🎰 <strong>SLOT GAGAL:</strong> [ ${r1} | ${r2} | ${r3} ] Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Kalah -${bet} Gold!`);
+      }
     }
 
     updateUI();
@@ -816,9 +1142,15 @@
 
   function playDice() {
     const betInput = document.getElementById('bet-dice');
-    const bet = Math.floor(Number(betInput.value));
-    if (isNaN(bet) || bet <= 0) { showToast('Jumlah taruhan tidak valid!'); return; }
-    if (state.gold < bet) { showToast('❌ Gold tidak cukup!'); return; }
+    const bet = parseBet(betInput ? betInput.value : 0);
+    if (bet <= 0) {
+      showToast(currentLang === 'en' ? 'Invalid bet amount!' : 'Jumlah taruhan tidak valid!');
+      return;
+    }
+    if (state.gold < bet) {
+      showToast(currentLang === 'en' ? '❌ Not enough gold!' : '❌ Gold tidak cukup!');
+      return;
+    }
 
     state.gold -= bet;
     const playerDice = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
@@ -827,15 +1159,30 @@
     if (playerDice > houseDice) {
       const winGain = Math.floor(bet * 2.5);
       state.gold += winGain;
-      addLog(`🎲 <strong>DADU MENANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Menang <strong>+${winGain} 💰</strong>!`, 'victory');
-      showToast(`Menang +${winGain} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🎲 <strong>DICE VICTORY!</strong> You [${playerDice}] vs House [${houseDice}]. Won <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Won +${winGain} Gold!`);
+      } else {
+        addLog(`🎲 <strong>DADU MENANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Menang <strong>+${winGain} 💰</strong>!`, 'victory');
+        showToast(`Menang +${winGain} Gold!`);
+      }
     } else if (playerDice === houseDice) {
       state.gold += bet; // Draw, refund
-      addLog(`🎲 <strong>DADU IMBANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Koin taruhan dikembalikan.`, 'system');
-      showToast(`Imbang! Koin kembali.`);
+      if (currentLang === 'en') {
+        addLog(`🎲 <strong>DICE DRAW!</strong> You [${playerDice}] vs House [${houseDice}]. Bet refunded.`, 'system');
+        showToast(`Draw! Bet refunded.`);
+      } else {
+        addLog(`🎲 <strong>DADU IMBANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Koin taruhan dikembalikan.`, 'system');
+        showToast(`Imbang! Koin kembali.`);
+      }
     } else {
-      addLog(`🎲 <strong>DADU KALAH!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-      showToast(`Kalah -${bet} Gold!`);
+      if (currentLang === 'en') {
+        addLog(`🎲 <strong>DICE LOSS:</strong> You [${playerDice}] vs House [${houseDice}]. Lost <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Lost -${bet} Gold!`);
+      } else {
+        addLog(`🎲 <strong>DADU KALAH!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
+        showToast(`Kalah -${bet} Gold!`);
+      }
     }
 
     updateUI();
@@ -1448,13 +1795,59 @@
   }
 
   async function checkSession() {
+    // 1. Coba verifikasi token yang tersimpan
     if (authToken && activeUsername) {
-      await loadCloudSave();
-      document.getElementById('auth-screen').style.display = 'none';
-      document.getElementById('game-screen').style.display = 'flex';
-      addLog(`🌌 Selamat datang kembali, <strong>${state.characterName || activeUsername}</strong>! Karakter tersinkron.`, 'system');
-      return;
+      try {
+        const checkRes = await fetch('/api/session', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const sess = await checkRes.json();
+        if (sess && sess.loggedIn) {
+          await loadCloudSave();
+          document.getElementById('auth-screen').style.display = 'none';
+          document.getElementById('game-screen').style.display = 'flex';
+          addLog(`🌌 Selamat datang kembali, <strong>${state.characterName || activeUsername}</strong>! Sesi tersinkron.`, 'system');
+          return;
+        }
+      } catch {}
     }
+
+    // 2. Self-Healing: Jika server baru saja restart di Render dan token hangus,
+    // gunakan vault lokal untuk memulihkan sesi secara otomatis tanpa input password lagi
+    const storedVault = localStorage.getItem('nexus_vault');
+    if (storedVault) {
+      try {
+        const vault = JSON.parse(storedVault);
+        if (vault.username && vault.password) {
+          const localSave = localStorage.getItem(`nexus_save_${vault.username}`);
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: vault.username,
+              password: vault.password,
+              fallbackVault: {
+                password: vault.password,
+                gameState: localSave ? JSON.parse(localSave) : null
+              }
+            })
+          });
+          const data = await res.json();
+          if (data && data.success) {
+            authToken = data.token;
+            activeUsername = data.username;
+            localStorage.setItem('nexus_auth_token', authToken);
+            localStorage.setItem('nexus_username', activeUsername);
+            await loadCloudSave();
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            addLog(`✨ Akun & karakter Anda dipulihkan otomatis dari Cloud Vault setelah restart server!`, 'victory');
+            return;
+          }
+        }
+      } catch {}
+    }
+
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('game-screen').style.display = 'none';
   }
@@ -1465,11 +1858,25 @@
     const u = document.getElementById('login-username').value.trim();
     const p = document.getElementById('login-password').value;
 
+    // Ambil fallback data dari localStorage jika ada
+    let localSave = null;
+    const localSaveStr = localStorage.getItem(`nexus_save_${u}`);
+    if (localSaveStr) {
+      try { localSave = JSON.parse(localSaveStr); } catch {}
+    }
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: u, password: p })
+        body: JSON.stringify({
+          username: u,
+          password: p,
+          fallbackVault: {
+            password: p,
+            gameState: localSave
+          }
+        })
       });
       const data = await res.json();
       if (data.success) {
@@ -1477,11 +1884,18 @@
         activeUsername = data.username;
         localStorage.setItem('nexus_auth_token', authToken);
         localStorage.setItem('nexus_username', activeUsername);
+        localStorage.setItem('nexus_vault', JSON.stringify({ username: u, password: p }));
 
         await loadCloudSave();
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
-        addLog(`⚔️ Berhasil masuk ke akun <strong>${state.characterName || u}</strong>.`, 'system');
+        
+        if (data.rehydrated) {
+          addLog(`✨ Akun <strong>${u}</strong> berhasil dipulihkan dari Cloud Vault!`, 'victory');
+          showToast('✨ Akun berhasil dipulihkan dari Cloud Vault!');
+        } else {
+          addLog(`⚔️ Berhasil masuk ke akun <strong>${state.characterName || u}</strong>.`, 'system');
+        }
       } else {
         document.getElementById('login-error').textContent = data.error || 'Login gagal';
       }
@@ -1509,6 +1923,7 @@
         activeUsername = data.username;
         localStorage.setItem('nexus_auth_token', authToken);
         localStorage.setItem('nexus_username', activeUsername);
+        localStorage.setItem('nexus_vault', JSON.stringify({ username: u, password: p, characterName: charName }));
 
         state = JSON.parse(JSON.stringify(DEFAULT_STATE));
         state.characterName = charName;
@@ -1532,6 +1947,7 @@
     activeUsername = null;
     localStorage.removeItem('nexus_auth_token');
     localStorage.removeItem('nexus_username');
+    localStorage.removeItem('nexus_vault');
     location.reload();
   }
 
@@ -1629,6 +2045,9 @@
     playCoinflip,
     playSlots,
     playDice,
+    adjustBet,
+    toggleLanguage,
+    applyLanguage,
     openSocialModal,
     closeSocialModal,
     addFriend,
@@ -1638,6 +2057,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     setupEvents();
+    applyLanguage(currentLang);
     checkSession();
   });
 

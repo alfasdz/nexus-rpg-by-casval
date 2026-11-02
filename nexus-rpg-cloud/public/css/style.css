@@ -71,6 +71,40 @@ body {
   background: radial-gradient(circle at center, #131336 0%, #050510 100%);
 }
 
+/* Auth Top Bar (Language toggle) */
+.auth-top-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-neon);
+  border-radius: 20px;
+  padding: 4px 10px;
+  color: var(--accent-cyan);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-toggle-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+  transform: scale(1.05);
+}
+
+.lang-current {
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+}
+
 .auth-card {
   width: 100%;
   max-width: 400px;
@@ -625,15 +659,111 @@ body {
   box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.2);
 }
 
-.bet-input-row {
+/* Free-Text Bet Controller & Quick Chips */
+.bet-controller {
+  background: var(--bg-deep);
+  border: 1px solid rgba(255, 204, 0, 0.25);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.bet-input-box {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin-bottom: 6px;
+}
+
+.bet-coin-badge {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.bet-free-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  font-size: 14px;
+  font-weight: 800;
+  outline: none;
+  font-family: inherit;
+  padding: 6px 0;
+}
+
+.bet-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chip-btn {
+  flex: 1 1 auto;
+  padding: 4px 6px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: var(--text-sub);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.chip-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.chip-btn.chip-max {
+  background: rgba(255, 51, 102, 0.15);
+  border-color: rgba(255, 51, 102, 0.4);
+  color: var(--accent-red);
+}
+
+.chip-btn.chip-max:hover {
+  background: var(--accent-red);
+  color: #fff;
+}
+
+.gamble-actions-row {
   display: flex;
   gap: 6px;
 }
 
-.bet-input-row input {
+.gamble-actions-row .sub-btn {
   flex: 1;
-  padding: 8px;
-  font-size: 12px;
+}
+
+.glow-gold-btn {
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 170, 0, 0.4));
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 800;
+  padding: 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.glow-gold-btn:hover {
+  background: var(--accent-gold);
+  color: #04040d;
+  box-shadow: 0 0 14px rgba(255, 204, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.slot-spin-btn {
+  background: linear-gradient(135deg, #ffcc00, #ff8800) !important;
+  color: #04040d !important;
+  font-weight: 900 !important;
+  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.35) !important;
 }
 
 .sub-btn {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NEXUS RPG - Cosmic Multiplayer Online</title>
-  <link rel="stylesheet" href="/css/style.css?v=3.0">
+  <link rel="stylesheet" href="/css/style.css?v=3.1">
 </head>
 <body>
   <div id="particles"></div>
@@ -13,48 +13,51 @@
   <div id="auth-screen" class="screen">
     <div class="auth-card">
       <div class="logo-box">
+        <div class="auth-top-bar">
+          <button type="button" class="lang-toggle-btn" id="auth-lang-btn" onclick="window.NexusRPG.toggleLanguage()">🌐 <span class="lang-current">ID</span></button>
+        </div>
         <div class="logo-icon">⚔️</div>
         <h1>NEXUS RPG</h1>
-        <p class="tagline">EPIC MULTIPLAYER COSMIC REALM</p>
+        <p class="tagline" data-i18n="auth_tagline">EPIC MULTIPLAYER COSMIC REALM</p>
       </div>
 
       <div class="auth-toggle">
-        <button class="toggle-btn active" data-tab="login">LOGIN</button>
-        <button class="toggle-btn" data-tab="register">DAFTAR BARU</button>
+        <button class="toggle-btn active" data-tab="login" data-i18n="btn_login_tab">LOGIN</button>
+        <button class="toggle-btn" data-tab="register" data-i18n="btn_reg_tab">DAFTAR BARU</button>
       </div>
 
       <form id="login-form" class="auth-form">
         <div class="form-group">
-          <label>Username</label>
+          <label data-i18n="lbl_username">Username</label>
           <input type="text" id="login-username" placeholder="Masukkan username" required autocomplete="username">
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label data-i18n="lbl_password">Password</label>
           <input type="password" id="login-password" placeholder="Masukkan password" required autocomplete="current-password">
         </div>
-        <button type="submit" class="glow-button">⚔️ MASUK KE PERMAINAN</button>
+        <button type="submit" class="glow-button" data-i18n="btn_login_submit">⚔️ MASUK KE PERMAINAN</button>
         <div id="login-error" class="error-text"></div>
       </form>
 
       <form id="register-form" class="auth-form" style="display:none">
         <div class="form-group">
-          <label>Pilih Username</label>
+          <label data-i18n="lbl_reg_username">Pilih Username</label>
           <input type="text" id="reg-username" placeholder="3-20 karakter" required autocomplete="username">
         </div>
         <div class="form-group">
-          <label>Pilih Password</label>
+          <label data-i18n="lbl_reg_password">Pilih Password</label>
           <input type="password" id="reg-password" placeholder="Minimal 4 karakter" required autocomplete="new-password">
         </div>
         <div class="form-group">
-          <label>Nama Gelar Hero</label>
+          <label data-i18n="lbl_reg_char">Nama Gelar Hero</label>
           <input type="text" id="reg-character" placeholder="Contoh: Arthur Pendragon" required>
         </div>
-        <button type="submit" class="glow-button register-btn">✨ BUAT KARAKTER</button>
+        <button type="submit" class="glow-button register-btn" data-i18n="btn_reg_submit">✨ BUAT KARAKTER</button>
         <div id="register-error" class="error-text"></div>
       </form>
 
       <div class="auth-hint">
-        <span>☁️ Auto-Save Cloud Aktif • Lintas HP & Desktop</span>
+        <span data-i18n="auth_vault_hint">☁️ Auto-Save Cloud Aktif • Lintas HP & Desktop</span>
       </div>
     </div>
   </div>
@@ -73,6 +76,7 @@
       </div>
       <div class="header-status">
         <div class="gold-capsule">💰 <span id="gold-display">0</span></div>
+        <button type="button" class="lang-toggle-btn" id="header-lang-btn" onclick="window.NexusRPG.toggleLanguage()" title="Ganti Bahasa / Switch Language">🌐 <span class="lang-current">ID</span></button>
         <button id="social-btn" class="icon-action-btn" title="Multiplayer & Teman">👥</button>
         <button id="logout-btn" class="icon-action-btn" title="Keluar">🚪</button>
       </div>
@@ -193,40 +197,85 @@
           <!-- 3. TAB GAMBLING (JUDI) -->
           <div id="tab-gambling" class="tab-content" style="display:none">
             <div class="gambling-panel">
-              <h3 class="sec-title">🎰 KASINO KOSMIK (JUDI KOIN)</h3>
-              <p class="sec-desc">Lipatgandakan koin Anda dengan keberuntungan! Hati-hati jangan sampai bangkrut!</p>
+              <h3 class="sec-title" data-i18n="casino_title">🎰 KASINO KOSMIK (JUDI KOIN)</h3>
+              <p class="sec-desc" data-i18n="casino_desc">Lipatgandakan koin Anda dengan keberuntungan! Hati-hati jangan sampai bangkrut!</p>
 
               <div class="gamble-cards-grid">
                 <!-- Coinflip -->
                 <div class="gamble-card">
-                  <div class="gamble-header">🪙 COINFLIP (2X MULTIPLIER)</div>
-                  <p class="gamble-info">Pilih Kepala atau Ekor (50% Chance menang 2x lipat)</p>
-                  <div class="bet-input-row">
-                    <input type="number" id="bet-coinflip" placeholder="Taruhan Gold" value="50" min="10">
-                    <button class="sub-btn" onclick="window.NexusRPG.playCoinflip('heads')">🪙 Kepala</button>
-                    <button class="sub-btn" onclick="window.NexusRPG.playCoinflip('tails')">🪙 Ekor</button>
+                  <div class="gamble-header" data-i18n="coinflip_title">🪙 COINFLIP (2X MULTIPLIER)</div>
+                  <p class="gamble-info" data-i18n="coinflip_info">Pilih Kepala atau Ekor (50% Chance menang 2x lipat)</p>
+
+                  <div class="bet-controller">
+                    <div class="bet-input-box">
+                      <span class="bet-coin-badge">💰</span>
+                      <input type="text" id="bet-coinflip" class="bet-free-input" placeholder="Jumlah koin..." value="50">
+                    </div>
+                    <div class="bet-chips-row">
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'min')">Min</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+50')">+50</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+100')">+100</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+500')">+500</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'half')">½ Half</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'double')">2× Double</button>
+                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('coinflip', 'max')">🔥 MAX</button>
+                    </div>
+                  </div>
+
+                  <div class="gamble-actions-row">
+                    <button class="sub-btn glow-gold-btn" onclick="window.NexusRPG.playCoinflip('heads')">🪙 <span data-i18n="btn_heads">Kepala</span></button>
+                    <button class="sub-btn glow-gold-btn" onclick="window.NexusRPG.playCoinflip('tails')">🪙 <span data-i18n="btn_tails">Ekor</span></button>
                   </div>
                 </div>
 
                 <!-- Cosmic Slot -->
                 <div class="gamble-card">
-                  <div class="gamble-header">🎰 COSMIC SLOTS (UP TO 10X)</div>
-                  <p class="gamble-info">Putar 3 rel kosmik! 3 simbol sama = 10x, 2 simbol = 3x jackpot!</p>
+                  <div class="gamble-header" data-i18n="slots_title">🎰 COSMIC SLOTS (UP TO 10X)</div>
+                  <p class="gamble-info" data-i18n="slots_info">Putar 3 rel kosmik! 3 simbol sama = 10x, 2 simbol = 3x jackpot!</p>
+                  
                   <div class="slot-display" id="slot-reels">🍒 | 💎 | 🔔</div>
-                  <div class="bet-input-row">
-                    <input type="number" id="bet-slot" placeholder="Taruhan Gold" value="100" min="10">
-                    <button class="glow-button" style="padding:10px;" onclick="window.NexusRPG.playSlots()">🎰 Putar Slot!</button>
+
+                  <div class="bet-controller">
+                    <div class="bet-input-box">
+                      <span class="bet-coin-badge">💰</span>
+                      <input type="text" id="bet-slot" class="bet-free-input" placeholder="Jumlah koin..." value="100">
+                    </div>
+                    <div class="bet-chips-row">
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'min')">Min</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+50')">+50</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+100')">+100</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+500')">+500</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'half')">½ Half</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'double')">2× Double</button>
+                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('slot', 'max')">🔥 MAX</button>
+                    </div>
                   </div>
+
+                  <button class="glow-button slot-spin-btn" onclick="window.NexusRPG.playSlots()" data-i18n="btn_spin_slot">🎰 Putar Mesin Slot!</button>
                 </div>
 
                 <!-- Dice Duel -->
                 <div class="gamble-card">
-                  <div class="gamble-header">🎲 DADU DUEL (2.5X)</div>
-                  <p class="gamble-info">Adu lempar dadu lawan bandar! Dadu Anda lebih tinggi = menang 2.5x!</p>
-                  <div class="bet-input-row">
-                    <input type="number" id="bet-dice" placeholder="Taruhan Gold" value="50" min="10">
-                    <button class="sub-btn" onclick="window.NexusRPG.playDice()">🎲 Lempar Dadu!</button>
+                  <div class="gamble-header" data-i18n="dice_title">🎲 DADU DUEL (2.5X)</div>
+                  <p class="gamble-info" data-i18n="dice_info">Adu lempar dadu lawan bandar! Dadu Anda lebih tinggi = menang 2.5x!</p>
+
+                  <div class="bet-controller">
+                    <div class="bet-input-box">
+                      <span class="bet-coin-badge">💰</span>
+                      <input type="text" id="bet-dice" class="bet-free-input" placeholder="Jumlah koin..." value="50">
+                    </div>
+                    <div class="bet-chips-row">
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'min')">Min</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+50')">+50</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+100')">+100</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+500')">+500</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'half')">½ Half</button>
+                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'double')">2× Double</button>
+                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('dice', 'max')">🔥 MAX</button>
+                    </div>
                   </div>
+
+                  <button class="sub-btn glow-gold-btn" style="width:100%;" onclick="window.NexusRPG.playDice()">🎲 <span data-i18n="btn_roll_dice">Lempar Dadu Duel!</span></button>
                 </div>
               </div>
             </div>
@@ -420,6 +469,6 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="/js/app.js?v=3.0"></script>
+  <script src="/js/app.js?v=3.1"></script>
 </body>
 </html>
