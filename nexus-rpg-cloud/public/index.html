@@ -1,141 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS RPG</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NEXUS RPG - Cosmic Multiplayer Online</title>
+  <link rel="stylesheet" href="/css/style.css?v=3.0">
 </head>
 <body>
   <div id="particles"></div>
-  
-  <!-- AUTH SCREEN -->
+
+  <!-- ================= AUTH SCREEN ================= -->
   <div id="auth-screen" class="screen">
-    <div class="auth-container">
-      <div class="logo">
-        <div class="logo-icon">⚔</div>
+    <div class="auth-card">
+      <div class="logo-box">
+        <div class="logo-icon">⚔️</div>
         <h1>NEXUS RPG</h1>
-        <p class="tagline">Enter the Cosmic Realm</p>
+        <p class="tagline">EPIC MULTIPLAYER COSMIC REALM</p>
       </div>
-      <div class="auth-tabs">
-        <button class="tab active" data-tab="login">Login</button>
-        <button class="tab" data-tab="register">Register</button>
+
+      <div class="auth-toggle">
+        <button class="toggle-btn active" data-tab="login">LOGIN</button>
+        <button class="toggle-btn" data-tab="register">DAFTAR BARU</button>
       </div>
+
       <form id="login-form" class="auth-form">
-        <div class="input-group">
+        <div class="form-group">
           <label>Username</label>
-          <input type="text" id="login-username" placeholder="Enter username" required>
+          <input type="text" id="login-username" placeholder="Masukkan username" required autocomplete="username">
         </div>
-        <div class="input-group">
+        <div class="form-group">
           <label>Password</label>
-          <input type="password" id="login-password" placeholder="Enter password" required>
+          <input type="password" id="login-password" placeholder="Masukkan password" required autocomplete="current-password">
         </div>
-        <button type="submit" class="btn-primary">⚔ Enter the Nexus</button>
-        <div id="login-error" class="error-msg"></div>
+        <button type="submit" class="glow-button">⚔️ MASUK KE PERMAINAN</button>
+        <div id="login-error" class="error-text"></div>
       </form>
+
       <form id="register-form" class="auth-form" style="display:none">
-        <div class="input-group">
-          <label>Username</label>
-          <input type="text" id="reg-username" placeholder="Choose username (3-20 chars)" required>
+        <div class="form-group">
+          <label>Pilih Username</label>
+          <input type="text" id="reg-username" placeholder="3-20 karakter" required autocomplete="username">
         </div>
-        <div class="input-group">
-          <label>Password</label>
-          <input type="password" id="reg-password" placeholder="Choose password (4+ chars)" required>
+        <div class="form-group">
+          <label>Pilih Password</label>
+          <input type="password" id="reg-password" placeholder="Minimal 4 karakter" required autocomplete="new-password">
         </div>
-        <div class="input-group">
-          <label>Hero Name</label>
-          <input type="text" id="reg-character" placeholder="Name your hero" required>
+        <div class="form-group">
+          <label>Nama Gelar Hero</label>
+          <input type="text" id="reg-character" placeholder="Contoh: Arthur Pendragon" required>
         </div>
-        <button type="submit" class="btn-primary">✨ Create Hero</button>
-        <div id="register-error" class="error-msg"></div>
+        <button type="submit" class="glow-button register-btn">✨ BUAT KARAKTER</button>
+        <div id="register-error" class="error-text"></div>
       </form>
+
+      <div class="auth-hint">
+        <span>☁️ Auto-Save Cloud Aktif • Lintas HP & Desktop</span>
+      </div>
     </div>
   </div>
 
-  <!-- GAME SCREEN -->
+  <!-- ================= GAME SCREEN ================= -->
   <div id="game-screen" class="screen" style="display:none">
-    <header class="game-header">
-      <div class="header-left">
-        <span class="game-title">⚔ NEXUS RPG</span>
+    
+    <!-- Top Bar Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="brand-title">⚔️ NEXUS RPG</span>
+        <div class="player-tag">
+          <span id="char-name">Hero</span>
+          <span class="level-pill">Lv.<span id="char-level">1</span></span>
+        </div>
       </div>
-      <div class="header-center">
-        <span id="char-name" class="char-name">Hero</span>
-        <span class="level-badge">Lv.<span id="char-level">1</span></span>
-      </div>
-      <div class="header-right">
-        <span class="gold-display">💰 <span id="gold-display">0</span></span>
-        <button id="save-btn" class="btn-icon" title="Save Game">💾</button>
-        <button id="logout-btn" class="btn-icon" title="Logout">🚪</button>
+      <div class="header-status">
+        <div class="gold-capsule">💰 <span id="gold-display">0</span></div>
+        <button id="social-btn" class="icon-action-btn" title="Multiplayer & Teman">👥</button>
+        <button id="logout-btn" class="icon-action-btn" title="Keluar">🚪</button>
       </div>
     </header>
 
-    <div class="game-body">
-      <div class="stats-panel">
-        <div class="bar-section">
-          <div class="bar-row">
-            <span class="bar-label">❤️ HP</span>
-            <div class="bar-container">
-              <div class="bar hp-bar" id="hp-bar" style="width:100%"></div>
-            </div>
-            <span class="bar-text" id="hp-text">100/100</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">⭐ XP</span>
-            <div class="bar-container">
-              <div class="bar xp-bar" id="xp-bar" style="width:0%"></div>
-            </div>
-            <span class="bar-text" id="xp-text">0/100</span>
-          </div>
-        </div>
-        <div class="stat-grid">
-          <div class="stat-item">⚔️ ATK <span id="stat-atk">10</span></div>
-          <div class="stat-item">🛡️ DEF <span id="stat-def">5</span></div>
-          <div class="stat-item">💥 CRIT <span id="stat-crit">5</span>%</div>
-          <div class="stat-item">📍 <span id="stat-area">Misty Forest</span></div>
-        </div>
-        <div class="equipment-summary">
-          <div class="equip-slot">🗡️ <span id="equip-weapon">Wooden Sword</span></div>
-          <div class="equip-slot">🛡️ <span id="equip-armor">Cloth Armor</span></div>
-          <div class="equip-slot">💍 <span id="equip-accessory">None</span></div>
-        </div>
-      </div>
+    <!-- Main Workspace (Desktop Split / Mobile Stack) -->
+    <div class="app-workspace">
 
-      <div class="game-main">
-        <div id="game-log" class="game-log"></div>
-      </div>
+      <!-- Left Sidebar (Desktop Only Permanent Profile, Hidden on Mobile in favor of Tab) -->
+      <aside class="desktop-sidebar">
+        <div class="panel-card hero-summary-card">
+          <div class="avatar-circle">🧙‍♂️</div>
+          <h3 id="side-char-name">Hero</h3>
+          <div class="area-badge">📍 <span id="side-area-name">Area 1</span></div>
+          
+          <div class="stat-bars">
+            <div class="bar-unit">
+              <div class="bar-legend"><span>❤️ HP</span><span id="side-hp-text">100/100</span></div>
+              <div class="bar-track"><div id="side-hp-bar" class="bar-fill hp" style="width:100%"></div></div>
+            </div>
+            <div class="bar-unit">
+              <div class="bar-legend"><span>⭐ EXP</span><span id="side-xp-text">0/100</span></div>
+              <div class="bar-track"><div id="side-xp-bar" class="bar-fill xp" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="mini-stats-grid">
+            <div class="m-stat">⚔️ ATK <strong id="side-stat-atk">10</strong></div>
+            <div class="m-stat">🛡️ DEF <strong id="side-stat-def">5</strong></div>
+            <div class="m-stat">💥 CRIT <strong id="side-stat-crit">5%</strong></div>
+            <div class="m-stat">💰 GOLD <strong id="side-gold">100</strong></div>
+          </div>
+
+          <div class="gear-slot-list">
+            <div class="g-slot">🗡️ <span id="side-weapon">Wooden Sword</span></div>
+            <div class="g-slot">🛡️ <span id="side-armor">Cloth Armor</span></div>
+            <div class="g-slot">💍 <span id="side-accessory">None</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center & Right Area: Dynamic Views & Live Feed -->
+      <main class="main-content">
+
+        <!-- Mobile Top Mini Status (Only visible on small screens) -->
+        <div class="mobile-mini-status">
+          <div class="mobile-bars">
+            <div class="m-bar-row">
+              <span>❤️ <strong id="mob-hp-text">100/100</strong></span>
+              <div class="bar-track"><div id="mob-hp-bar" class="bar-fill hp" style="width:100%"></div></div>
+            </div>
+            <div class="m-bar-row">
+              <span>⭐ <strong id="mob-xp-text">0/100</strong></span>
+              <div class="bar-track"><div id="mob-xp-bar" class="bar-fill xp" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="mobile-pills">
+            <span>⚔️ <b id="mob-atk">10</b></span>
+            <span>🛡️ <b id="mob-def">5</b></span>
+            <span>📍 <b id="mob-area">Area 1</b></span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Tabs (Hidden on Mobile) -->
+        <nav class="desktop-nav-tabs">
+          <button class="d-tab active" data-tab="combat">⚔️ Pertarungan</button>
+          <button class="d-tab" data-tab="farming">🌲 Panen Kayu & Ikan</button>
+          <button class="d-tab" data-tab="gambling">🎰 Kasino / Judi</button>
+          <button class="d-tab" data-tab="bag">🎒 Tas & Pasar</button>
+          <button class="d-tab" data-tab="profile">👤 Profil & Stats</button>
+        </nav>
+
+        <!-- Dynamic Action Sections -->
+        <section class="tab-viewport">
+
+          <!-- 1. TAB COMBAT -->
+          <div id="tab-combat" class="tab-content active">
+            <div class="action-grid-4">
+              <button class="game-btn btn-hunt" data-action="hunt">
+                <span class="btn-emoji">⚔️</span>
+                <span class="btn-title">Hunt</span>
+                <span class="btn-desc">Lawan Monster Area</span>
+              </button>
+              <button class="game-btn btn-adventure" data-action="adventure">
+                <span class="btn-emoji">🗺️</span>
+                <span class="btn-title">Adventure</span>
+                <span class="btn-desc">Ekspedisi 3 Ronde (+50%)</span>
+              </button>
+              <button class="game-btn btn-dungeon" data-action="dungeon">
+                <span class="btn-emoji">🏰</span>
+                <span class="btn-title">Dungeon</span>
+                <span class="btn-desc">Tantang Boss Area</span>
+              </button>
+              <button class="game-btn btn-heal" data-action="heal">
+                <span class="btn-emoji">❤️</span>
+                <span class="btn-title">Heal</span>
+                <span class="btn-desc">Pulihkan Darah Penuh</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. TAB FARMING -->
+          <div id="tab-farming" class="tab-content" style="display:none">
+            <div class="action-grid-2">
+              <button class="game-btn btn-chop" data-action="chop">
+                <span class="btn-emoji">🪓</span>
+                <span class="btn-title">Chop Wood</span>
+                <span class="btn-desc">Tebang Kayu, Apel & Peti</span>
+              </button>
+              <button class="game-btn btn-fish" data-action="fish">
+                <span class="btn-emoji">🎣</span>
+                <span class="btn-title">Fish Net</span>
+                <span class="btn-desc">Pancing Ikan Emas & Ruby</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. TAB GAMBLING (JUDI) -->
+          <div id="tab-gambling" class="tab-content" style="display:none">
+            <div class="gambling-panel">
+              <h3 class="sec-title">🎰 KASINO KOSMIK (JUDI KOIN)</h3>
+              <p class="sec-desc">Lipatgandakan koin Anda dengan keberuntungan! Hati-hati jangan sampai bangkrut!</p>
+
+              <div class="gamble-cards-grid">
+                <!-- Coinflip -->
+                <div class="gamble-card">
+                  <div class="gamble-header">🪙 COINFLIP (2X MULTIPLIER)</div>
+                  <p class="gamble-info">Pilih Kepala atau Ekor (50% Chance menang 2x lipat)</p>
+                  <div class="bet-input-row">
+                    <input type="number" id="bet-coinflip" placeholder="Taruhan Gold" value="50" min="10">
+                    <button class="sub-btn" onclick="window.NexusRPG.playCoinflip('heads')">🪙 Kepala</button>
+                    <button class="sub-btn" onclick="window.NexusRPG.playCoinflip('tails')">🪙 Ekor</button>
+                  </div>
+                </div>
+
+                <!-- Cosmic Slot -->
+                <div class="gamble-card">
+                  <div class="gamble-header">🎰 COSMIC SLOTS (UP TO 10X)</div>
+                  <p class="gamble-info">Putar 3 rel kosmik! 3 simbol sama = 10x, 2 simbol = 3x jackpot!</p>
+                  <div class="slot-display" id="slot-reels">🍒 | 💎 | 🔔</div>
+                  <div class="bet-input-row">
+                    <input type="number" id="bet-slot" placeholder="Taruhan Gold" value="100" min="10">
+                    <button class="glow-button" style="padding:10px;" onclick="window.NexusRPG.playSlots()">🎰 Putar Slot!</button>
+                  </div>
+                </div>
+
+                <!-- Dice Duel -->
+                <div class="gamble-card">
+                  <div class="gamble-header">🎲 DADU DUEL (2.5X)</div>
+                  <p class="gamble-info">Adu lempar dadu lawan bandar! Dadu Anda lebih tinggi = menang 2.5x!</p>
+                  <div class="bet-input-row">
+                    <input type="number" id="bet-dice" placeholder="Taruhan Gold" value="50" min="10">
+                    <button class="sub-btn" onclick="window.NexusRPG.playDice()">🎲 Lempar Dadu!</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. TAB BAG & MARKET -->
+          <div id="tab-bag" class="tab-content" style="display:none">
+            <div class="action-grid-4">
+              <button class="game-btn btn-inventory" data-action="inventory">
+                <span class="btn-emoji">🎒</span>
+                <span class="btn-title">Inventory</span>
+                <span class="btn-desc">Buka Tas & Pakai Item</span>
+              </button>
+              <button class="game-btn btn-crate" data-action="crate">
+                <span class="btn-emoji">📦</span>
+                <span class="btn-title">Buka Lootbox</span>
+                <span class="btn-desc">Buka Peti Hadiah</span>
+              </button>
+              <button class="game-btn btn-craft" data-action="craft">
+                <span class="btn-emoji">🔨</span>
+                <span class="btn-title">Mystic Forge</span>
+                <span class="btn-desc">Tempa Senjata & Zirah</span>
+              </button>
+              <button class="game-btn btn-shop" data-action="shop">
+                <span class="btn-emoji">🛒</span>
+                <span class="btn-title">Cosmic Shop</span>
+                <span class="btn-desc">Toko Potion & Crate</span>
+              </button>
+            </div>
+            <div style="margin-top: 10px;">
+              <button class="game-btn btn-trade" style="width:100%; flex-direction:row; gap:10px;" data-action="trade">
+                <span class="btn-emoji">⚖️</span>
+                <span class="btn-title">Pasar Tukar Kayu / Ikan / Ruby</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. TAB PROFILE -->
+          <div id="tab-profile" class="tab-content" style="display:none">
+            <div class="profile-view-box">
+              <div class="profile-hero-banner">
+                <div class="p-avatar">🧙‍♂️</div>
+                <div class="p-hero-meta">
+                  <h2 id="prof-char-name">Hero</h2>
+                  <div class="p-badge-line">
+                    <span class="p-badge">Level <strong id="prof-level">1</strong></span>
+                    <span class="p-badge gold">💰 <strong id="prof-gold">100</strong> Gold</span>
+                    <span class="p-badge area">📍 <strong id="prof-area">Area 1</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-sub-grid">
+                <!-- Combat Statistics -->
+                <div class="p-box">
+                  <h4>⚔️ STATISTIK TEMPUR</h4>
+                  <ul class="stats-list">
+                    <li>Total Monster Dibunuh: <b id="stat-m-kills">0</b></li>
+                    <li>Boss Dungeon Dikalahkan: <b id="stat-b-kills">0</b></li>
+                    <li>Total Damage Diberikan: <b id="stat-dmg">0</b></li>
+                    <li>Pernah Tumbang / Mati: <b id="stat-deaths">0</b></li>
+                  </ul>
+                </div>
+
+                <!-- Gathering Statistics -->
+                <div class="p-box">
+                  <h4>🌲 STATISTIK PANEN & PETI</h4>
+                  <ul class="stats-list">
+                    <li>Penebangan Kayu (Chop): <b id="stat-chops">0</b> kali</li>
+                    <li>Menangkap Ikan (Fish): <b id="stat-fish">0</b> kali</li>
+                    <li>Peti Hadiah Dibuka: <b id="stat-crates">0</b> buah</li>
+                    <li>Total Gold Diperoleh: <b id="stat-earned">0</b> 💰</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Area Preview -->
+              <div class="p-box area-preview-box">
+                <h4>🗺️ INFORMASI ZONA TERKINI</h4>
+                <p id="prof-area-desc" style="color:var(--text-sub); font-size:13px; margin: 4px 0 10px;">Zona petualangan Anda.</p>
+                <div class="area-boss-banner">
+                  <span>🏰 Boss Penjaga Dungeon:</span>
+                  <strong id="prof-boss-name" style="color:var(--accent-red)">Boss</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Realtime Live Combat & Event Log -->
+        <section class="live-feed-card">
+          <div class="feed-header">
+            <span>📜 COMBAT LOG & AKTIVITAS DUNIA</span>
+            <span class="pulse-indicator">● LIVE</span>
+          </div>
+          <div id="game-log" class="feed-scroll"></div>
+        </section>
+
+      </main>
     </div>
 
-    <div class="action-bar">
-      <div class="action-row">
-        <button class="action-btn btn-hunt" data-action="hunt">⚔️ Hunt</button>
-        <button class="action-btn btn-adventure" data-action="adventure">🗺️ Adventure</button>
-        <button class="action-btn btn-dungeon" data-action="dungeon">🏰 Dungeon</button>
-        <button class="action-btn btn-heal" data-action="heal">❤️ Heal</button>
+    <!-- Mobile Bottom Navigation Bar (Thumb-Friendly, Fixed Bottom) -->
+    <nav class="mobile-bottom-bar">
+      <button class="m-nav-item active" data-tab="combat">
+        <span class="m-icon">⚔️</span>
+        <span class="m-text">Combat</span>
+      </button>
+      <button class="m-nav-item" data-tab="farming">
+        <span class="m-icon">🌲</span>
+        <span class="m-text">Panen</span>
+      </button>
+      <button class="m-nav-item" data-tab="gambling">
+        <span class="m-icon">🎰</span>
+        <span class="m-text">Judi</span>
+      </button>
+      <button class="m-nav-item" data-tab="bag">
+        <span class="m-icon">🎒</span>
+        <span class="m-text">Tas/Toko</span>
+      </button>
+      <button class="m-nav-item" data-tab="profile">
+        <span class="m-icon">👤</span>
+        <span class="m-text">Profil</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- ================= MULTIPLAYER SOCIAL MODAL ================= -->
+  <div id="social-modal" class="modal" style="display:none">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>👥 Multiplayer: Teman & Transfer Koin</h2>
+        <button class="modal-close" onclick="window.NexusRPG.closeSocialModal()">✕</button>
       </div>
-      <div class="action-row">
-        <button class="action-btn btn-inventory" data-action="inventory">🎒 Inventory</button>
-        <button class="action-btn btn-shop" data-action="shop">🛒 Shop</button>
-        <button class="action-btn btn-craft" data-action="craft">🔨 Craft</button>
-        <button class="action-btn btn-skills" data-action="skills">⭐ Skills</button>
+      <div class="modal-body-scroll">
+        
+        <!-- Add Friend & Send Coin Actions -->
+        <div class="social-actions-grid">
+          <div class="social-action-card">
+            <h4>➕ TAMBAH TEMAN</h4>
+            <div class="input-inline">
+              <input type="text" id="add-friend-input" placeholder="Ketik username teman">
+              <button class="glow-button" onclick="window.NexusRPG.addFriend()">Tambah</button>
+            </div>
+          </div>
+
+          <div class="social-action-card">
+            <h4>💸 TRANSFER KOIN KE PEMAIN LAIN</h4>
+            <div class="input-inline">
+              <input type="text" id="transfer-target" placeholder="Username penerima" style="flex:1.2">
+              <input type="number" id="transfer-amount" placeholder="Jumlah 💰" style="flex:0.8" min="1">
+              <button class="glow-button" onclick="window.NexusRPG.sendCoin()">Kirim 💰</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Friend List -->
+        <div class="social-section">
+          <h3>🌟 DAFTAR TEMAN SAYA</h3>
+          <div id="friend-list-container" class="player-list-grid">
+            <p style="color:var(--text-sub); font-size:12px;">Memuat daftar teman...</p>
+          </div>
+        </div>
+
+        <!-- Global Leaderboard -->
+        <div class="social-section" style="margin-top:20px;">
+          <h3>🏆 PAPAN PERINGKAT GLOBAL (LEADERBOARD)</h3>
+          <div id="leaderboard-container" class="player-list-grid">
+            <p style="color:var(--text-sub); font-size:12px;">Memuat leaderboard...</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- General Purpose Modal (Inventory, Shop, Craft, Skills, Crates) -->
   <div id="modal" class="modal" style="display:none">
     <div class="modal-overlay"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="modal-title"></h2>
+        <h2 id="modal-title">Menu</h2>
         <button class="modal-close" id="modal-close">✕</button>
       </div>
-      <div id="modal-body"></div>
+      <div id="modal-body" class="modal-body-scroll"></div>
     </div>
   </div>
 
-  <!-- TOAST -->
+  <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="/js/app.js"></script>
+  <script src="/js/app.js?v=3.0"></script>
 </body>
 </html>
