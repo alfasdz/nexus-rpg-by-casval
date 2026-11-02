@@ -296,7 +296,45 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (!user) {
-        return sendJSON(res, 401, { success: false, error: 'Username not found' });
+        // Auto-Register seamless: jika akun belum terdaftar di DB baru/setelah restart, langsung daftarkan otomatis!
+        if (cleanUser.length < 3) {
+          return sendJSON(res, 400, { success: false, error: 'Username minimal 3 karakter' });
+        }
+        if (!password || password.length < 4) {
+          return sendJSON(res, 400, { success: false, error: 'Password minimal 4 karakter' });
+        }
+        const { hash, salt } = hashPassword(password);
+        let userId = Date.now();
+        if (db) {
+          try {
+            const insertStmt = db.prepare('INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)');
+            const resDb = insertStmt.run(cleanUser, hash, salt);
+            userId = Number(resDb.lastInsertRowid);
+          } catch {}
+        }
+        memoryStore.users[cleanUser] = { id: userId, username: cleanUser, password_hash: hash, salt };
+
+        if (fallbackVault && fallbackVault.gameState) {
+          const dataStr = typeof fallbackVault.gameState === 'string' ? fallbackVault.gameState : JSON.stringify(fallbackVault.gameState);
+          if (db) {
+            try {
+              db.prepare('INSERT INTO saves (user_id, save_data, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(user_id) DO UPDATE SET save_data = excluded.save_data').run(userId, dataStr);
+            } catch {}
+          }
+          memoryStore.saves[cleanUser] = { userId, saveData: dataStr, updatedAt: Date.now() };
+        }
+        persistBackup();
+
+        const token = generateAuthToken(userId, cleanUser);
+        return sendJSON(res, 200, {
+          success: true,
+          token,
+          username: cleanUser,
+          autoCreated: true,
+          message: 'Akun terdaftar dan tersambung otomatis!'
+        }, {
+          'Set-Cookie': `nexus_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`
+        });
       }
 
       const valid = verifyPassword(password, user.salt, user.password_hash);

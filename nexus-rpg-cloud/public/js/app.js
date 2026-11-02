@@ -582,7 +582,10 @@
       state.hp = computed.maxHp;
       leveled = true;
 
-      addLog(`✨ <strong>LEVEL UP!</strong> Anda mencapai <strong>Level ${state.level}</strong>! Status melonjak & HP pulih!`, 'levelup');
+      addCardLog('LEVEL UP!', 'victory', `🌟 Naik ke Level ${state.level}`, 'Status melonjak & HP pulih maksimal', [
+        { cls: 'perk', text: `❤️ Full HP` },
+        { cls: 'xp', text: `Level ${state.level}` }
+      ]);
 
       SKILLS.forEach(s => {
         if (state.level >= s.levelReq && !state.skills.includes(s.id)) {
@@ -696,6 +699,25 @@
         feed.removeChild(feed.lastChild);
       }
     }
+  }
+
+  function addCardLog(badge, badgeCls, iconTitle, detailsRow, pills = []) {
+    const pillHtml = (pills && pills.length) ? `
+      <div class="combat-rewards-pill">
+        ${pills.map(p => `<span class="reward-tag ${p.cls || ''}">${p.text}</span>`).join(' ')}
+      </div>` : '';
+    const detailHtml = detailsRow ? `<div class="log-card-detail" style="font-size:10px; color:var(--text-sub); margin-top:1px;">${detailsRow}</div>` : '';
+    const html = `
+      <div class="combat-card-result ${badgeCls || 'system'}">
+        <div class="combat-card-header">
+          <span class="combat-badge ${badgeCls || 'system'}">${badge}</span>
+          <span class="combat-enemy-title" style="font-size:11px; font-weight:700;">${iconTitle}</span>
+        </div>
+        ${detailHtml}
+        ${pillHtml}
+      </div>
+    `;
+    addLog(html, 'card');
   }
 
   function showToast(msg) {
@@ -1002,7 +1024,10 @@
     state.gold -= cost;
     state.hp = stats.maxHp;
     showToast(`❤️ Darah pulih maksimal! (-${cost} 💰)`);
-    addLog(`❤️ <strong>Divine Sanctuary:</strong> Sinar suci memulihkan Anda ke <strong>${stats.maxHp}/${stats.maxHp} HP</strong>! Biaya: ${cost} 💰.`, 'heal');
+    addCardLog('HEAL', 'heal', '✨ Divine Sanctuary', 'Memulihkan HP ke batas maksimal', [
+      { cls: 'perk', text: `❤️ ${stats.maxHp} HP` },
+      { cls: 'gold', text: `-${cost} 💰` }
+    ]);
 
     updateUI();
     autoSaveInstant();
@@ -1016,31 +1041,34 @@
     const baseWood = Math.floor(Math.random() * 6) + 3;
     state.inventory.wood_normie = (state.inventory.wood_normie || 0) + baseWood;
 
-    let bonusLog = [];
+    let bonusPills = [];
     if (Math.random() < 0.35) {
       state.inventory.wood_epic = (state.inventory.wood_epic || 0) + 1;
-      bonusLog.push(`🪵 <strong>Epic Wood x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '🪵 Epic Wood x1' });
     }
     if (Math.random() < 0.25) {
       state.inventory.apple = (state.inventory.apple || 0) + 1;
-      bonusLog.push(`🍎 <strong>Apple x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '🍎 Apple x1' });
     }
     if (Math.random() < 0.1) {
       state.inventory.wood_super = (state.inventory.wood_super || 0) + 1;
-      bonusLog.push(`🪵 <strong>Super Wood x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '🪵 Super Wood x1' });
     }
     if (Math.random() < 0.08) {
       state.inventory.crate_common = (state.inventory.crate_common || 0) + 1;
-      bonusLog.push(`📦 <strong>Common Crate x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '📦 Common Crate x1' });
     }
 
     const xpEarned = 12 + state.level * 2;
     state.xp += xpEarned;
 
-    let msg = `🪓 <strong>LOGGING PANEN:</strong> Menebang kayu di hutan!<br>Hasil: 🪵 <strong>Normie Wood x${baseWood}</strong>, +${xpEarned} EXP.`;
-    if (bonusLog.length > 0) msg += `<br>Hadiah Bonus: ${bonusLog.join(', ')}!`;
+    const pills = [
+      { cls: 'drop', text: `🪵 Normie Wood x${baseWood}` },
+      { cls: 'xp', text: `+${xpEarned} EXP` },
+      ...bonusPills
+    ];
+    addCardLog('CHOP', 'loot', '🪓 Penebangan Hutan', 'Menebang pohon & memanen kayu', pills);
 
-    addLog(msg, 'loot');
     checkLevelUp();
     updateUI();
     autoSaveInstant();
@@ -1054,31 +1082,34 @@
     const baseFish = Math.floor(Math.random() * 5) + 3;
     state.inventory.fish_normie = (state.inventory.fish_normie || 0) + baseFish;
 
-    let bonusLog = [];
+    let bonusPills = [];
     if (Math.random() < 0.3) {
       state.inventory.fish_golden = (state.inventory.fish_golden || 0) + 1;
-      bonusLog.push(`🐠 <strong>Golden Fish x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '🐠 Golden Fish x1' });
     }
     if (Math.random() < 0.12) {
       state.inventory.fish_epic = (state.inventory.fish_epic || 0) + 1;
-      bonusLog.push(`🐡 <strong>Epic Fish x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '🐡 Epic Fish x1' });
     }
     if (Math.random() < 0.15) {
       state.inventory.ruby = (state.inventory.ruby || 0) + 1;
-      bonusLog.push(`💎 <strong>Ruby x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '💎 Ruby x1' });
     }
     if (Math.random() < 0.08) {
       state.inventory.crate_common = (state.inventory.crate_common || 0) + 1;
-      bonusLog.push(`📦 <strong>Common Crate x1</strong>`);
+      bonusPills.push({ cls: 'drop', text: '📦 Common Crate x1' });
     }
 
     const xpEarned = 12 + state.level * 2;
     state.xp += xpEarned;
 
-    let msg = `🎣 <strong>MEMANCING:</strong> Menjaring ikan di aliran sungai kosmik!<br>Tangkapan: 🐟 <strong>Normie Fish x${baseFish}</strong>, +${xpEarned} EXP.`;
-    if (bonusLog.length > 0) msg += `<br>Ikan Langka: ${bonusLog.join(', ')}!`;
+    const pills = [
+      { cls: 'drop', text: `🐟 Normie Fish x${baseFish}` },
+      { cls: 'xp', text: `+${xpEarned} EXP` },
+      ...bonusPills
+    ];
+    addCardLog('FISH', 'loot', '🎣 Pemancingan Kosmik', 'Menjaring ikan di aliran sungai kosmik', pills);
 
-    addLog(msg, 'loot');
     checkLevelUp();
     updateUI();
     autoSaveInstant();
@@ -1149,21 +1180,17 @@
     if (isWin) {
       const winGain = bet * 2;
       state.gold += winGain;
-      if (currentLang === 'en') {
-        addLog(`🪙 <strong>COINFLIP VICTORY!</strong> Landed on ${label}! You won <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Won +${winGain} Gold!`);
-      } else {
-        addLog(`🪙 <strong>COINFLIP MENANG!</strong> Koin mendarat di ${label}! Anda menang <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Menang +${winGain} Gold!`);
-      }
+      const title = currentLang === 'en' ? `Coinflip Won (${label})` : `Tebak Koin Menang (${label})`;
+      addCardLog('COINFLIP', 'victory', `🪙 ${title}`, `Taruhan: ${bet.toLocaleString()} 💰`, [
+        { cls: 'gold', text: `+${winGain.toLocaleString()} 💰` }
+      ]);
+      showToast(currentLang === 'en' ? `Won +${winGain} Gold!` : `Menang +${winGain} Gold!`);
     } else {
-      if (currentLang === 'en') {
-        addLog(`🪙 <strong>COINFLIP LOSS:</strong> Landed on ${label}. You lost <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Lost -${bet} Gold!`);
-      } else {
-        addLog(`🪙 <strong>COINFLIP KALAH!</strong> Koin mendarat di ${label}. Anda kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Kalah -${bet} Gold!`);
-      }
+      const title = currentLang === 'en' ? `Coinflip Lost (${label})` : `Tebak Koin Kalah (${label})`;
+      addCardLog('COINFLIP', 'danger', `🪙 ${title}`, `Taruhan: ${bet.toLocaleString()} 💰`, [
+        { cls: 'danger', text: `-${bet.toLocaleString()} 💰` }
+      ]);
+      showToast(currentLang === 'en' ? `Lost -${bet} Gold!` : `Kalah -${bet} Gold!`);
     }
 
     updateUI();
@@ -1192,35 +1219,24 @@
     if (reelEl) reelEl.textContent = `${r1} | ${r2} | ${r3}`;
 
     if (r1 === r2 && r2 === r3) {
-      // 3 of a kind = 10x jackpot
       const winGain = bet * 10;
       state.gold += winGain;
-      if (currentLang === 'en') {
-        addLog(`🎰 <strong>SUPER JACKPOT 10X!</strong> [ ${r1} | ${r2} | ${r3} ] Hit the jackpot <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
-      } else {
-        addLog(`🎰 <strong>JACKPOT SUPER 10X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang telak <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
-      }
+      addCardLog('10X JACKPOT', 'victory', `🎰 [ ${r1} | ${r2} | ${r3} ]`, `Bet: ${bet.toLocaleString()} 💰`, [
+        { cls: 'gold', text: `+${winGain.toLocaleString()} 💰` }
+      ]);
+      showToast(`🎉 JACKPOT 10X! +${winGain} Gold!`);
     } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-      // 2 of a kind = 3x
       const winGain = bet * 3;
       state.gold += winGain;
-      if (currentLang === 'en') {
-        addLog(`🎰 <strong>SLOT 3X WIN!</strong> [ ${r1} | ${r2} | ${r3} ] Won <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Won 3x! +${winGain} Gold!`);
-      } else {
-        addLog(`🎰 <strong>SLOT MENANG 3X!</strong> [ ${r1} | ${r2} | ${r3} ] Menang <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Menang 3x! +${winGain} Gold!`);
-      }
+      addCardLog('3X WIN', 'victory', `🎰 [ ${r1} | ${r2} | ${r3} ]`, `Bet: ${bet.toLocaleString()} 💰`, [
+        { cls: 'gold', text: `+${winGain.toLocaleString()} 💰` }
+      ]);
+      showToast(`Won 3x! +${winGain} Gold!`);
     } else {
-      if (currentLang === 'en') {
-        addLog(`🎰 <strong>SLOT LOSS:</strong> [ ${r1} | ${r2} | ${r3} ] Lost <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Lost -${bet} Gold!`);
-      } else {
-        addLog(`🎰 <strong>SLOT GAGAL:</strong> [ ${r1} | ${r2} | ${r3} ] Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Kalah -${bet} Gold!`);
-      }
+      addCardLog('SLOTS', 'danger', `🎰 [ ${r1} | ${r2} | ${r3} ]`, `Bet: ${bet.toLocaleString()} 💰`, [
+        { cls: 'danger', text: `-${bet.toLocaleString()} 💰` }
+      ]);
+      showToast(currentLang === 'en' ? `Lost -${bet} Gold!` : `Kalah -${bet} Gold!`);
     }
 
     updateUI();
@@ -1246,30 +1262,21 @@
     if (playerDice > houseDice) {
       const winGain = Math.floor(bet * 2.5);
       state.gold += winGain;
-      if (currentLang === 'en') {
-        addLog(`🎲 <strong>DICE VICTORY!</strong> You [${playerDice}] vs House [${houseDice}]. Won <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Won +${winGain} Gold!`);
-      } else {
-        addLog(`🎲 <strong>DADU MENANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Menang <strong>+${winGain} 💰</strong>!`, 'victory');
-        showToast(`Menang +${winGain} Gold!`);
-      }
+      addCardLog('DICE WIN', 'victory', `🎲 Hero [${playerDice}] vs House [${houseDice}]`, `Bet: ${bet.toLocaleString()} 💰`, [
+        { cls: 'gold', text: `+${winGain.toLocaleString()} 💰` }
+      ]);
+      showToast(`Won +${winGain} Gold!`);
     } else if (playerDice === houseDice) {
       state.gold += bet; // Draw, refund
-      if (currentLang === 'en') {
-        addLog(`🎲 <strong>DICE DRAW!</strong> You [${playerDice}] vs House [${houseDice}]. Bet refunded.`, 'system');
-        showToast(`Draw! Bet refunded.`);
-      } else {
-        addLog(`🎲 <strong>DADU IMBANG!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Koin taruhan dikembalikan.`, 'system');
-        showToast(`Imbang! Koin kembali.`);
-      }
+      addCardLog('DICE DRAW', 'system', `🎲 Hero [${playerDice}] vs House [${houseDice}]`, `Draw - Refunded`, [
+        { cls: 'gold', text: `Ref: ${bet.toLocaleString()} 💰` }
+      ]);
+      showToast(currentLang === 'en' ? `Draw! Bet refunded.` : `Imbang! Koin kembali.`);
     } else {
-      if (currentLang === 'en') {
-        addLog(`🎲 <strong>DICE LOSS:</strong> You [${playerDice}] vs House [${houseDice}]. Lost <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Lost -${bet} Gold!`);
-      } else {
-        addLog(`🎲 <strong>DADU KALAH!</strong> Anda [${playerDice}] vs Bandar [${houseDice}]. Kehilangan <strong>-${bet} 💰</strong>.`, 'danger');
-        showToast(`Kalah -${bet} Gold!`);
-      }
+      addCardLog('DICE LOSS', 'danger', `🎲 Hero [${playerDice}] vs House [${houseDice}]`, `Bet: ${bet.toLocaleString()} 💰`, [
+        { cls: 'danger', text: `-${bet.toLocaleString()} 💰` }
+      ]);
+      showToast(currentLang === 'en' ? `Lost -${bet} Gold!` : `Kalah -${bet} Gold!`);
     }
 
     updateUI();
@@ -1518,7 +1525,12 @@
     state.gold += gainedGold;
     state.xp += gainedXp;
 
-    addLog(`🎁 <strong>PETI TERBUKA:</strong> ${ITEMS[crateId].name}!<br>Gold: +${gainedGold} 💰 | EXP: +${gainedXp}<br>Hadiah: ${itemsGained.join(', ')}`, 'victory');
+    const pills = [
+      { cls: 'gold', text: `+${gainedGold.toLocaleString()} 💰` },
+      { cls: 'xp', text: `+${gainedXp.toLocaleString()} EXP` },
+      ...itemsGained.map(it => ({ cls: 'drop', text: it }))
+    ];
+    addCardLog('CRATE', 'victory', `🎁 ${ITEMS[crateId].name}`, 'Membuka peti hadiah', pills);
     showToast(`Membuka ${ITEMS[crateId].name}!`);
 
     checkLevelUp();
@@ -1659,7 +1671,9 @@
     const gain = (item.sellPrice || 5) * count;
     state.gold += gain;
     showToast(`Terjual seharga +${gain} 💰`);
-    addLog(`💰 Menjual ${item.emoji} ${item.name} seharga <strong>+${gain} 💰</strong>.`, 'loot');
+    addCardLog('SOLD', 'loot', `${item.emoji} ${item.name} ${count > 1 ? `x${count}` : ''}`, 'Menjual barang ke pasar', [
+      { cls: 'gold', text: `+${gain.toLocaleString()} 💰` }
+    ]);
 
     updateUI();
     autoSaveInstant();
@@ -1771,7 +1785,11 @@
 
     state.inventory[itemId] = (state.inventory[itemId] || 0) + 1;
     showToast(`✨ Berhasil menempa ${item.name}!`);
-    addLog(`🔨 <strong>FORGED:</strong> Menempa perlengkapan baru: <strong>${item.emoji} ${item.name}</strong>!`, 'victory');
+    const statPills = item.stats ? Object.entries(item.stats).map(([k, v]) => ({ cls: 'perk', text: `+${v} ${k.toUpperCase()}` })) : [];
+    addCardLog('FORGED', 'victory', `🔨 ${item.emoji} ${item.name}`, 'Menempa perlengkapan baru', [
+      { cls: 'drop', text: item.type.toUpperCase() },
+      ...statPills
+    ]);
 
     updateUI();
     autoSaveInstant();
@@ -1989,7 +2007,10 @@
     };
 
     showToast(`🎉 Sukses! Mendapatkan [${chosenTier.name} +${chosenTier.bonus}%]!`);
-    addLog(`✨ <strong>ENCHANT ALTAR:</strong> Menempa rune pada ${selectedEnchantTarget === 'weapon' ? 'Senjata' : 'Zirah'} ➔ <strong>[${chosenTier.name} +${chosenTier.bonus}%]</strong> dengan Ability: <strong>${chosenPerk.name}</strong> (${chosenPerk.desc})!`, 'victory');
+    addCardLog('ENCHANT', 'victory', `✨ ${selectedEnchantTarget.toUpperCase()}: [${chosenTier.name} +${chosenTier.bonus}%]`, `${chosenPerk.name}: ${chosenPerk.desc}`, [
+      { cls: 'perk', text: `+${chosenTier.bonus}% Power` },
+      { cls: 'drop', text: chosenPerk.name }
+    ]);
 
     updateUI();
     autoSaveInstant();
@@ -2048,7 +2069,11 @@
       state.inventory.crate_common = (state.inventory.crate_common || 0) + 2;
       state.inventory.ruby = (state.inventory.ruby || 0) + 1;
       showToast('🎁 Klaim Harian: +500 Gold, 2 Peti, 1 Ruby!');
-      addLog(`🎁 <strong>KLAIM HARIAN:</strong> Menerima <strong>+500 💰 Gold</strong>, <strong>2x 📦 Common Crate</strong>, dan <strong>1x 💎 Ruby</strong>!`, 'loot');
+      addCardLog('DAILY', 'loot', '🎁 Hadiah Harian', 'Bonus login harian', [
+        { cls: 'gold', text: '+500 💰' },
+        { cls: 'drop', text: '📦 Common Crate x2' },
+        { cls: 'drop', text: '💎 Ruby x1' }
+      ]);
     } else if (type === 'weekly') {
       if (now - (state.rewards.weeklyClaimedAt || 0) < 7 * 24 * 60 * 60 * 1000) {
         showToast('⏳ Hadiah mingguan belum siap!'); return;
@@ -2058,7 +2083,11 @@
       state.inventory.crate_epic = (state.inventory.crate_epic || 0) + 1;
       state.inventory.ruby = (state.inventory.ruby || 0) + 3;
       showToast('👑 Klaim Mingguan: +2,500 Gold, 1 Epic Crate, 3 Ruby!');
-      addLog(`👑 <strong>KLAIM MINGGUAN:</strong> Menerima <strong>+2,500 💰 Gold</strong>, <strong>1x 🎁 Epic Crate</strong>, dan <strong>3x 💎 Ruby</strong>!`, 'loot');
+      addCardLog('WEEKLY', 'victory', '👑 Hadiah Mingguan', 'Bonus login mingguan', [
+        { cls: 'gold', text: '+2,500 💰' },
+        { cls: 'drop', text: '🎁 Epic Crate x1' },
+        { cls: 'drop', text: '💎 Ruby x3' }
+      ]);
     }
 
     updateUI();
@@ -2076,11 +2105,17 @@
     if (isAtk) {
       state.baseAtk += 1;
       showToast(`🎯 Latihan Berhasil! +1 Base ATK & +${gainXp} EXP!`);
-      addLog(`🎯 <strong>TRAINING SELESAI:</strong> Melatih ketajaman serangan! Mendapatkan <strong>+1 Base ATK</strong> dan <strong>+${gainXp} EXP</strong>.`, 'victory');
+      addCardLog('TRAINING', 'victory', '🎯 Latihan Hero (ATK)', 'Melatih ketajaman tebasan pedang', [
+        { cls: 'perk', text: '+1 Base ATK' },
+        { cls: 'xp', text: `+${gainXp} EXP` }
+      ]);
     } else {
       state.baseDef += 1;
       showToast(`🛡️ Latihan Berhasil! +1 Base DEF & +${gainXp} EXP!`);
-      addLog(`🛡️ <strong>TRAINING SELESAI:</strong> Melatih pertahanan tubuh! Mendapatkan <strong>+1 Base DEF</strong> dan <strong>+${gainXp} EXP</strong>.`, 'victory');
+      addCardLog('TRAINING', 'victory', '🛡️ Latihan Hero (DEF)', 'Melatih ketahanan fisik & perisai', [
+        { cls: 'perk', text: '+1 Base DEF' },
+        { cls: 'xp', text: `+${gainXp} EXP` }
+      ]);
     }
     checkLevelUp();
     updateUI();

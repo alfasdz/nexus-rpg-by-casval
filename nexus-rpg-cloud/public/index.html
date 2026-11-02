@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NEXUS RPG - Cosmic Multiplayer Online</title>
-  <link rel="stylesheet" href="/css/style.css?v=3.2">
+  <link rel="stylesheet" href="/css/style.css?v=3.5">
 </head>
 <body>
   <canvas id="space-canvas"></canvas>
@@ -386,11 +386,14 @@
 
         </section>
 
-        <!-- Realtime Live Combat & Event Log -->
-        <section class="live-feed-card">
+        <!-- Realtime Live Combat & Event Log (Resizable & Minimalist Cards) -->
+        <section class="live-feed-card" id="live-feed-box">
           <div class="feed-header">
-            <span>📜 COMBAT LOG & AKTIVITAS DUNIA</span>
-            <span class="pulse-indicator">● LIVE</span>
+            <span>📜 COMBAT LOG & AKTIVITAS REALM</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="resize-hint" title="Tarik tepi bawah kotak ini untuk memperbesar/memperkecil tinggi log">↕️ TARIK LOG KE BAWAH/ATAS</span>
+              <span class="pulse-indicator">● LIVE</span>
+            </div>
           </div>
           <div id="game-log" class="feed-scroll"></div>
         </section>
@@ -489,6 +492,6 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="/js/app.js?v=3.2"></script>
+  <script src="/js/app.js?v=3.5"></script>
 </body>
 </html>
