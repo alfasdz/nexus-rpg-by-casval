@@ -1,33 +1,33 @@
-// NEXUS RPG - Core Engine (Inspired by EPIC RPG)
-// Features: 10 Areas, Dungeons, Chop, Fish, Crates, Trading, Crafting, Cloud Save, String Backup/Restore
+// NEXUS RPG v2.0 - Core Engine
+// Features: Full EPIC RPG Database (Area 1-10), Auto-Save Instan, Persistent Auth Lintas Device
 
 (function() {
   'use strict';
 
   /* ============================================================
-     1. DATABASE DEFINITION (Adapted from EPIC RPG Wiki)
+     1. DATABASE DEFINISI LENGKAP DARI EPIC RPG WIKI
      ============================================================ */
   const AREAS = [
-    { id: 'area_1', name: 'Area 1: Verdant Plains', emoji: '🌱', levelReq: 1, desc: 'Peaceful rolling grasslands with roaming wolves' },
-    { id: 'area_2', name: 'Area 2: Whispering Woods', emoji: '🌲', levelReq: 5, desc: 'Ancient forest dense with logging trees & wildlife' },
-    { id: 'area_3', name: 'Area 3: Echoing Caverns', emoji: '🕳️', levelReq: 10, desc: 'Damp cavern lakes teeming with fish and stone ogres' },
-    { id: 'area_4', name: 'Area 4: Frostfall Summit', emoji: '🏔️', levelReq: 20, desc: 'Glacial peaks guarded by frost drakes & yeti clans' },
-    { id: 'area_5', name: 'Area 5: Sunken Marsh', emoji: '🌿', levelReq: 30, desc: 'Toxic swamp where sirens and hydras dwell' },
-    { id: 'area_6', name: 'Area 6: Obsidian Caldera', emoji: '🌋', levelReq: 45, desc: 'Subterranean lava rivers and volcanic beasts' },
-    { id: 'area_7', name: 'Area 7: Cyber Void', emoji: '🤖', levelReq: 60, desc: 'Ruins of a fallen technological civilization' },
-    { id: 'area_8', name: 'Area 8: Celestial Sanctuary', emoji: '🏛️', levelReq: 75, desc: 'Floating marble ruins bathed in sacred sunlight' },
-    { id: 'area_9', name: 'Area 9: Chrono Rift', emoji: '⏳', levelReq: 90, desc: 'A shattered continuum of looping timelines' },
-    { id: 'area_10', name: 'Area 10: Nexus Multiverse', emoji: '🌀', levelReq: 100, desc: 'The apex pinnacle of all dimensional reality' }
+    { id: 'area_1', name: 'Area 1: Verdant Plains', emoji: '🌱', levelReq: 1, desc: 'Padang rumput damai tempat berkeliarannya serigala dan goblin' },
+    { id: 'area_2', name: 'Area 2: Whispering Woods', emoji: '🌲', levelReq: 5, desc: 'Hutan lebat kuno penuh pohon logging dan rubah hutan' },
+    { id: 'area_3', name: 'Area 3: Echoing Caverns', emoji: '🕳️', levelReq: 10, desc: 'Gua bawah tanah dengan mata air jernih dan ogre batu' },
+    { id: 'area_4', name: 'Area 4: Frostfall Summit', emoji: '🏔️', levelReq: 20, desc: 'Puncak es abadi tempat tinggal frost drake dan yeti' },
+    { id: 'area_5', name: 'Area 5: Sunken Marsh', emoji: '🌿', levelReq: 30, desc: 'Rawa beracun habitat hydra purba dan siren air' },
+    { id: 'area_6', name: 'Area 6: Obsidian Caldera', emoji: '🌋', levelReq: 45, desc: 'Kawah lahar panas membara dan iblis magma' },
+    { id: 'area_7', name: 'Area 7: Cyber Void', emoji: '🤖', levelReq: 60, desc: 'Reruntuhan peradaban mecha dengan chip nano canggih' },
+    { id: 'area_8', name: 'Area 8: Celestial Sanctuary', emoji: '🏛️', levelReq: 75, desc: 'Kuil suci melayang bermandikan cahaya starlight' },
+    { id: 'area_9', name: 'Area 9: Chrono Rift', emoji: '⏳', levelReq: 90, desc: 'Dimensi retakan ruang waktu dan pasir keabadian' },
+    { id: 'area_10', name: 'Area 10: Nexus Multiverse', emoji: '🌀', levelReq: 100, desc: 'Puncak konvergensi realitas semesta' }
   ];
 
   const MONSTERS = {
     area_1: [
-      { name: 'Plains Wolf', emoji: '🐺', hp: 22, atk: 6, def: 2, xp: 14, gold: 10, drops: [{id: 'wolf_pelt', chance: 0.45}, {id: 'crate_common', chance: 0.15}] },
+      { name: 'Plains Wolf', emoji: '🐺', hp: 22, atk: 6, def: 2, xp: 14, gold: 10, drops: [{id: 'wolf_pelt', chance: 0.5}, {id: 'crate_common', chance: 0.15}] },
       { name: 'Wild Goblin', emoji: '👺', hp: 26, atk: 8, def: 3, xp: 18, gold: 14, drops: [{id: 'goblin_ear', chance: 0.4}] },
       { name: 'Stray Zombie', emoji: '🧟', hp: 34, atk: 7, def: 4, xp: 22, gold: 18, drops: [{id: 'zombie_eye', chance: 0.35}] }
     ],
     area_2: [
-      { name: 'Forest Ent', emoji: '🌳', hp: 45, atk: 12, def: 6, xp: 32, gold: 26, drops: [{id: 'wood_epic', chance: 0.3}, {id: 'apple', chance: 0.4}] },
+      { name: 'Forest Ent', emoji: '🌳', hp: 45, atk: 12, def: 6, xp: 32, gold: 26, drops: [{id: 'wood_epic', chance: 0.35}, {id: 'apple', chance: 0.4}] },
       { name: 'Sneaky Fox', emoji: '🦊', hp: 38, atk: 15, def: 5, xp: 30, gold: 24, drops: [{id: 'fox_tail', chance: 0.35}] },
       { name: 'Giant Viper', emoji: '🐍', hp: 48, atk: 18, def: 7, xp: 36, gold: 30, drops: [{id: 'snake_fang', chance: 0.3}, {id: 'crate_uncommon', chance: 0.12}] }
     ],
@@ -87,129 +87,121 @@
   };
 
   const ITEMS = {
-    // Basic Gathering Materials (EPIC RPG Style)
-    wood_normie: { name: 'Normie Wood', emoji: '🪵', type: 'material', rarity: 'common', desc: 'Freshly chopped timber', sellPrice: 2 },
-    wood_epic: { name: 'Epic Wood', emoji: '🪵', type: 'material', rarity: 'uncommon', desc: 'Rare sturdy glowing timber', sellPrice: 10 },
-    wood_super: { name: 'Super Wood', emoji: '🪵', type: 'material', rarity: 'rare', desc: 'Dense lumber imbued with nature mana', sellPrice: 40 },
-    wood_mega: { name: 'Mega Wood', emoji: '🪵', type: 'material', rarity: 'epic', desc: 'Rock-solid primeval timber', sellPrice: 150 },
-    wood_hyper: { name: 'Hyper Wood', emoji: '🪵', type: 'material', rarity: 'legendary', desc: 'Cosmic log pulsating with starlight', sellPrice: 500 },
+    wood_normie: { name: 'Normie Wood', emoji: '🪵', type: 'material', rarity: 'common', desc: 'Kayu pohon standar hasil tebang', sellPrice: 2 },
+    wood_epic: { name: 'Epic Wood', emoji: '🪵', type: 'material', rarity: 'uncommon', desc: 'Kayu langka berkilau alami', sellPrice: 10 },
+    wood_super: { name: 'Super Wood', emoji: '🪵', type: 'material', rarity: 'rare', desc: 'Batang kayu bermuatan mana alam', sellPrice: 40 },
+    wood_mega: { name: 'Mega Wood', emoji: '🪵', type: 'material', rarity: 'epic', desc: 'Kayu keras purba tak terpatahkan', sellPrice: 150 },
+    wood_hyper: { name: 'Hyper Wood', emoji: '🪵', type: 'material', rarity: 'legendary', desc: 'Kayu kosmik berdenyut starlight', sellPrice: 500 },
 
-    fish_normie: { name: 'Normie Fish', emoji: '🐟', type: 'material', rarity: 'common', desc: 'Common fresh river fish', sellPrice: 3 },
-    fish_golden: { name: 'Golden Fish', emoji: '🐠', type: 'material', rarity: 'uncommon', desc: 'Shimmering rare golden river fish', sellPrice: 15 },
-    fish_epic: { name: 'Epic Fish', emoji: '🐡', type: 'material', rarity: 'rare', desc: 'Prized delicacy fish filled with mana', sellPrice: 60 },
-    fish_super: { name: 'Super Fish', emoji: '🦈', type: 'material', rarity: 'epic', desc: 'Leviathan fry with thick scales', sellPrice: 200 },
+    fish_normie: { name: 'Normie Fish', emoji: '🐟', type: 'material', rarity: 'common', desc: 'Ikan sungai air tawar segar', sellPrice: 3 },
+    fish_golden: { name: 'Golden Fish', emoji: '🐠', type: 'material', rarity: 'uncommon', desc: 'Ikan emas berkilau langka', sellPrice: 15 },
+    fish_epic: { name: 'Epic Fish', emoji: '🐡', type: 'material', rarity: 'rare', desc: 'Ikan laut dalam sarat energi', sellPrice: 60 },
+    fish_super: { name: 'Super Fish', emoji: '🦈', type: 'material', rarity: 'epic', desc: 'Ikan predator raksasa bersisik baja', sellPrice: 200 },
 
-    apple: { name: 'Apple', emoji: '🍎', type: 'consumable', rarity: 'common', desc: 'Heals 25 HP', effect: { type: 'heal', value: 25 }, sellPrice: 4, buyPrice: 8 },
-    banana: { name: 'Banana', emoji: '🍌', type: 'consumable', rarity: 'uncommon', desc: 'Heals 60 HP', effect: { type: 'heal', value: 60 }, sellPrice: 12, buyPrice: 25 },
-    ruby: { name: 'Ruby', emoji: '💎', type: 'material', rarity: 'rare', desc: 'Precious gemstone for elite trades', sellPrice: 100 },
-    diamond: { name: 'Diamond', emoji: '💠', type: 'material', rarity: 'epic', desc: 'Indestructible brilliant gem', sellPrice: 350 },
+    apple: { name: 'Apple', emoji: '🍎', type: 'consumable', rarity: 'common', desc: 'Memulihkan 30 HP', effect: { type: 'heal', value: 30 }, sellPrice: 4, buyPrice: 8 },
+    banana: { name: 'Banana', emoji: '🍌', type: 'consumable', rarity: 'uncommon', desc: 'Memulihkan 75 HP', effect: { type: 'heal', value: 75 }, sellPrice: 12, buyPrice: 25 },
+    ruby: { name: 'Ruby', emoji: '💎', type: 'material', rarity: 'rare', desc: 'Permata merah untuk bahan elite', sellPrice: 100 },
+    diamond: { name: 'Diamond', emoji: '💠', type: 'material', rarity: 'epic', desc: 'Berlian murni legendaris', sellPrice: 350 },
 
-    // Mob drops (Area 1 - 10)
-    wolf_pelt: { name: 'Wolf Pelt', emoji: '🐺', type: 'material', rarity: 'common', desc: 'Warm wolf fur hide', sellPrice: 6 },
-    goblin_ear: { name: 'Goblin Ear', emoji: '👂', type: 'material', rarity: 'common', desc: 'Trophy from sneaky goblin', sellPrice: 5 },
-    zombie_eye: { name: 'Zombie Eye', emoji: '👁️', type: 'material', rarity: 'common', desc: 'Glowing rotten eyeball', sellPrice: 8 },
-    fox_tail: { name: 'Fox Tail', emoji: '🦊', type: 'material', rarity: 'uncommon', desc: 'Silky orange fox tail', sellPrice: 14 },
-    snake_fang: { name: 'Snake Fang', emoji: '🐍', type: 'material', rarity: 'uncommon', desc: 'Envenomed serpent tooth', sellPrice: 16 },
-    ogre_club_piece: { name: 'Ogre Bone Club', emoji: '🦴', type: 'material', rarity: 'uncommon', desc: 'Massive crushing bone fragment', sellPrice: 22 },
-    bat_wing: { name: 'Bat Wing', emoji: '🦇', type: 'material', rarity: 'common', desc: 'Leathery cave membrane', sellPrice: 12 },
-    spider_silk: { name: 'Spider Silk', emoji: '🕸️', type: 'material', rarity: 'uncommon', desc: 'Steel-tough web thread', sellPrice: 20 },
-    ice_scale: { name: 'Ice Scale', emoji: '❄️', type: 'material', rarity: 'rare', desc: 'Subzero dragon scale', sellPrice: 35 },
-    yeti_horn: { name: 'Yeti Horn', emoji: '🦏', type: 'material', rarity: 'rare', desc: 'Dense alpine predator horn', sellPrice: 42 },
-    ice_crystal: { name: 'Ice Crystal', emoji: '💠', type: 'material', rarity: 'rare', desc: 'Everlasting winter crystal', sellPrice: 40 },
-    hydra_scale: { name: 'Hydra Scale', emoji: '🐍', type: 'material', rarity: 'rare', desc: 'Regenerating hydra armor piece', sellPrice: 50 },
-    unicorn_horn: { name: 'Unicorn Horn', emoji: '🦄', type: 'material', rarity: 'rare', desc: 'Pristine horn radiating pure magic', sellPrice: 65 },
-    siren_hair: { name: 'Siren Hair', emoji: '🧜', type: 'material', rarity: 'rare', desc: 'Enchanting aqua locks', sellPrice: 60 },
-    fire_scale: { name: 'Fire Scale', emoji: '🔥', type: 'material', rarity: 'epic', desc: 'Blazes with subterranean fire', sellPrice: 85 },
-    magma_core: { name: 'Magma Core', emoji: '🟠', type: 'material', rarity: 'epic', desc: 'Heart of living magma', sellPrice: 100 },
-    demon_heart: { name: 'Demon Heart', emoji: '🖤', type: 'material', rarity: 'epic', desc: 'Pulsating abyssal core', sellPrice: 120 },
-    robot_chip: { name: 'Cyber Chip', emoji: '💾', type: 'material', rarity: 'epic', desc: 'High-tech nano processor', sellPrice: 135 },
-    cyber_alloy: { name: 'Cyber Alloy', emoji: '⚙️', type: 'material', rarity: 'epic', desc: 'Carbon-tempered sci-fi plate', sellPrice: 150 },
-    celestial_feather: { name: 'Celestial Feather', emoji: '🪶', type: 'material', rarity: 'legendary', desc: 'Feather touched by starlight', sellPrice: 220 },
-    divine_starlight: { name: 'Divine Starlight', emoji: '⭐', type: 'material', rarity: 'legendary', desc: 'Pure solar essence crystal', sellPrice: 250 },
-    astral_horn: { name: 'Astral Horn', emoji: '✨', type: 'material', rarity: 'legendary', desc: 'Horn from a starry constellation', sellPrice: 280 },
-    chrono_dust: { name: 'Chrono Dust', emoji: '⏳', type: 'material', rarity: 'legendary', desc: 'Powdered sands of eternity', sellPrice: 350 },
-    void_matter: { name: 'Void Matter', emoji: '🕳️', type: 'material', rarity: 'legendary', desc: 'Condensed negative spacetime', sellPrice: 400 },
-    entropy_shard: { name: 'Entropy Shard', emoji: '🔮', type: 'material', rarity: 'legendary', desc: 'Fragment of cosmic collapse', sellPrice: 450 },
-    nexus_essence: { name: 'Nexus Essence', emoji: '🌀', type: 'material', rarity: 'legendary', desc: 'Raw omniversal energy', sellPrice: 600 },
-    reality_tear: { name: 'Reality Tear', emoji: '🌌', type: 'material', rarity: 'legendary', desc: 'Torn thread of creation', sellPrice: 750 },
-    nexus_core: { name: 'Nexus Heart', emoji: '❤️‍🔥', type: 'material', rarity: 'legendary', desc: 'The pulse of all existence', sellPrice: 1000 },
+    wolf_pelt: { name: 'Wolf Pelt', emoji: '🐺', type: 'material', rarity: 'common', desc: 'Kulit serigala tebal', sellPrice: 6 },
+    goblin_ear: { name: 'Goblin Ear', emoji: '👂', type: 'material', rarity: 'common', desc: 'Telinga goblin pemburu', sellPrice: 5 },
+    zombie_eye: { name: 'Zombie Eye', emoji: '👁️', type: 'material', rarity: 'common', desc: 'Mata mayat hidup beracun', sellPrice: 8 },
+    fox_tail: { name: 'Fox Tail', emoji: '🦊', type: 'material', rarity: 'uncommon', desc: 'Bulu ekor rubah halus', sellPrice: 14 },
+    snake_fang: { name: 'Snake Fang', emoji: '🐍', type: 'material', rarity: 'uncommon', desc: 'Taring ular berbisa', sellPrice: 16 },
+    ogre_club_piece: { name: 'Ogre Club Fragment', emoji: '🦴', type: 'material', rarity: 'uncommon', desc: 'Patahan gada tulang ogre', sellPrice: 22 },
+    bat_wing: { name: 'Bat Wing', emoji: '🦇', type: 'material', rarity: 'common', desc: 'Sayap kelelawar gua', sellPrice: 12 },
+    spider_silk: { name: 'Spider Silk', emoji: '🕸️', type: 'material', rarity: 'uncommon', desc: 'Sutra laba-laba sekuat baja', sellPrice: 20 },
+    ice_scale: { name: 'Ice Scale', emoji: '❄️', type: 'material', rarity: 'rare', desc: 'Sisik naga es bersuhu minus', sellPrice: 35 },
+    yeti_horn: { name: 'Yeti Horn', emoji: '🦏', type: 'material', rarity: 'rare', desc: 'Tanduk yeti raksasa', sellPrice: 42 },
+    ice_crystal: { name: 'Ice Crystal', emoji: '💠', type: 'material', rarity: 'rare', desc: 'Kristal es abadi glasial', sellPrice: 40 },
+    hydra_scale: { name: 'Hydra Scale', emoji: '🐍', type: 'material', rarity: 'rare', desc: 'Sisik hydra dengan regenerasi', sellPrice: 50 },
+    unicorn_horn: { name: 'Unicorn Horn', emoji: '🦄', type: 'material', rarity: 'rare', desc: 'Tanduk suci unicorn pembawa berkah', sellPrice: 65 },
+    siren_hair: { name: 'Siren Hair', emoji: '🧜', type: 'material', rarity: 'rare', desc: 'Rambut siren pemikat samudra', sellPrice: 60 },
+    fire_scale: { name: 'Fire Scale', emoji: '🔥', type: 'material', rarity: 'epic', desc: 'Sisik berapi tahan magma', sellPrice: 85 },
+    magma_core: { name: 'Magma Core', emoji: '🟠', type: 'material', rarity: 'epic', desc: 'Inti api cair tanah kawah', sellPrice: 100 },
+    demon_heart: { name: 'Demon Heart', emoji: '🖤', type: 'material', rarity: 'epic', desc: 'Jantung iblis jurang api', sellPrice: 120 },
+    robot_chip: { name: 'Cyber Chip', emoji: '💾', type: 'material', rarity: 'epic', desc: 'Mikroprosesor quantum masa depan', sellPrice: 135 },
+    cyber_alloy: { name: 'Cyber Alloy', emoji: '⚙️', type: 'material', rarity: 'epic', desc: 'Baja komposit pelindung mecha', sellPrice: 150 },
+    celestial_feather: { name: 'Celestial Feather', emoji: '🪶', type: 'material', rarity: 'legendary', desc: 'Bulu malaikat pelindung langit', sellPrice: 220 },
+    divine_starlight: { name: 'Divine Starlight', emoji: '⭐', type: 'material', rarity: 'legendary', desc: 'Cahaya murni bintang galaksi', sellPrice: 250 },
+    astral_horn: { name: 'Astral Horn', emoji: '✨', type: 'material', rarity: 'legendary', desc: 'Tanduk konstelasi rasi bintang', sellPrice: 280 },
+    chrono_dust: { name: 'Chrono Dust', emoji: '⏳', type: 'material', rarity: 'legendary', desc: 'Debu pengatur putaran waktu', sellPrice: 350 },
+    void_matter: { name: 'Void Matter', emoji: '🕳️', type: 'material', rarity: 'legendary', desc: 'Materi gelap ruang hampa', sellPrice: 400 },
+    entropy_shard: { name: 'Entropy Shard', emoji: '🔮', type: 'material', rarity: 'legendary', desc: 'Pecahan singularitas waktu', sellPrice: 450 },
+    nexus_essence: { name: 'Nexus Essence', emoji: '🌀', type: 'material', rarity: 'legendary', desc: 'Energi murni pembentuk multiverse', sellPrice: 600 },
+    reality_tear: { name: 'Reality Tear', emoji: '🌌', type: 'material', rarity: 'legendary', desc: 'Serat pembungkus dimensi', sellPrice: 750 },
+    nexus_core: { name: 'Nexus Heart', emoji: '❤️‍🔥', type: 'material', rarity: 'legendary', desc: 'Inti jantung dari seluruh realitas', sellPrice: 1000 },
 
-    // Dungeon Relics
-    d1_relic: { name: 'Alpha Crest', emoji: '🐺', type: 'material', rarity: 'rare', desc: 'Dungeon 1 Boss Trophy', sellPrice: 100 },
-    d2_relic: { name: 'Treant Heartwood', emoji: '💚', type: 'material', rarity: 'rare', desc: 'Dungeon 2 Boss Trophy', sellPrice: 200 },
-    d3_relic: { name: 'Ogre Crown', emoji: '👑', type: 'material', rarity: 'rare', desc: 'Dungeon 3 Boss Trophy', sellPrice: 350 },
-    d4_relic: { name: 'Frost Drake Eye', emoji: '👁️', type: 'material', rarity: 'epic', desc: 'Dungeon 4 Boss Trophy', sellPrice: 550 },
-    d5_relic: { name: 'Siren Diadem', emoji: '🔱', type: 'material', rarity: 'epic', desc: 'Dungeon 5 Boss Trophy', sellPrice: 800 },
-    d6_relic: { name: 'Infernus Gem', emoji: '🔴', type: 'material', rarity: 'epic', desc: 'Dungeon 6 Boss Trophy', sellPrice: 1150 },
-    d7_relic: { name: 'Quantum Core', emoji: '💠', type: 'material', rarity: 'legendary', desc: 'Dungeon 7 Boss Trophy', sellPrice: 1600 },
-    d8_relic: { name: 'Divine Halo', emoji: '😇', type: 'material', rarity: 'legendary', desc: 'Dungeon 8 Boss Trophy', sellPrice: 2200 },
-    d9_relic: { name: 'Timeless Hourglass', emoji: '⌛', type: 'material', rarity: 'legendary', desc: 'Dungeon 9 Boss Trophy', sellPrice: 3000 },
-    d10_relic: { name: 'Nexus Omnipotent Crown', emoji: '👑', type: 'material', rarity: 'legendary', desc: 'Dungeon 10 Supreme Relic', sellPrice: 5000 },
+    d1_relic: { name: 'Alpha Crest', emoji: '🐺', type: 'material', rarity: 'rare', desc: 'Piala Boss Dungeon 1', sellPrice: 100 },
+    d2_relic: { name: 'Treant Heartwood', emoji: '💚', type: 'material', rarity: 'rare', desc: 'Piala Boss Dungeon 2', sellPrice: 200 },
+    d3_relic: { name: 'Ogre Crown', emoji: '👑', type: 'material', rarity: 'rare', desc: 'Piala Boss Dungeon 3', sellPrice: 350 },
+    d4_relic: { name: 'Frost Drake Eye', emoji: '👁️', type: 'material', rarity: 'epic', desc: 'Piala Boss Dungeon 4', sellPrice: 550 },
+    d5_relic: { name: 'Siren Diadem', emoji: '🔱', type: 'material', rarity: 'epic', desc: 'Piala Boss Dungeon 5', sellPrice: 800 },
+    d6_relic: { name: 'Infernus Gem', emoji: '🔴', type: 'material', rarity: 'epic', desc: 'Piala Boss Dungeon 6', sellPrice: 1150 },
+    d7_relic: { name: 'Quantum Core', emoji: '💠', type: 'material', rarity: 'legendary', desc: 'Piala Boss Dungeon 7', sellPrice: 1600 },
+    d8_relic: { name: 'Divine Halo', emoji: '😇', type: 'material', rarity: 'legendary', desc: 'Piala Boss Dungeon 8', sellPrice: 2200 },
+    d9_relic: { name: 'Timeless Hourglass', emoji: '⌛', type: 'material', rarity: 'legendary', desc: 'Piala Boss Dungeon 9', sellPrice: 3000 },
+    d10_relic: { name: 'Nexus Omnipotent Crown', emoji: '👑', type: 'material', rarity: 'legendary', desc: 'Piala Puncak Dungeon 10', sellPrice: 5000 },
 
-    // Lootboxes (EPIC RPG Crates)
-    crate_common: { name: 'Common Crate', emoji: '📦', type: 'crate', rarity: 'common', desc: 'Contains Wood, Fish, and Coins', buyPrice: 40, sellPrice: 20 },
-    crate_uncommon: { name: 'Uncommon Crate', emoji: '📦', type: 'crate', rarity: 'uncommon', desc: 'Contains Apples, Pelts, and extra Gold', buyPrice: 100, sellPrice: 50 },
-    crate_rare: { name: 'Rare Crate', emoji: '🎁', type: 'crate', rarity: 'rare', desc: 'Contains Rubies, Super Wood, Golden Fish', buyPrice: 300, sellPrice: 150 },
-    crate_epic: { name: 'Epic Crate', emoji: '🎁', type: 'crate', rarity: 'epic', desc: 'Contains Diamonds, Mega Wood, Boss Relics', buyPrice: 800, sellPrice: 400 },
-    crate_edgy: { name: 'EDGY Crate', emoji: '🧰', type: 'crate', rarity: 'legendary', desc: 'Elite crate brimming with massive resources', buyPrice: 2000, sellPrice: 1000 },
-    crate_omega: { name: 'OMEGA Crate', emoji: '🧰', type: 'crate', rarity: 'legendary', desc: 'Mythic crate full of Hyper Wood and Void Matter', buyPrice: 5000, sellPrice: 2500 },
-    crate_godly: { name: 'GODLY Crate', emoji: '✨', type: 'crate', rarity: 'legendary', desc: 'Divine crate containing endgame gear materials', buyPrice: 12000, sellPrice: 6000 },
+    crate_common: { name: 'Common Crate', emoji: '📦', type: 'crate', rarity: 'common', desc: 'Berisi Kayu, Ikan, dan Gold', buyPrice: 40, sellPrice: 20 },
+    crate_uncommon: { name: 'Uncommon Crate', emoji: '📦', type: 'crate', rarity: 'uncommon', desc: 'Berisi Apel, Pelts, dan Ekstra Gold', buyPrice: 100, sellPrice: 50 },
+    crate_rare: { name: 'Rare Crate', emoji: '🎁', type: 'crate', rarity: 'rare', desc: 'Berisi Ruby, Super Wood, Golden Fish', buyPrice: 300, sellPrice: 150 },
+    crate_epic: { name: 'Epic Crate', emoji: '🎁', type: 'crate', rarity: 'epic', desc: 'Berisi Diamond, Mega Wood, Boss Relic', buyPrice: 800, sellPrice: 400 },
+    crate_edgy: { name: 'EDGY Crate', emoji: '🧰', type: 'crate', rarity: 'legendary', desc: 'Peti elite berisi tumpukan material berharga', buyPrice: 2000, sellPrice: 1000 },
+    crate_omega: { name: 'OMEGA Crate', emoji: '🧰', type: 'crate', rarity: 'legendary', desc: 'Peti mitos berisi Hyper Wood dan Void Matter', buyPrice: 5000, sellPrice: 2500 },
+    crate_godly: { name: 'GODLY Crate', emoji: '✨', type: 'crate', rarity: 'legendary', desc: 'Peti ilahi berisi bahan senjata tertinggi', buyPrice: 12000, sellPrice: 6000 },
 
-    // Potions & Consumables
-    potion_small: { name: 'Small Life Potion', emoji: '🧪', type: 'consumable', rarity: 'common', desc: 'Restores 40 HP', effect: { type: 'heal', value: 40 }, buyPrice: 20, sellPrice: 10 },
-    potion_medium: { name: 'Medium Life Potion', emoji: '🧪', type: 'consumable', rarity: 'uncommon', desc: 'Restores 120 HP', effect: { type: 'heal', value: 120 }, buyPrice: 60, sellPrice: 30 },
-    potion_large: { name: 'Large Life Potion', emoji: '🧪', type: 'consumable', rarity: 'rare', desc: 'Restores 300 HP', effect: { type: 'heal', value: 300 }, buyPrice: 150, sellPrice: 75 },
-    potion_mega: { name: 'Full Restore Elixir', emoji: '🧪', type: 'consumable', rarity: 'epic', desc: 'Fully restores health to 100%', effect: { type: 'heal_full', value: 9999 }, buyPrice: 400, sellPrice: 200 },
-    elixir_atk: { name: 'Dragon Might Elixir', emoji: '⚗️', type: 'consumable', rarity: 'rare', desc: '+50% ATK for 4 battles', effect: { type: 'buff_atk', value: 1.5, battles: 4 }, buyPrice: 120, sellPrice: 60 },
-    elixir_def: { name: 'Stone Skin Elixir', emoji: '⚗️', type: 'consumable', rarity: 'rare', desc: '+50% DEF for 4 battles', effect: { type: 'buff_def', value: 1.5, battles: 4 }, buyPrice: 120, sellPrice: 60 },
+    potion_small: { name: 'Small Life Potion', emoji: '🧪', type: 'consumable', rarity: 'common', desc: 'Memulihkan 45 HP', effect: { type: 'heal', value: 45 }, buyPrice: 20, sellPrice: 10 },
+    potion_medium: { name: 'Medium Life Potion', emoji: '🧪', type: 'consumable', rarity: 'uncommon', desc: 'Memulihkan 140 HP', effect: { type: 'heal', value: 140 }, buyPrice: 60, sellPrice: 30 },
+    potion_large: { name: 'Large Life Potion', emoji: '🧪', type: 'consumable', rarity: 'rare', desc: 'Memulihkan 350 HP', effect: { type: 'heal', value: 350 }, buyPrice: 150, sellPrice: 75 },
+    potion_mega: { name: 'Full Restore Elixir', emoji: '🧪', type: 'consumable', rarity: 'epic', desc: 'Memulihkan HP hingga 100%', effect: { type: 'heal_full', value: 9999 }, buyPrice: 400, sellPrice: 200 },
+    elixir_atk: { name: 'Dragon Might Elixir', emoji: '⚗️', type: 'consumable', rarity: 'rare', desc: '+50% ATK untuk 4 ronde pertarungan', effect: { type: 'buff_atk', value: 1.5, battles: 4 }, buyPrice: 120, sellPrice: 60 },
+    elixir_def: { name: 'Stone Skin Elixir', emoji: '⚗️', type: 'consumable', rarity: 'rare', desc: '+50% DEF untuk 4 ronde pertarungan', effect: { type: 'buff_def', value: 1.5, battles: 4 }, buyPrice: 120, sellPrice: 60 },
 
-    // Weapons (Progression Tiers)
-    wooden_sword: { name: 'Wooden Sword', emoji: '🗡️', type: 'weapon', rarity: 'common', desc: 'Carved beginner blade', stats: { atk: 6 }, buyPrice: 0, sellPrice: 5 },
-    fish_sword: { name: 'Fish Sword', emoji: '🐟', type: 'weapon', rarity: 'common', desc: 'A smelly but effective blade of fish', stats: { atk: 14, crit: 2 }, craftRecipe: { fish_normie: 5, wood_normie: 5 } },
-    iron_sword: { name: 'Iron Broadsword', emoji: '⚔️', type: 'weapon', rarity: 'common', desc: 'Tempered warrior steel', stats: { atk: 22 }, buyPrice: 80, sellPrice: 40 },
-    wolf_katana: { name: 'Wolf Katana', emoji: '🐺', type: 'weapon', rarity: 'uncommon', desc: 'Infused with predatory fang', stats: { atk: 35, crit: 4 }, craftRecipe: { d1_relic: 1, wolf_pelt: 5, wood_epic: 3 } },
-    enchanted_blade: { name: 'Enchanted Claymore', emoji: '🔮', type: 'weapon', rarity: 'rare', desc: 'Glows with subterranean rune light', stats: { atk: 55, crit: 6 }, craftRecipe: { d2_relic: 1, wood_super: 4, ruby: 2 } },
-    frost_halberd: { name: 'Frost Halberd', emoji: '❄️', type: 'weapon', rarity: 'rare', desc: 'Freezes target armor on hit', stats: { atk: 80, crit: 8 }, craftRecipe: { d4_relic: 1, ice_crystal: 4, diamond: 1 } },
-    edgy_blade: { name: 'EDGY Scythe', emoji: '🖤', type: 'weapon', rarity: 'epic', desc: 'Legendary milestone weapon of edge', stats: { atk: 125, crit: 10 }, craftRecipe: { d5_relic: 1, siren_hair: 5, wood_mega: 4 } },
-    ultra_edgy_blade: { name: 'ULTRA-EDGY Greatsword', emoji: '🔥', type: 'weapon', rarity: 'epic', desc: 'Cuts through fire and dimensions', stats: { atk: 180, crit: 12 }, craftRecipe: { d6_relic: 1, magma_core: 4, wood_mega: 8 } },
-    omega_laser_blade: { name: 'OMEGA Cyber Blade', emoji: '⚡', type: 'weapon', rarity: 'legendary', desc: 'High-frequency photon beam weapon', stats: { atk: 260, crit: 15 }, craftRecipe: { d7_relic: 1, robot_chip: 6, wood_hyper: 4 } },
-    godly_celestial_blade: { name: 'GODLY Solar Edge', emoji: '⭐', type: 'weapon', rarity: 'legendary', desc: 'Wields the blinding power of a supernova', stats: { atk: 380, crit: 20 }, craftRecipe: { d8_relic: 1, divine_starlight: 5, wood_hyper: 8 } },
-    nexus_prime_blade: { name: 'NEXUS OMNI SLICER', emoji: '🌀', type: 'weapon', rarity: 'legendary', desc: 'The ultimate reality weapon of creation', stats: { atk: 550, crit: 28 }, craftRecipe: { d10_relic: 1, nexus_core: 2, reality_tear: 3, wood_hyper: 15 } },
+    wooden_sword: { name: 'Wooden Sword', emoji: '🗡️', type: 'weapon', rarity: 'common', desc: 'Pedang latihan kayu standar', stats: { atk: 6 }, buyPrice: 0, sellPrice: 5 },
+    fish_sword: { name: 'Fish Sword', emoji: '🐟', type: 'weapon', rarity: 'common', desc: 'Pedang ikan bau tapi tajam', stats: { atk: 14, crit: 2 }, craftRecipe: { fish_normie: 5, wood_normie: 5 } },
+    iron_sword: { name: 'Iron Broadsword', emoji: '⚔️', type: 'weapon', rarity: 'common', desc: 'Pedang baja prajurit tangguh', stats: { atk: 22 }, buyPrice: 80, sellPrice: 40 },
+    wolf_katana: { name: 'Wolf Katana', emoji: '🐺', type: 'weapon', rarity: 'uncommon', desc: 'Katana berbalut taring serigala alfa', stats: { atk: 35, crit: 4 }, craftRecipe: { d1_relic: 1, wolf_pelt: 5, wood_epic: 3 } },
+    enchanted_blade: { name: 'Enchanted Claymore', emoji: '🔮', type: 'weapon', rarity: 'rare', desc: 'Pedang bercahaya rune kuno', stats: { atk: 55, crit: 6 }, craftRecipe: { d2_relic: 1, wood_super: 4, ruby: 2 } },
+    frost_halberd: { name: 'Frost Halberd', emoji: '❄️', type: 'weapon', rarity: 'rare', desc: 'Tombak pembeku armor lawan', stats: { atk: 80, crit: 8 }, craftRecipe: { d4_relic: 1, ice_crystal: 4, diamond: 1 } },
+    edgy_blade: { name: 'EDGY Scythe', emoji: '🖤', type: 'weapon', rarity: 'epic', desc: 'Sabit legendaris penembus kutukan', stats: { atk: 125, crit: 10 }, craftRecipe: { d5_relic: 1, siren_hair: 5, wood_mega: 4 } },
+    ultra_edgy_blade: { name: 'ULTRA-EDGY Greatsword', emoji: '🔥', type: 'weapon', rarity: 'epic', desc: 'Pedang raksasa pemotong api naga', stats: { atk: 180, crit: 12 }, craftRecipe: { d6_relic: 1, magma_core: 4, wood_mega: 8 } },
+    omega_laser_blade: { name: 'OMEGA Cyber Blade', emoji: '⚡', type: 'weapon', rarity: 'legendary', desc: 'Pedang laser frekuensi tinggi', stats: { atk: 260, crit: 15 }, craftRecipe: { d7_relic: 1, robot_chip: 6, wood_hyper: 4 } },
+    godly_celestial_blade: { name: 'GODLY Solar Edge', emoji: '⭐', type: 'weapon', rarity: 'legendary', desc: 'Senjata berkekuatan ledakan supernova', stats: { atk: 380, crit: 20 }, craftRecipe: { d8_relic: 1, divine_starlight: 5, wood_hyper: 8 } },
+    nexus_prime_blade: { name: 'NEXUS OMNI SLICER', emoji: '🌀', type: 'weapon', rarity: 'legendary', desc: 'Senjata pemotong serat antar-dimensi', stats: { atk: 550, crit: 28 }, craftRecipe: { d10_relic: 1, nexus_core: 2, reality_tear: 3, wood_hyper: 15 } },
 
-    // Armors (Progression Tiers)
-    cloth_armor: { name: 'Cloth Tunic', emoji: '👕', type: 'armor', rarity: 'common', desc: 'Simple traveler vest', stats: { def: 4, maxHp: 0 }, buyPrice: 0, sellPrice: 3 },
-    fish_armor: { name: 'Fish Scale Vest', emoji: '🐟', type: 'armor', rarity: 'common', desc: 'Flexible stitched fish scales', stats: { def: 10, maxHp: 30 }, craftRecipe: { fish_normie: 6, wood_normie: 4 } },
-    iron_plate: { name: 'Iron Plate Armor', emoji: '🛡️', type: 'armor', rarity: 'common', desc: 'Solid protective chestplate', stats: { def: 18, maxHp: 65 }, buyPrice: 100, sellPrice: 50 },
-    wolf_fur_mantle: { name: 'Alpha Fur Mantle', emoji: '🐺', type: 'armor', rarity: 'uncommon', desc: 'Tough thick wolf hide protection', stats: { def: 30, maxHp: 120 }, craftRecipe: { d1_relic: 1, wolf_pelt: 6, fish_golden: 2 } },
-    ogre_stone_plate: { name: 'Ogre Carved Plate', emoji: '🗿', type: 'armor', rarity: 'rare', desc: 'Heavy stone carved armor', stats: { def: 52, maxHp: 220 }, craftRecipe: { d3_relic: 1, ogre_club_piece: 4, fish_epic: 2 } },
-    edgy_armor: { name: 'EDGY Cuirass', emoji: '🖤', type: 'armor', rarity: 'epic', desc: 'Dark metallic armor of absolute focus', stats: { def: 85, maxHp: 380 }, craftRecipe: { d5_relic: 1, hydra_scale: 5, fish_super: 3 } },
-    ultra_edgy_armor: { name: 'ULTRA-EDGY Aegis', emoji: '🔥', type: 'armor', rarity: 'epic', desc: 'Impervious to dragon fire and curses', stats: { def: 130, maxHp: 600 }, craftRecipe: { d6_relic: 1, fire_scale: 5, fish_super: 6 } },
-    omega_force_armor: { name: 'OMEGA Energy Shield', emoji: '⚡', type: 'armor', rarity: 'legendary', desc: 'Permeates body with forcefield', stats: { def: 195, maxHp: 950 }, craftRecipe: { d7_relic: 1, cyber_alloy: 6, fish_super: 10 } },
-    godly_aegis: { name: 'GODLY Seraph Mantle', emoji: '⭐', type: 'armor', rarity: 'legendary', desc: 'Armor blessed by divine light', stats: { def: 280, maxHp: 1500 }, craftRecipe: { d8_relic: 1, celestial_feather: 6, diamond: 5 } },
-    nexus_prime_armor: { name: 'NEXUS COSMIC MANTLE', emoji: '🌀', type: 'armor', rarity: 'legendary', desc: 'Absolute barrier absorbing all matter', stats: { def: 420, maxHp: 2500 }, craftRecipe: { d10_relic: 1, nexus_essence: 3, reality_tear: 3, wood_hyper: 10 } },
+    cloth_armor: { name: 'Cloth Tunic', emoji: '👕', type: 'armor', rarity: 'common', desc: 'Pakaian kain pengelana', stats: { def: 4, maxHp: 0 }, buyPrice: 0, sellPrice: 3 },
+    fish_armor: { name: 'Fish Scale Vest', emoji: '🐟', type: 'armor', rarity: 'common', desc: 'Rompi jahit sisik ikan sungai', stats: { def: 10, maxHp: 30 }, craftRecipe: { fish_normie: 6, wood_normie: 4 } },
+    iron_plate: { name: 'Iron Plate Armor', emoji: '🛡️', type: 'armor', rarity: 'common', desc: 'Baju zirah pelat besi tempa', stats: { def: 18, maxHp: 65 }, buyPrice: 100, sellPrice: 50 },
+    wolf_fur_mantle: { name: 'Alpha Fur Mantle', emoji: '🐺', type: 'armor', rarity: 'uncommon', desc: 'Mantel bulu serigala pelindung dada', stats: { def: 30, maxHp: 120 }, craftRecipe: { d1_relic: 1, wolf_pelt: 6, fish_golden: 2 } },
+    ogre_stone_plate: { name: 'Ogre Carved Plate', emoji: '🗿', type: 'armor', rarity: 'rare', desc: 'Zirah batu kokoh tahan hantaman', stats: { def: 52, maxHp: 220 }, craftRecipe: { d3_relic: 1, ogre_club_piece: 4, fish_epic: 2 } },
+    edgy_armor: { name: 'EDGY Cuirass', emoji: '🖤', type: 'armor', rarity: 'epic', desc: 'Zirah hitam penahan racun mematikan', stats: { def: 85, maxHp: 380 }, craftRecipe: { d5_relic: 1, hydra_scale: 5, fish_super: 3 } },
+    ultra_edgy_armor: { name: 'ULTRA-EDGY Aegis', emoji: '🔥', type: 'armor', rarity: 'epic', desc: 'Perisai dada penangkal semburan lahar', stats: { def: 130, maxHp: 600 }, craftRecipe: { d6_relic: 1, fire_scale: 5, fish_super: 6 } },
+    omega_force_armor: { name: 'OMEGA Energy Shield', emoji: '⚡', type: 'armor', rarity: 'legendary', desc: 'Zirah berbalut kubah energi pelindung', stats: { def: 195, maxHp: 950 }, craftRecipe: { d7_relic: 1, cyber_alloy: 6, fish_super: 10 } },
+    godly_aegis: { name: 'GODLY Seraph Mantle', emoji: '⭐', type: 'armor', rarity: 'legendary', desc: 'Mantel suci diberkahi cahaya para malaikat', stats: { def: 280, maxHp: 1500 }, craftRecipe: { d8_relic: 1, celestial_feather: 6, diamond: 5 } },
+    nexus_prime_armor: { name: 'NEXUS COSMIC MANTLE', emoji: '🌀', type: 'armor', rarity: 'legendary', desc: 'Baju zirah pelindung absolut multiverse', stats: { def: 420, maxHp: 2500 }, craftRecipe: { d10_relic: 1, nexus_essence: 3, reality_tear: 3, wood_hyper: 10 } },
 
-    // Accessories
-    ring_wood: { name: 'Wooden Luck Ring', emoji: '💍', type: 'accessory', rarity: 'common', desc: 'Light polished band', stats: { crit: 2 }, buyPrice: 40, sellPrice: 20 },
-    ring_ruby: { name: 'Ruby Power Ring', emoji: '💍', type: 'accessory', rarity: 'rare', desc: 'Pulsing red jewel', stats: { crit: 5, atk: 12 }, buyPrice: 250, sellPrice: 125 },
-    talisman_siren: { name: 'Siren Pearl Talisman', emoji: '📿', type: 'accessory', rarity: 'epic', desc: 'Boosts health and offense', stats: { crit: 8, atk: 25, def: 15, maxHp: 150 }, craftRecipe: { d5_relic: 1, ruby: 3, fish_epic: 4 } },
-    chrono_amulet: { name: 'Chrono Time Amulet', emoji: '⏳', type: 'accessory', rarity: 'legendary', desc: 'Bends time in combat', stats: { crit: 15, atk: 55, def: 35, maxHp: 400 }, craftRecipe: { d9_relic: 1, chrono_dust: 4, diamond: 3 } },
-    nexus_infinity_ring: { name: 'NEXUS INFINITY ORB', emoji: '🌀', type: 'accessory', rarity: 'legendary', desc: 'Crown jewel of the multiverse', stats: { crit: 25, atk: 100, def: 75, maxHp: 800 }, craftRecipe: { d10_relic: 1, nexus_core: 1, nexus_essence: 2 } }
+    ring_wood: { name: 'Wooden Luck Ring', emoji: '💍', type: 'accessory', rarity: 'common', desc: 'Cincin kayu pembawa keberuntungan', stats: { crit: 2 }, buyPrice: 40, sellPrice: 20 },
+    ring_ruby: { name: 'Ruby Power Ring', emoji: '💍', type: 'accessory', rarity: 'rare', desc: 'Cincin permata penambah serangan', stats: { crit: 5, atk: 12 }, buyPrice: 250, sellPrice: 125 },
+    talisman_siren: { name: 'Siren Pearl Talisman', emoji: '📿', type: 'accessory', rarity: 'epic', desc: 'Jimat mutiara laut dalam', stats: { crit: 8, atk: 25, def: 15, maxHp: 150 }, craftRecipe: { d5_relic: 1, ruby: 3, fish_epic: 4 } },
+    chrono_amulet: { name: 'Chrono Time Amulet', emoji: '⏳', type: 'accessory', rarity: 'legendary', desc: 'Jimat pembengkok waktu tempur', stats: { crit: 15, atk: 55, def: 35, maxHp: 400 }, craftRecipe: { d9_relic: 1, chrono_dust: 4, diamond: 3 } },
+    nexus_infinity_ring: { name: 'NEXUS INFINITY ORB', emoji: '🌀', type: 'accessory', rarity: 'legendary', desc: 'Artefak mutlak penguasa realitas', stats: { crit: 25, atk: 100, def: 75, maxHp: 800 }, craftRecipe: { d10_relic: 1, nexus_core: 1, nexus_essence: 2 } }
   };
 
   const SKILLS = [
-    { id: 'power_strike', name: 'Power Strike', emoji: '💪', desc: 'Deal 150% strike damage', levelReq: 3, mult: 1.5 },
-    { id: 'shield_block', name: 'Shield Block', emoji: '🛡️', desc: 'Block 50% damage from foe', levelReq: 5, defType: true },
-    { id: 'heal_light', name: 'Heal Light', emoji: '💚', desc: 'Auto-heals 25% HP when critical', levelReq: 8, healType: true },
-    { id: 'fire_slash', name: 'Fire Slash', emoji: '🔥', desc: 'Burn target for 200% fire damage', levelReq: 12, mult: 2.0 },
-    { id: 'thunder_strike', name: 'Thunder Strike', emoji: '⚡', desc: 'Electrocute foe for 250% lightning', levelReq: 20, mult: 2.5 },
-    { id: 'mystic_shield', name: 'Mystic Shield', emoji: '🔮', desc: 'Completely absorbs 1 lethal attack', levelReq: 30, absorbType: true },
-    { id: 'dragon_fury', name: 'Dragon Fury', emoji: '🐉', desc: 'Roar of dragons for 350% devastation', levelReq: 45, mult: 3.5 },
-    { id: 'chrono_warp', name: 'Chrono Warp Strike', emoji: '⏳', desc: 'Strike 2x consecutive hits for 500%', levelReq: 65, mult: 5.0 },
-    { id: 'nexus_blast', name: 'Nexus Omni Blast', emoji: '🌀', desc: 'Unleash singularity for 800% omni damage', levelReq: 85, mult: 8.0 }
+    { id: 'power_strike', name: 'Power Strike', emoji: '💪', desc: 'Menghasilkan 150% damage tebasan', levelReq: 3, mult: 1.5 },
+    { id: 'shield_block', name: 'Shield Block', emoji: '🛡️', desc: 'Menangkis 50% serangan lawan', levelReq: 5, defType: true },
+    { id: 'heal_light', name: 'Heal Light', emoji: '💚', desc: 'Otomatis pulihkan 25% HP saat kritis', levelReq: 8, healType: true },
+    { id: 'fire_slash', name: 'Fire Slash', emoji: '🔥', desc: 'Serangan api 200% damage', levelReq: 12, mult: 2.0 },
+    { id: 'thunder_strike', name: 'Thunder Strike', emoji: '⚡', desc: 'Tebasan petir 250% damage', levelReq: 20, mult: 2.5 },
+    { id: 'mystic_shield', name: 'Mystic Shield', emoji: '🔮', desc: 'Kebal total dari 1 serangan musuh', levelReq: 30, absorbType: true },
+    { id: 'dragon_fury', name: 'Dragon Fury', emoji: '🐉', desc: 'Auman naga 350% kehancuran', levelReq: 45, mult: 3.5 },
+    { id: 'chrono_warp', name: 'Chrono Warp Strike', emoji: '⏳', desc: 'Tebasan beruntun waktu 500% damage', levelReq: 65, mult: 5.0 },
+    { id: 'nexus_blast', name: 'Nexus Omni Blast', emoji: '🌀', desc: 'Ledakan singularitas 800% omni damage', levelReq: 85, mult: 8.0 }
   ];
 
   /* ============================================================
-     2. GAME STATE
+     2. DEFAULT STATE & CLIENT PERSISTENCE
      ============================================================ */
   const DEFAULT_STATE = {
     characterName: '',
@@ -261,10 +253,11 @@
   };
 
   let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  let isDirty = false;
+  let authToken = localStorage.getItem('nexus_auth_token') || null;
+  let activeUsername = localStorage.getItem('nexus_username') || null;
 
   /* ============================================================
-     3. MATH & COMPUTED STATS
+     3. STATS & FORMULAS
      ============================================================ */
   function getComputedStats() {
     let atk = state.baseAtk;
@@ -323,12 +316,12 @@
       state.hp = computed.maxHp;
       leveled = true;
 
-      addLog(`✨ <strong>LEVEL UP!</strong> You reached <strong>Level ${state.level}</strong>! Attributes surged and HP restored!`, 'levelup');
+      addLog(`✨ <strong>LEVEL UP!</strong> Anda mencapai <strong>Level ${state.level}</strong>! Status meningkat dan darah pulih penuh!`, 'levelup');
 
       SKILLS.forEach(s => {
         if (state.level >= s.levelReq && !state.skills.includes(s.id)) {
           state.skills.push(s.id);
-          addLog(`⭐ <strong>Skill Mastered:</strong> ${s.emoji} <strong>${s.name}</strong> (${s.desc})!`, 'system');
+          addLog(`⭐ <strong>Skill Terbuka:</strong> ${s.emoji} <strong>${s.name}</strong> (${s.desc})!`, 'system');
         }
       });
 
@@ -336,14 +329,13 @@
       const latestArea = unlockedAreas[unlockedAreas.length - 1];
       if (latestArea && latestArea.id !== state.currentArea) {
         state.currentArea = latestArea.id;
-        addLog(`🗺️ <strong>New Frontier Unlocked:</strong> ${latestArea.emoji} <strong>${latestArea.name}</strong>!`, 'system');
+        addLog(`🗺️ <strong>Zona Baru Terbuka:</strong> ${latestArea.emoji} <strong>${latestArea.name}</strong>!`, 'system');
       }
     }
 
     if (leveled) {
-      isDirty = true;
       updateUI();
-      saveGame(true);
+      autoSaveInstant();
     }
   }
 
@@ -356,7 +348,7 @@
   }
 
   /* ============================================================
-     4. UI ELEMENTS
+     4. UI RENDER & AUTO-SAVE INSTAN
      ============================================================ */
   const el = {
     authScreen: document.getElementById('auth-screen'),
@@ -381,14 +373,15 @@
     equipArmor: document.getElementById('equip-armor'),
     equipAccessory: document.getElementById('equip-accessory'),
     gameLog: document.getElementById('game-log'),
-    saveBtn: document.getElementById('save-btn'),
-    backupBtn: document.getElementById('backup-btn'),
     logoutBtn: document.getElementById('logout-btn'),
+    saveStatus: document.getElementById('save-status'),
     modal: document.getElementById('modal'),
     modalTitle: document.getElementById('modal-title'),
     modalBody: document.getElementById('modal-body'),
     modalClose: document.getElementById('modal-close'),
-    toast: document.getElementById('toast')
+    toast: document.getElementById('toast'),
+    viewTabs: document.querySelectorAll('.nav-tab-btn'),
+    viewPanels: document.querySelectorAll('.view-panel')
   };
 
   function updateUI() {
@@ -402,17 +395,17 @@
     el.goldDisplay.textContent = Number(state.gold).toLocaleString();
 
     el.hpBar.style.width = `${hpPct}%`;
-    el.hpText.textContent = `${Math.max(0, state.hp)} / ${stats.maxHp}`;
+    el.hpText.textContent = `${Math.max(0, state.hp)}/${stats.maxHp}`;
 
     el.xpBar.style.width = `${xpPct}%`;
-    el.xpText.textContent = `${state.xp} / ${state.xpToNext}`;
+    el.xpText.textContent = `${state.xp}/${state.xpToNext}`;
 
     el.statAtk.textContent = stats.atk;
     el.statDef.textContent = stats.def;
     el.statCrit.textContent = `${stats.crit.toFixed(1)}%`;
 
     const currentAreaObj = AREAS.find(a => a.id === state.currentArea) || AREAS[0];
-    el.statArea.textContent = `${currentAreaObj.emoji} ${currentAreaObj.name}`;
+    el.statArea.textContent = `${currentAreaObj.emoji} ${currentAreaObj.name.split(':')[0]}`;
 
     const wItem = ITEMS[state.equipment.weapon];
     const aItem = ITEMS[state.equipment.armor];
@@ -428,7 +421,7 @@
     div.className = `log-entry ${type}`;
     div.innerHTML = msg;
     el.gameLog.insertBefore(div, el.gameLog.firstChild);
-    while (el.gameLog.children.length > 90) {
+    while (el.gameLog.children.length > 70) {
       el.gameLog.removeChild(el.gameLog.lastChild);
     }
   }
@@ -439,7 +432,43 @@
     clearTimeout(el.toast._timer);
     el.toast._timer = setTimeout(() => {
       el.toast.classList.remove('show');
-    }, 2400);
+    }, 2200);
+  }
+
+  // 100% AUTO-SAVE: Langsung simpan di localStorage (0 ms) & kirim ke Server Cloud
+  function autoSaveInstant() {
+    if (activeUsername) {
+      localStorage.setItem(`nexus_save_${activeUsername}`, JSON.stringify(state));
+    }
+
+    if (el.saveStatus) {
+      el.saveStatus.textContent = '💾 Menyimpan...';
+      el.saveStatus.style.color = 'var(--accent-gold)';
+    }
+
+    if (authToken) {
+      fetch('/api/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ gameState: state })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && el.saveStatus) {
+          el.saveStatus.textContent = '🟢 Cloud Tersinkron';
+          el.saveStatus.style.color = 'var(--accent-green)';
+        }
+      })
+      .catch(() => {
+        if (el.saveStatus) {
+          el.saveStatus.textContent = '📱 Tersimpan di HP/PC';
+          el.saveStatus.style.color = 'var(--accent-cyan)';
+        }
+      });
+    }
   }
 
   function checkCooldown(actionKey, ms) {
@@ -447,7 +476,7 @@
     const readyAt = state.cooldowns[actionKey] || 0;
     if (now < readyAt) {
       const waitSec = Math.ceil((readyAt - now) / 1000);
-      showToast(`⏳ ${actionKey.toUpperCase()} cooldown: wait ${waitSec}s`);
+      showToast(`⏳ Cooldown ${actionKey.toUpperCase()}: tunggu ${waitSec} detik`);
       return false;
     }
     state.cooldowns[actionKey] = now + ms;
@@ -455,7 +484,7 @@
   }
 
   /* ============================================================
-     5. COMBAT SYSTEM
+     5. COMBAT ENGINE
      ============================================================ */
   function executeBattle(monster, isBoss = false) {
     const pStats = getComputedStats();
@@ -471,7 +500,7 @@
     const hasHealLight = state.skills.includes('heal_light');
     const hasMysticShield = state.skills.includes('mystic_shield');
 
-    battleLog.push(`⚔️ <strong>ENCOUNTER:</strong> You face <strong>${monster.emoji} ${monster.name}</strong> [HP: ${monster.hp} | ATK: ${monster.atk} | DEF: ${monster.def}]`);
+    battleLog.push(`⚔️ <strong>PERTARUNGAN:</strong> Menghadapi <strong>${monster.emoji} ${monster.name}</strong> [HP: ${monster.hp} | ATK: ${monster.atk} | DEF: ${monster.def}]`);
 
     while (mHp > 0 && pHp > 0 && round <= 14) {
       let skillUsed = null;
@@ -489,11 +518,11 @@
       state.stats.totalDamageDealt += pDmg;
 
       if (skillUsed) {
-        battleLog.push(`✨ <strong>${skillUsed.emoji} ${skillUsed.name}!</strong> Extreme strike dealt <strong>${pDmg}</strong> DMG!`);
+        battleLog.push(`✨ <strong>${skillUsed.emoji} ${skillUsed.name}!</strong> Jurus mengerahkan <strong>${pDmg}</strong> DMG!`);
       } else if (isCrit) {
-        battleLog.push(`💥 <strong>CRITICAL BLOW!</strong> Struck ${monster.name} for <strong>${pDmg}</strong> DMG!`);
+        battleLog.push(`💥 <strong>CRITICAL HIT!</strong> Menghantam ${monster.name} sebesar <strong>${pDmg}</strong> DMG!`);
       } else {
-        battleLog.push(`🗡️ You strike ${monster.name} for <strong>${pDmg}</strong> DMG.`);
+        battleLog.push(`🗡️ Anda menebas ${monster.name} sebesar <strong>${pDmg}</strong> DMG.`);
       }
 
       if (mHp <= 0) break;
@@ -501,19 +530,19 @@
       if (hasHealLight && pHp < pStats.maxHp * 0.3 && Math.random() < 0.6) {
         const healAmt = Math.floor(pStats.maxHp * 0.25);
         pHp = Math.min(pStats.maxHp, pHp + healAmt);
-        battleLog.push(`💚 <strong>Heal Light</strong> activated! Recovered <strong>+${healAmt} HP</strong>.`);
+        battleLog.push(`💚 <strong>Heal Light</strong> terpicu! Pulih <strong>+${healAmt} HP</strong>.`);
       }
 
       let mDmg = calculateDamage(monster.atk, pStats.def, false);
       if (hasMysticShield && !absorbedHit && Math.random() < 0.45) {
         absorbedHit = true;
         mDmg = 0;
-        battleLog.push(`🔮 <strong>Mystic Shield</strong> completely absorbed ${monster.name}'s attack!`);
+        battleLog.push(`🔮 <strong>Mystic Shield</strong> menangkis mutlak serangan ${monster.name}!`);
       } else if (hasShieldBlock && Math.random() < 0.4) {
         mDmg = Math.floor(mDmg * 0.5);
-        battleLog.push(`🛡️ <strong>Shield Block</strong> mitigated half the strike! Took <strong>${mDmg}</strong> DMG.`);
+        battleLog.push(`🛡️ <strong>Shield Block</strong> mengurangi separuh serangan! Terkena <strong>${mDmg}</strong> DMG.`);
       } else {
-        battleLog.push(`🩸 ${monster.name} strikes you for <strong>${mDmg}</strong> DMG.`);
+        battleLog.push(`🩸 ${monster.name} menyerang Anda sebesar <strong>${mDmg}</strong> DMG.`);
       }
 
       pHp -= mDmg;
@@ -527,7 +556,7 @@
       if (state.buffs.battlesLeft === 0) {
         state.buffs.atkMultiplier = 1;
         state.buffs.defMultiplier = 1;
-        addLog(`⌛ Power buffs expired.`, 'system');
+        addLog(`⌛ Efek ramuan kekuatan telah habis.`, 'system');
       }
     }
 
@@ -538,21 +567,18 @@
       state.xp += earnedXp;
       state.stats.goldEarned += earnedGold;
 
-      if (isBoss) {
-        state.stats.bossesKilled += 1;
-      } else {
-        state.stats.monstersKilled += 1;
-      }
+      if (isBoss) state.stats.bossesKilled += 1;
+      else state.stats.monstersKilled += 1;
 
-      battleLog.push(`🏆 <strong>VICTORY!</strong> Slain ${monster.emoji} ${monster.name}!`);
-      battleLog.push(`🎁 <strong>Rewards:</strong> +${earnedXp} XP, +${earnedGold} 💰 Gold.`);
+      battleLog.push(`🏆 <strong>MENANG!</strong> Berhasil mengalahkan ${monster.emoji} ${monster.name}!`);
+      battleLog.push(`🎁 <strong>Hadiah:</strong> +${earnedXp} EXP, +${earnedGold} 💰 Gold.`);
 
       if (monster.drops && monster.drops.length > 0) {
         monster.drops.forEach(drop => {
           if (Math.random() < drop.chance) {
             state.inventory[drop.id] = (state.inventory[drop.id] || 0) + 1;
             const item = ITEMS[drop.id];
-            battleLog.push(`💎 <strong>Loot Found:</strong> ${item ? `${item.emoji} ${item.name}` : drop.id} x1!`);
+            battleLog.push(`💎 <strong>Drop Didapat:</strong> ${item ? `${item.emoji} ${item.name}` : drop.id} x1!`);
           }
         });
       }
@@ -562,18 +588,119 @@
       return true;
     } else {
       state.stats.deaths += 1;
-      battleLog.push(`💀 <strong>DEFEAT!</strong> You were slain by ${monster.name}. Visit ❤️ Heal to resurrect!`);
+      battleLog.push(`💀 <strong>TEWAS!</strong> Anda gugur melawan ${monster.name}. Gunakan ❤️ Heal untuk bangkit!`);
       addLog(battleLog.join('<br>'), 'danger');
       return false;
     }
   }
 
   /* ============================================================
-     6. GATHERING ACTIVITIES (EPIC RPG STYLE)
+     6. ACTIONS (COMBAT, CHOP, FISH, HEAL)
      ============================================================ */
+  function handleHunt() {
+    if (!checkCooldown('hunt', 2000)) return;
+    if (state.hp <= 0) { showToast('💀 Anda tumbang! Gunakan ❤️ Heal untuk memulihkan diri.'); return; }
+
+    const areaMonsters = MONSTERS[state.currentArea] || MONSTERS.area_1;
+    const monster = areaMonsters[Math.floor(Math.random() * areaMonsters.length)];
+
+    executeBattle(monster, false);
+    updateUI();
+    autoSaveInstant();
+  }
+
+  function handleAdventure() {
+    if (!checkCooldown('adventure', 5000)) return;
+    if (state.hp <= 0) { showToast('💀 Anda tumbang! Gunakan ❤️ Heal terlebih dahulu.'); return; }
+
+    openModal('🗺️ Pilih Destinasi Ekspedisi', () => {
+      const available = AREAS.filter(a => state.level >= a.levelReq);
+      return `
+        <p style="margin-bottom: 14px; color: var(--text-sub); font-size:13px;">Ekspedisi 3 ronde beruntun berbahaya dengan bonus +50% EXP dan Gold!</p>
+        <div class="shop-grid">
+          ${available.map(a => `
+            <div class="item-card">
+              <div class="item-name">${a.emoji} ${a.name}</div>
+              <div class="item-desc">${a.desc}</div>
+              <div class="item-stats">Syarat: Lv.${a.levelReq}</div>
+              <button class="btn-primary" style="margin-top:10px;" onclick="window.NexusRPG.startAdventure('${a.id}')">🚀 Mulai Ekspedisi</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    });
+  }
+
+  function startAdventure(areaId) {
+    closeModal();
+    const area = AREAS.find(a => a.id === areaId);
+    if (!area) return;
+
+    const areaMonsters = MONSTERS[areaId] || MONSTERS.area_1;
+    const stages = 3;
+    let allWon = true;
+
+    addLog(`🚀 <strong>EKSPEDISI DIMULAI:</strong> Menjelajahi ${area.emoji} <strong>${area.name}</strong> (3 Ronde)...`, 'system');
+
+    for (let i = 1; i <= stages; i++) {
+      if (state.hp <= 0) { allWon = false; break; }
+      const m = areaMonsters[Math.floor(Math.random() * areaMonsters.length)];
+      addLog(`📍 <strong>Ronde ${i}/${stages}:</strong> Pertempuran di garis depan...`, 'system');
+      const won = executeBattle(m, false);
+      if (!won) { allWon = false; break; }
+      const pStats = getComputedStats();
+      const restHeal = Math.floor(pStats.maxHp * 0.15);
+      state.hp = Math.min(pStats.maxHp, state.hp + restHeal);
+    }
+
+    if (allWon) {
+      const bonusGold = Math.floor(area.levelReq * 40 + 60);
+      const bonusXp = Math.floor(area.levelReq * 50 + 80);
+      state.gold += bonusGold;
+      state.xp += bonusXp;
+      addLog(`🎉 <strong>EKSPEDISI SELESAI!</strong> Seluruh ronde ditaklukkan! Bonus Ekstra: <strong>+${bonusXp} EXP</strong>, <strong>+${bonusGold} 💰</strong>.`, 'victory');
+      checkLevelUp();
+    }
+
+    updateUI();
+    autoSaveInstant();
+  }
+
+  function handleDungeon() {
+    if (!checkCooldown('dungeon', 8000)) return;
+    if (state.hp <= 0) { showToast('💀 Anda tumbang! Pulihkan HP Anda.'); return; }
+
+    const boss = DUNGEON_BOSSES[state.currentArea];
+    if (!boss) { showToast('Tidak ada dungeon di area ini.'); return; }
+
+    addLog(`🏰 <strong>DUNGEON TERBUKA!</strong> Menantang Boss Penjaga: <strong>${boss.emoji} ${boss.name}</strong>!`, 'combat');
+    executeBattle(boss, true);
+    updateUI();
+    autoSaveInstant();
+  }
+
+  function handleHeal() {
+    if (!checkCooldown('heal', 2000)) return;
+    const stats = getComputedStats();
+    if (state.hp >= stats.maxHp) { showToast('✨ Darah Anda sudah penuh 100%!'); return; }
+
+    const isDead = state.hp <= 0;
+    const cost = isDead ? (35 + state.level * 4) : Math.max(10, Math.floor((stats.maxHp - state.hp) * 0.4));
+
+    if (state.gold < cost) { showToast(`❌ Gold tidak cukup! Perlu ${cost} 💰`); return; }
+
+    state.gold -= cost;
+    state.hp = stats.maxHp;
+    showToast(`❤️ Darah pulih maksimal! (-${cost} 💰)`);
+    addLog(`❤️ <strong>Divine Sanctuary:</strong> Sinar suci memulihkan Anda ke <strong>${stats.maxHp}/${stats.maxHp} HP</strong>! Biaya: ${cost} 💰.`, 'heal');
+
+    updateUI();
+    autoSaveInstant();
+  }
+
   function handleChop() {
     if (!checkCooldown('chop', 3000)) return;
-    if (state.hp <= 0) { showToast('💀 You are dead! Use ❤️ Heal first.'); return; }
+    if (state.hp <= 0) { showToast('💀 Anda tumbang! Gunakan ❤️ Heal dulu.'); return; }
 
     state.stats.chopsCount += 1;
     const baseWood = Math.floor(Math.random() * 6) + 3;
@@ -600,18 +727,18 @@
     const xpEarned = 12 + state.level * 2;
     state.xp += xpEarned;
 
-    let msg = `🪓 <strong>CHOP:</strong> You swung your axe deep into the woods!<br>Harvested: 🪵 <strong>Normie Wood x${baseWood}</strong>, +${xpEarned} XP.`;
-    if (bonusLog.length > 0) msg += `<br>Extra Drops: ${bonusLog.join(', ')}!`;
+    let msg = `🪓 <strong>LOGGING PANEN:</strong> Anda menebang kayu di hutan!<br>Hasil: 🪵 <strong>Normie Wood x${baseWood}</strong>, +${xpEarned} EXP.`;
+    if (bonusLog.length > 0) msg += `<br>Hadiah Bonus: ${bonusLog.join(', ')}!`;
 
     addLog(msg, 'loot');
     checkLevelUp();
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
   }
 
   function handleFish() {
     if (!checkCooldown('fish', 3000)) return;
-    if (state.hp <= 0) { showToast('💀 You are dead! Use ❤️ Heal first.'); return; }
+    if (state.hp <= 0) { showToast('💀 Anda tumbang! Gunakan ❤️ Heal dulu.'); return; }
 
     state.stats.fishCount += 1;
     const baseFish = Math.floor(Math.random() * 5) + 3;
@@ -638,28 +765,28 @@
     const xpEarned = 12 + state.level * 2;
     state.xp += xpEarned;
 
-    let msg = `🎣 <strong>FISH:</strong> You cast your net into the shimmering stream!<br>Caught: 🐟 <strong>Normie Fish x${baseFish}</strong>, +${xpEarned} XP.`;
-    if (bonusLog.length > 0) msg += `<br>Extra Catches: ${bonusLog.join(', ')}!`;
+    let msg = `🎣 <strong>MEMANCING:</strong> Anda menebar jaring di arus sungai kosmik!<br>Tangkapan: 🐟 <strong>Normie Fish x${baseFish}</strong>, +${xpEarned} EXP.`;
+    if (bonusLog.length > 0) msg += `<br>Ikan Langka: ${bonusLog.join(', ')}!`;
 
     addLog(msg, 'loot');
     checkLevelUp();
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
   }
 
   /* ============================================================
      7. CRATES / LOOTBOXES
      ============================================================ */
   function showCratesModal() {
-    openModal('📦 Open Lootboxes', () => {
+    openModal('📦 Buka Peti Hadiah (Lootbox)', () => {
       const crateKeys = ['crate_common', 'crate_uncommon', 'crate_rare', 'crate_epic', 'crate_edgy', 'crate_omega', 'crate_godly'];
       const myCrates = crateKeys.filter(k => state.inventory[k] > 0);
 
       if (myCrates.length === 0) {
         return `
-          <div style="text-align:center; padding:25px; color:var(--text-secondary)">
-            <p>You have no crates in your satchel right now!</p>
-            <p style="margin-top:10px; font-size:13px;">Hunt monsters, chop wood, fish, or purchase them at the 🛒 Shop to obtain lootboxes.</p>
+          <div style="text-align:center; padding:25px; color:var(--text-sub)">
+            <p>Saat ini tidak ada peti di tas Anda!</p>
+            <p style="margin-top:10px; font-size:12px;">Dapatkan peti dari berburu monster, panen kayu, memancing, atau beli di 🛒 Toko.</p>
           </div>
         `;
       }
@@ -670,10 +797,10 @@
             const item = ITEMS[id];
             const qty = state.inventory[id];
             return `
-              <div class="item-card item-rarity-${item.rarity}">
-                <div class="item-name">${item.emoji} ${item.name} <span style="font-size:13px; opacity:0.8">(x${qty})</span></div>
+              <div class="item-card">
+                <div class="item-name">${item.emoji} ${item.name} <span style="font-size:12px; opacity:0.8">(x${qty})</span></div>
                 <div class="item-desc">${item.desc}</div>
-                <button class="btn-primary" style="margin-top:10px;" onclick="window.NexusRPG.openCrate('${id}')">🎁 Open Crate</button>
+                <button class="btn-primary" style="margin-top:10px;" onclick="window.NexusRPG.openCrate('${id}')">🎁 Buka Peti Ini</button>
               </div>
             `;
           }).join('')}
@@ -743,12 +870,12 @@
     state.gold += gainedGold;
     state.xp += gainedXp;
 
-    addLog(`🎁 <strong>CRATE OPENED:</strong> ${ITEMS[crateId].name} unlocked!<br>Gold: +${gainedGold} 💰 | XP: +${gainedXp}<br>Loot: ${itemsGained.join(', ')}`, 'victory');
-    showToast(`Unlocked ${ITEMS[crateId].name}!`);
+    addLog(`🎁 <strong>PETI DIBUKA:</strong> ${ITEMS[crateId].name} terbuka!<br>Gold: +${gainedGold} 💰 | EXP: +${gainedXp}<br>Hadiah: ${itemsGained.join(', ')}`, 'victory');
+    showToast(`Membuka ${ITEMS[crateId].name}!`);
 
     checkLevelUp();
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showCratesModal();
   }
 
@@ -756,45 +883,45 @@
      8. TRADE MARKET
      ============================================================ */
   function showTradeModal() {
-    openModal('⚖️ Resource Exchange Market', () => {
+    openModal('⚖️ Pasar Penukaran Sumber Daya', () => {
       return `
-        <p style="margin-bottom:14px; color:var(--text-secondary)">Exchange raw gathered resources, wood, fish, and gemstones instantly:</p>
+        <p style="margin-bottom:14px; color:var(--text-sub); font-size:13px;">Tukar hasil panen kayu, ikan, dan permata langsung:</p>
         <div class="shop-grid">
           <div class="item-card">
-            <div class="item-name">🪵 Wood ➔ 🐟 Fish</div>
-            <div class="item-desc">Exchange 10 Normie Wood for 10 Normie Fish</div>
-            <div class="item-stats">Your Wood: ${state.inventory.wood_normie || 0}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('wood_to_fish')">Trade (10 Wood)</button>
+            <div class="item-name">🪵 Kayu ➔ 🐟 Ikan</div>
+            <div class="item-desc">Tukar 10 Normie Wood jadi 10 Normie Fish</div>
+            <div class="item-stats">Kayu Anda: ${state.inventory.wood_normie || 0}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('wood_to_fish')">Tukar (10 Kayu)</button>
           </div>
           <div class="item-card">
-            <div class="item-name">🐟 Fish ➔ 🪵 Wood</div>
-            <div class="item-desc">Exchange 10 Normie Fish for 10 Normie Wood</div>
-            <div class="item-stats">Your Fish: ${state.inventory.fish_normie || 0}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('fish_to_wood')">Trade (10 Fish)</button>
+            <div class="item-name">🐟 Ikan ➔ 🪵 Kayu</div>
+            <div class="item-desc">Tukar 10 Normie Fish jadi 10 Normie Wood</div>
+            <div class="item-stats">Ikan Anda: ${state.inventory.fish_normie || 0}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('fish_to_wood')">Tukar (10 Ikan)</button>
           </div>
           <div class="item-card">
             <div class="item-name">🪵 10 Normie Wood ➔ 🪵 1 Epic Wood</div>
-            <div class="item-desc">Condense timber into higher tier</div>
-            <div class="item-stats">Your Wood: ${state.inventory.wood_normie || 0}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('compress_wood')">Compress Wood</button>
+            <div class="item-desc">Gabungkan kayu menjadi kayu langka</div>
+            <div class="item-stats">Kayu Anda: ${state.inventory.wood_normie || 0}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('compress_wood')">Gabungkan Kayu</button>
           </div>
           <div class="item-card">
             <div class="item-name">🐟 10 Normie Fish ➔ 🐠 1 Golden Fish</div>
-            <div class="item-desc">Refine catches into higher tier</div>
-            <div class="item-stats">Your Fish: ${state.inventory.fish_normie || 0}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('compress_fish')">Refine Fish</button>
+            <div class="item-desc">Tukar tangkapan menjadi ikan emas</div>
+            <div class="item-stats">Ikan Anda: ${state.inventory.fish_normie || 0}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('compress_fish')">Tukar Ikan Emas</button>
           </div>
           <div class="item-card">
             <div class="item-name">💎 1 Ruby ➔ 💰 100 Gold</div>
-            <div class="item-desc">Pawn gemstone for immediate coin</div>
-            <div class="item-stats">Your Rubies: ${state.inventory.ruby || 0}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('ruby_to_gold')">Sell Ruby</button>
+            <div class="item-desc">Jual permata ruby untuk gold langsung</div>
+            <div class="item-stats">Ruby Anda: ${state.inventory.ruby || 0}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('ruby_to_gold')">Jual Ruby (+100 💰)</button>
           </div>
           <div class="item-card">
             <div class="item-name">💰 150 Gold ➔ 💎 1 Ruby</div>
-            <div class="item-desc">Purchase rare gemstone for elite crafts</div>
-            <div class="item-stats">Your Gold: ${state.gold}</div>
-            <button class="btn-primary" onclick="window.NexusRPG.trade('gold_to_ruby')">Buy Ruby</button>
+            <div class="item-desc">Beli permata ruby untuk menempa senjata</div>
+            <div class="item-stats">Gold Anda: ${state.gold}</div>
+            <button class="btn-primary" onclick="window.NexusRPG.trade('gold_to_ruby')">Beli Ruby (-150 💰)</button>
           </div>
         </div>
       `;
@@ -803,211 +930,44 @@
 
   function handleTrade(tradeType) {
     if (tradeType === 'wood_to_fish') {
-      if ((state.inventory.wood_normie || 0) < 10) { showToast('Need 10 Normie Wood!'); return; }
+      if ((state.inventory.wood_normie || 0) < 10) { showToast('Kurang 10 Normie Wood!'); return; }
       state.inventory.wood_normie -= 10;
       state.inventory.fish_normie = (state.inventory.fish_normie || 0) + 10;
-      showToast('Traded 10 Wood for 10 Fish!');
+      showToast('Menukar 10 Kayu menjadi 10 Ikan!');
     } else if (tradeType === 'fish_to_wood') {
-      if ((state.inventory.fish_normie || 0) < 10) { showToast('Need 10 Normie Fish!'); return; }
+      if ((state.inventory.fish_normie || 0) < 10) { showToast('Kurang 10 Normie Fish!'); return; }
       state.inventory.fish_normie -= 10;
       state.inventory.wood_normie = (state.inventory.wood_normie || 0) + 10;
-      showToast('Traded 10 Fish for 10 Wood!');
+      showToast('Menukar 10 Ikan menjadi 10 Kayu!');
     } else if (tradeType === 'compress_wood') {
-      if ((state.inventory.wood_normie || 0) < 10) { showToast('Need 10 Normie Wood!'); return; }
+      if ((state.inventory.wood_normie || 0) < 10) { showToast('Kurang 10 Normie Wood!'); return; }
       state.inventory.wood_normie -= 10;
       state.inventory.wood_epic = (state.inventory.wood_epic || 0) + 1;
-      showToast('Compressed into 1 Epic Wood!');
+      showToast('Menggabungkan jadi 1 Epic Wood!');
     } else if (tradeType === 'compress_fish') {
-      if ((state.inventory.fish_normie || 0) < 10) { showToast('Need 10 Normie Fish!'); return; }
+      if ((state.inventory.fish_normie || 0) < 10) { showToast('Kurang 10 Normie Fish!'); return; }
       state.inventory.fish_normie -= 10;
       state.inventory.fish_golden = (state.inventory.fish_golden || 0) + 1;
-      showToast('Refined into 1 Golden Fish!');
+      showToast('Menukar jadi 1 Golden Fish!');
     } else if (tradeType === 'ruby_to_gold') {
-      if ((state.inventory.ruby || 0) < 1) { showToast('No Ruby available!'); return; }
+      if ((state.inventory.ruby || 0) < 1) { showToast('Tidak punya Ruby!'); return; }
       state.inventory.ruby -= 1;
       state.gold += 100;
-      showToast('Sold Ruby for +100 Gold!');
+      showToast('Menjual Ruby (+100 Gold)!');
     } else if (tradeType === 'gold_to_ruby') {
-      if (state.gold < 150) { showToast('Need 150 Gold!'); return; }
+      if (state.gold < 150) { showToast('Butuh 150 Gold!'); return; }
       state.gold -= 150;
       state.inventory.ruby = (state.inventory.ruby || 0) + 1;
-      showToast('Bought 1 Ruby!');
+      showToast('Membeli 1 Ruby!');
     }
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showTradeModal();
   }
 
   /* ============================================================
-     9. BACKUP & RESTORE MODAL (CROSS-DEVICE SAVE CODES)
-     ============================================================ */
-  function showBackupModal() {
-    const saveString = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-
-    openModal('📤 Save Backup & Cross-Device Sync', () => {
-      return `
-        <div style="font-size:14px; line-height:1.6; color:var(--text-primary)">
-          <p>Salin <strong>Save Code</strong> ini untuk menyimpan cadangan karakter Anda atau memindahkannya ke perangkat lain kapan saja:</p>
-          
-          <div style="margin: 14px 0;">
-            <label style="color:var(--accent-cyan); font-weight:bold; font-size:12px;">KODE CADANGAN KARAKTER (BASE64):</label>
-            <textarea id="backup-code-area" readonly style="width:100%; height:90px; background:var(--bg-dark); color:var(--accent-gold); border:1px solid rgba(0,255,204,0.3); border-radius:8px; padding:10px; font-family:monospace; font-size:12px; resize:none; margin-top:6px;">${saveString}</textarea>
-            <button class="btn-primary" style="margin-top:8px;" onclick="window.NexusRPG.copySaveCode()">📋 Copy Kode ke Clipboard</button>
-          </div>
-
-          <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-
-          <div style="margin: 14px 0;">
-            <label style="color:var(--accent-purple); font-weight:bold; font-size:12px;">PULIHKAN / IMPORT KODE CADANGAN:</label>
-            <p style="font-size:12px; color:var(--text-secondary); margin:4px 0;">Punya kode dari PC lain? Tempel (paste) di bawah ini untuk memuat karakter Anda:</p>
-            <textarea id="restore-code-area" placeholder="Paste kode save di sini..." style="width:100%; height:80px; background:var(--bg-dark); color:var(--text-primary); border:1px solid rgba(170,68,255,0.3); border-radius:8px; padding:10px; font-family:monospace; font-size:12px; resize:none; margin-top:6px;"></textarea>
-            <button class="btn-primary" style="margin-top:8px; background:linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));" onclick="window.NexusRPG.restoreSaveCode()">📥 Restore Karakter</button>
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  function copySaveCode() {
-    const area = document.getElementById('backup-code-area');
-    if (!area) return;
-    area.select();
-    navigator.clipboard.writeText(area.value);
-    showToast('📋 Save Code berhasil disalin!');
-  }
-
-  function restoreSaveCode() {
-    const area = document.getElementById('restore-code-area');
-    if (!area || !area.value.trim()) {
-      showToast('❌ Kode save kosong!');
-      return;
-    }
-    try {
-      const decodedStr = decodeURIComponent(escape(atob(area.value.trim())));
-      const parsed = JSON.parse(decodedStr);
-      if (!parsed.characterName && !parsed.level) {
-        throw new Error('Invalid structure');
-      }
-
-      state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-      isDirty = true;
-      updateUI();
-      saveGame(false);
-      closeModal();
-      showToast('✅ Karakter berhasil dipulihkan!');
-      addLog(`✨ <strong>RESTORE SUKSES:</strong> Karakter <strong>${state.characterName}</strong> (Lv.${state.level}) berhasil dimuat!`, 'system');
-    } catch (e) {
-      showToast('❌ Format kode save tidak valid!');
-    }
-  }
-
-  /* ============================================================
-     10. STANDARD ACTIONS (HUNT, ADVENTURE, DUNGEON, HEAL)
-     ============================================================ */
-  function handleHunt() {
-    if (!checkCooldown('hunt', 2000)) return;
-    if (state.hp <= 0) { showToast('💀 You are dead! Use ❤️ Heal first.'); return; }
-
-    const areaMonsters = MONSTERS[state.currentArea] || MONSTERS.area_1;
-    const monster = areaMonsters[Math.floor(Math.random() * areaMonsters.length)];
-
-    executeBattle(monster, false);
-    isDirty = true;
-    updateUI();
-  }
-
-  function handleAdventure() {
-    if (!checkCooldown('adventure', 5000)) return;
-    if (state.hp <= 0) { showToast('💀 You are dead! Use ❤️ Heal first.'); return; }
-
-    openModal('🗺️ Choose Adventure Destination', () => {
-      const available = AREAS.filter(a => state.level >= a.levelReq);
-      return `
-        <p style="margin-bottom: 14px; color: var(--text-secondary)">Embark on a perilous 3-stage expedition for +50% bonus rewards!</p>
-        <div class="shop-grid">
-          ${available.map(a => `
-            <div class="item-card">
-              <div class="item-name">${a.emoji} ${a.name}</div>
-              <div class="item-desc">${a.desc}</div>
-              <div class="item-stats">Requires Lv.${a.levelReq}</div>
-              <button class="btn-primary" style="margin-top:10px;" onclick="window.NexusRPG.startAdventure('${a.id}')">Start Expedition</button>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    });
-  }
-
-  function startAdventure(areaId) {
-    closeModal();
-    const area = AREAS.find(a => a.id === areaId);
-    if (!area) return;
-
-    const areaMonsters = MONSTERS[areaId] || MONSTERS.area_1;
-    const stages = 3;
-    let allWon = true;
-
-    addLog(`🚀 <strong>EXPEDITION STARTED:</strong> Exploring ${area.emoji} <strong>${area.name}</strong> (3 Stages)...`, 'system');
-
-    for (let i = 1; i <= stages; i++) {
-      if (state.hp <= 0) { allWon = false; break; }
-      const m = areaMonsters[Math.floor(Math.random() * areaMonsters.length)];
-      addLog(`📍 <strong>Stage ${i}/${stages}:</strong> Deep exploration...`, 'system');
-      const won = executeBattle(m, false);
-      if (!won) { allWon = false; break; }
-      const pStats = getComputedStats();
-      const restHeal = Math.floor(pStats.maxHp * 0.15);
-      state.hp = Math.min(pStats.maxHp, state.hp + restHeal);
-    }
-
-    if (allWon) {
-      const bonusGold = Math.floor(area.levelReq * 40 + 60);
-      const bonusXp = Math.floor(area.levelReq * 50 + 80);
-      state.gold += bonusGold;
-      state.xp += bonusXp;
-      addLog(`🎉 <strong>EXPEDITION CONQUERED!</strong> Explored ${area.name}! Bonus: <strong>+${bonusXp} XP</strong>, <strong>+${bonusGold} 💰</strong>.`, 'victory');
-      checkLevelUp();
-    }
-
-    isDirty = true;
-    updateUI();
-  }
-
-  function handleDungeon() {
-    if (!checkCooldown('dungeon', 8000)) return;
-    if (state.hp <= 0) { showToast('💀 You are dead! Use ❤️ Heal first.'); return; }
-
-    const boss = DUNGEON_BOSSES[state.currentArea];
-    if (!boss) { showToast('No dungeon lair in this area.'); return; }
-
-    addLog(`🏰 <strong>DUNGEON LAIR BREACHED!</strong> Awakening: <strong>${boss.emoji} ${boss.name}</strong>!`, 'combat');
-    executeBattle(boss, true);
-    isDirty = true;
-    updateUI();
-  }
-
-  function handleHeal() {
-    if (!checkCooldown('heal', 2000)) return;
-    const stats = getComputedStats();
-    if (state.hp >= stats.maxHp) { showToast('✨ You are already at peak health!'); return; }
-
-    const isDead = state.hp <= 0;
-    const cost = isDead ? (35 + state.level * 4) : Math.max(10, Math.floor((stats.maxHp - state.hp) * 0.4));
-
-    if (state.gold < cost) { showToast(`❌ Not enough gold! Need ${cost} 💰`); return; }
-
-    state.gold -= cost;
-    state.hp = stats.maxHp;
-    showToast(`❤️ Full HP restored! (-${cost} 💰)`);
-    addLog(`❤️ <strong>Divine Sanctuary:</strong> Blessed light restores you to full <strong>${stats.maxHp}/${stats.maxHp} HP</strong>! Paid ${cost} 💰.`, 'heal');
-
-    isDirty = true;
-    updateUI();
-  }
-
-  /* ============================================================
-     11. MODALS (INVENTORY, SHOP, CRAFT, SKILLS)
+     9. MODALS (INVENTORY, SHOP, CRAFT, SKILLS)
      ============================================================ */
   function openModal(title, renderFn) {
     el.modalTitle.textContent = title;
@@ -1020,10 +980,10 @@
   }
 
   function showInventory() {
-    openModal('🎒 Hero Inventory', () => {
+    openModal('🎒 Tas Hero & Perlengkapan', () => {
       const keys = Object.keys(state.inventory).filter(k => state.inventory[k] > 0);
       if (keys.length === 0) {
-        return `<p style="text-align:center; color: var(--text-secondary); padding: 30px;">Your cosmic satchel is completely empty.</p>`;
+        return `<p style="text-align:center; color: var(--text-sub); padding: 30px;">Tas Anda kosong melompong.</p>`;
       }
 
       return `
@@ -1035,17 +995,17 @@
             let actionBtn = '';
 
             if (item.type === 'consumable') {
-              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.useItem('${itemId}')">Use Item</button>`;
+              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.useItem('${itemId}')">Gunakan Item</button>`;
             } else if (item.type === 'crate') {
-              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.openCrate('${itemId}')">Open Crate</button>`;
+              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.openCrate('${itemId}')">Buka Peti</button>`;
             } else if (item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory') {
-              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.equipItem('${itemId}')">Equip</button>`;
+              actionBtn = `<button class="btn-primary" onclick="window.NexusRPG.equipItem('${itemId}')">Pakai (Equip)</button>`;
             } else {
-              actionBtn = `<button style="border-color:var(--accent-gold); color:var(--accent-gold)" onclick="window.NexusRPG.sellItem('${itemId}', 1)">Sell for ${item.sellPrice} 💰</button>`;
+              actionBtn = `<button class="btn-primary" style="background:transparent; border:1px solid var(--accent-gold); color:var(--accent-gold)" onclick="window.NexusRPG.sellItem('${itemId}', 1)">Jual (${item.sellPrice} 💰)</button>`;
             }
 
             return `
-              <div class="item-card item-rarity-${item.rarity}">
+              <div class="item-card">
                 <div class="item-name">${item.emoji} ${item.name} <span style="font-size:12px; opacity:0.8;">(x${qty})</span></div>
                 <div class="item-desc">${item.desc}</div>
                 ${item.stats ? `<div class="item-stats">${formatStats(item.stats)}</div>` : ''}
@@ -1077,26 +1037,26 @@
     const pStats = getComputedStats();
     if (item.effect.type === 'heal') {
       state.hp = Math.min(pStats.maxHp, state.hp + item.effect.value);
-      showToast(`Restored +${item.effect.value} HP!`);
-      addLog(`🧪 Used <strong>${item.name}</strong>: Restored <strong>+${item.effect.value} HP</strong>.`, 'heal');
+      showToast(`Pulih +${item.effect.value} HP!`);
+      addLog(`🧪 Menggunakan <strong>${item.name}</strong>: Memulihkan <strong>+${item.effect.value} HP</strong>.`, 'heal');
     } else if (item.effect.type === 'heal_full') {
       state.hp = pStats.maxHp;
-      showToast(`Full health restored!`);
-      addLog(`🧪 Used <strong>${item.name}</strong>: Fully revitalized to max HP!`, 'heal');
+      showToast(`Darah pulih penuh 100%!`);
+      addLog(`🧪 Menggunakan <strong>${item.name}</strong>: Vitalitas kembali 100%!`, 'heal');
     } else if (item.effect.type === 'buff_atk') {
       state.buffs.atkMultiplier = item.effect.value;
       state.buffs.battlesLeft = item.effect.battles || 4;
-      showToast(`+50% ATK boosted for 4 battles!`);
-      addLog(`⚗️ Drank <strong>${item.name}</strong>: +50% ATK for 4 battles!`, 'system');
+      showToast(`+50% Serangan bertambah untuk 4 ronde!`);
+      addLog(`⚗️ Meminum <strong>${item.name}</strong>: +50% ATK untuk 4 ronde!`, 'system');
     } else if (item.effect.type === 'buff_def') {
       state.buffs.defMultiplier = item.effect.value;
       state.buffs.battlesLeft = item.effect.battles || 4;
-      showToast(`+50% DEF boosted for 4 battles!`);
-      addLog(`⚗️ Drank <strong>${item.name}</strong>: +50% DEF for 4 battles!`, 'system');
+      showToast(`+50% Pertahanan bertambah untuk 4 ronde!`);
+      addLog(`⚗️ Meminum <strong>${item.name}</strong>: +50% DEF untuk 4 ronde!`, 'system');
     }
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showInventory();
   }
 
@@ -1113,11 +1073,11 @@
     if (state.inventory[itemId] <= 0) delete state.inventory[itemId];
 
     state.equipment[item.type] = itemId;
-    showToast(`Equipped ${item.name}!`);
-    addLog(`🛡️ Equipped <strong>${item.emoji} ${item.name}</strong>.`, 'system');
+    showToast(`Memakai ${item.name}!`);
+    addLog(`🛡️ Memakai <strong>${item.emoji} ${item.name}</strong>.`, 'system');
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showInventory();
   }
 
@@ -1130,11 +1090,11 @@
 
     const gain = (item.sellPrice || 5) * count;
     state.gold += gain;
-    showToast(`Sold for +${gain} 💰`);
-    addLog(`💰 Sold ${item.emoji} ${item.name} for <strong>+${gain} 💰</strong>.`, 'loot');
+    showToast(`Terjual seharga +${gain} 💰`);
+    addLog(`💰 Menjual ${item.emoji} ${item.name} seharga <strong>+${gain} 💰</strong>.`, 'loot');
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showInventory();
   }
 
@@ -1146,7 +1106,7 @@
       'iron_sword', 'iron_plate', 'ring_ruby'
     ];
 
-    openModal('🛒 Cosmic Merchant', () => {
+    openModal('🛒 Toko Pasar Kosmik', () => {
       return `
         <div class="shop-grid">
           ${shopList.map(id => {
@@ -1154,13 +1114,13 @@
             if (!item) return '';
             const canAfford = state.gold >= item.buyPrice;
             return `
-              <div class="item-card item-rarity-${item.rarity}">
+              <div class="item-card">
                 <div class="item-name">${item.emoji} ${item.name}</div>
                 <div class="item-desc">${item.desc}</div>
                 ${item.stats ? `<div class="item-stats">${formatStats(item.stats)}</div>` : ''}
                 <div class="item-price">💰 ${item.buyPrice} Gold</div>
                 <button ${canAfford ? '' : 'disabled'} class="btn-primary" onclick="window.NexusRPG.buyItem('${id}')">
-                  ${canAfford ? 'Purchase' : 'Need more Gold'}
+                  ${canAfford ? 'Beli Sekarang' : 'Gold Kurang'}
                 </button>
               </div>
             `;
@@ -1173,22 +1133,22 @@
   function buyItem(itemId) {
     const item = ITEMS[itemId];
     if (!item || state.gold < item.buyPrice) {
-      showToast('❌ Insufficient gold!');
+      showToast('❌ Gold tidak cukup!');
       return;
     }
 
     state.gold -= item.buyPrice;
     state.inventory[itemId] = (state.inventory[itemId] || 0) + 1;
-    showToast(`Purchased ${item.name}!`);
-    addLog(`🛒 Bought <strong>${item.emoji} ${item.name}</strong> for ${item.buyPrice} 💰.`, 'system');
+    showToast(`Membeli ${item.name}!`);
+    addLog(`🛒 Membeli <strong>${item.emoji} ${item.name}</strong> seharga ${item.buyPrice} 💰.`, 'system');
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showShop();
   }
 
   function showCraft() {
-    openModal('🔨 Mystic Forge', () => {
+    openModal('🔨 Mystic Forge (Tempa Senjata & Armor)', () => {
       const craftableKeys = Object.keys(ITEMS).filter(k => ITEMS[k].craftRecipe);
 
       return `
@@ -1210,15 +1170,15 @@
             }).join(' • ');
 
             return `
-              <div class="item-card item-rarity-${item.rarity}">
+              <div class="item-card">
                 <div class="item-name">${item.emoji} ${item.name}</div>
                 <div class="item-desc">${item.desc}</div>
                 ${item.stats ? `<div class="item-stats">${formatStats(item.stats)}</div>` : ''}
-                <div style="font-size:12px; margin: 8px 0; background:rgba(0,0,0,0.3); padding:6px; border-radius:6px;">
+                <div style="font-size:12px; margin: 8px 0; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;">
                   ${ingredientsHtml}
                 </div>
                 <button ${canCraft ? '' : 'disabled'} class="btn-primary" onclick="window.NexusRPG.craftItem('${k}')">
-                  ${canCraft ? '🔨 Forge Artifact' : 'Missing Materials'}
+                  ${canCraft ? '🔨 Tempa Sekarang' : 'Bahan Belum Cukup'}
                 </button>
               </div>
             `;
@@ -1235,7 +1195,7 @@
     for (const matId of Object.keys(item.craftRecipe)) {
       const needed = item.craftRecipe[matId];
       if ((state.inventory[matId] || 0) < needed) {
-        showToast('Missing required materials!');
+        showToast('Bahan belum mencukupi!');
         return;
       }
     }
@@ -1246,26 +1206,26 @@
     }
 
     state.inventory[itemId] = (state.inventory[itemId] || 0) + 1;
-    showToast(`✨ Forged ${item.name}!`);
-    addLog(`🔨 <strong>FORGED:</strong> Created <strong>${item.emoji} ${item.name}</strong>!`, 'victory');
+    showToast(`✨ Berhasil menempa ${item.name}!`);
+    addLog(`🔨 <strong>FORGED:</strong> Menempa perlengkapan baru: <strong>${item.emoji} ${item.name}</strong>!`, 'victory');
 
-    isDirty = true;
     updateUI();
+    autoSaveInstant();
     showCraft();
   }
 
   function showSkills() {
-    openModal('⭐ Stellar Skills', () => {
+    openModal('⭐ Pohon Keahlian Hero', () => {
       return `
         <div class="skill-grid">
           ${SKILLS.map(s => {
             const unlocked = state.level >= s.levelReq;
             return `
-              <div class="item-card" style="opacity: ${unlocked ? 1 : 0.5}; border-color: ${unlocked ? 'var(--accent-purple)' : 'rgba(255,255,255,0.1)'}">
-                <div class="item-name">${s.emoji} ${s.name} ${unlocked ? '✅' : '🔒'}</div>
+              <div class="item-card" style="opacity: ${unlocked ? 1 : 0.5};">
+                <div class="item-name">${s.emoji} ${s.name} ${unlocked ? '✅ Aktif' : '🔒 Terkunci'}</div>
                 <div class="item-desc">${s.desc}</div>
                 <div class="item-stats" style="color: ${unlocked ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
-                  ${unlocked ? 'Mastered & Active in Battle' : `Unlocks at Level ${s.levelReq}`}
+                  ${unlocked ? 'Keahlian aktif dalam pertarungan' : `Terbuka pada Level ${s.levelReq}`}
                 </div>
               </div>
             `;
@@ -1276,55 +1236,52 @@
   }
 
   /* ============================================================
-     12. CLOUD SAVE & AUTH APIS
+     10. AUTH & SINKRONISASI CLOUD LINTAS DEVICE
      ============================================================ */
-  async function saveGame(silent = false) {
+  async function loadCloudSave() {
+    if (!authToken) return false;
     try {
-      const res = await fetch('/api/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameState: state })
+      const res = await fetch('/api/load', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
-      const data = await res.json();
-      if (data.success) {
-        isDirty = false;
-        if (!silent) showToast('💾 Cloud Save Synced!');
-      }
-    } catch (err) {
-      console.error('Failed to save game:', err);
-    }
-  }
-
-  async function loadGame() {
-    try {
-      const res = await fetch('/api/load');
       const data = await res.json();
       if (data.success && data.gameState) {
         state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), data.gameState);
+        if (activeUsername) {
+          localStorage.setItem(`nexus_save_${activeUsername}`, JSON.stringify(state));
+        }
+        updateUI();
+        return true;
       }
-      updateUI();
-    } catch (err) {
-      console.error('Failed to load save:', err);
+    } catch (e) {
+      console.warn('Could not reach cloud load, using local cache');
     }
+
+    // Fallback ke localStorage jika server sleep
+    if (activeUsername) {
+      const local = localStorage.getItem(`nexus_save_${activeUsername}`);
+      if (local) {
+        try {
+          state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), JSON.parse(local));
+          updateUI();
+          return true;
+        } catch {}
+      }
+    }
+    return false;
   }
 
   async function checkSession() {
-    try {
-      const res = await fetch('/api/session');
-      const data = await res.json();
-      if (data.loggedIn) {
-        await loadGame();
-        el.authScreen.style.display = 'none';
-        el.gameScreen.style.display = 'flex';
-        addLog(`🌌 Welcome back to the Nexus, <strong>${state.characterName || data.username}</strong>!`, 'system');
-      } else {
-        el.authScreen.style.display = 'flex';
-        el.gameScreen.style.display = 'none';
-      }
-    } catch (err) {
-      el.authScreen.style.display = 'flex';
-      el.gameScreen.style.display = 'none';
+    if (authToken && activeUsername) {
+      await loadCloudSave();
+      el.authScreen.style.display = 'none';
+      el.gameScreen.style.display = 'flex';
+      addLog(`🌌 Selamat datang kembali, <strong>${state.characterName || activeUsername}</strong>! Progres aktif.`, 'system');
+      return;
     }
+
+    el.authScreen.style.display = 'flex';
+    el.gameScreen.style.display = 'none';
   }
 
   async function handleLogin(e) {
@@ -1341,15 +1298,20 @@
       });
       const data = await res.json();
       if (data.success) {
-        await loadGame();
+        authToken = data.token;
+        activeUsername = data.username;
+        localStorage.setItem('nexus_auth_token', authToken);
+        localStorage.setItem('nexus_username', activeUsername);
+
+        await loadCloudSave();
         el.authScreen.style.display = 'none';
         el.gameScreen.style.display = 'flex';
-        addLog(`⚔️ Connected as <strong>${state.characterName || u}</strong>.`, 'system');
+        addLog(`⚔️ Berhasil terhubung ke akun <strong>${state.characterName || u}</strong>.`, 'system');
       } else {
-        el.loginError.textContent = data.error || 'Login failed';
+        el.loginError.textContent = data.error || 'Login gagal';
       }
     } catch (err) {
-      el.loginError.textContent = 'Network or server error';
+      el.loginError.textContent = 'Gagal menghubungi server cloud';
     }
   }
 
@@ -1368,93 +1330,41 @@
       });
       const data = await res.json();
       if (data.success) {
+        authToken = data.token;
+        activeUsername = data.username;
+        localStorage.setItem('nexus_auth_token', authToken);
+        localStorage.setItem('nexus_username', activeUsername);
+
         state = JSON.parse(JSON.stringify(DEFAULT_STATE));
         state.characterName = charName;
-        await saveGame(true);
+        autoSaveInstant();
+
         el.authScreen.style.display = 'none';
         el.gameScreen.style.display = 'flex';
         updateUI();
-        addLog(`✨ Welcome Hero <strong>${charName}</strong>! Adventure begins in Area 1: Verdant Plains.`, 'system');
+        addLog(`✨ Selamat datang Hero <strong>${charName}</strong>! Petualangan dimulai di Area 1: Verdant Plains.`, 'system');
       } else {
-        el.registerError.textContent = data.error || 'Registration failed';
+        el.registerError.textContent = data.error || 'Pendaftaran gagal';
       }
     } catch (err) {
-      el.registerError.textContent = 'Network or server error';
+      el.registerError.textContent = 'Gagal menghubungi server cloud';
     }
   }
 
-  async function handleLogout() {
-    try {
-      await saveGame(true);
-      await fetch('/api/logout', { method: 'POST' });
-      location.reload();
-    } catch (err) {
-      location.reload();
-    }
+  function handleLogout() {
+    autoSaveInstant();
+    authToken = null;
+    activeUsername = null;
+    localStorage.removeItem('nexus_auth_token');
+    localStorage.removeItem('nexus_username');
+    location.reload();
   }
 
   /* ============================================================
-     13. BACKGROUND PARTICLES
-     ============================================================ */
-  function initParticles() {
-    const canvas = document.createElement('canvas');
-    const container = document.getElementById('particles');
-    if (!container) return;
-    container.appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-
-    window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
-
-    const particles = [];
-    const colors = ['#00ffcc', '#aa44ff', '#ffcc00', '#44aaff'];
-
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        radius: Math.random() * 2 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: -Math.random() * 0.6 - 0.2,
-        alpha: Math.random() * 0.6 + 0.2
-      });
-    }
-
-    function render() {
-      ctx.clearRect(0, 0, w, h);
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.y < 0) { p.y = h; p.x = Math.random() * w; }
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.alpha;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = p.color;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-      requestAnimationFrame(render);
-    }
-    render();
-  }
-
-  /* ============================================================
-     14. EVENT LISTENERS & GLOBAL EXPORTS
+     11. EVENT LISTENERS & SETUP
      ============================================================ */
   function setupEvents() {
+    // Auth Tabs
     el.tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         el.tabs.forEach(t => t.classList.remove('active'));
@@ -1471,14 +1381,29 @@
 
     el.loginForm.addEventListener('submit', handleLogin);
     el.registerForm.addEventListener('submit', handleRegister);
-
-    el.saveBtn.addEventListener('click', () => saveGame(false));
-    el.backupBtn.addEventListener('click', showBackupModal);
     el.logoutBtn.addEventListener('click', handleLogout);
 
     el.modalClose.addEventListener('click', closeModal);
     el.modal.querySelector('.modal-overlay').addEventListener('click', closeModal);
 
+    // Responsive View Switcher Tabs (Combat, Gathering, Bag, Forge)
+    el.viewTabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        el.viewTabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const viewId = btn.dataset.view;
+
+        el.viewPanels.forEach(p => {
+          if (p.id === `view-${viewId}`) {
+            p.style.display = 'block';
+          } else {
+            p.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Action button listeners
     document.querySelectorAll('.action-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const action = btn.dataset.action;
@@ -1498,10 +1423,6 @@
         }
       });
     });
-
-    setInterval(() => {
-      if (isDirty) saveGame(true);
-    }, 45000);
   }
 
   window.NexusRPG = {
@@ -1512,13 +1433,10 @@
     buyItem,
     craftItem,
     openCrate,
-    trade: handleTrade,
-    copySaveCode,
-    restoreSaveCode
+    trade: handleTrade
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
     setupEvents();
     checkSession();
   });
