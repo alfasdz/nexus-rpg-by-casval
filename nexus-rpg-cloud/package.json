@@ -1,15 +1,23 @@
 {
   "name": "nexus-rpg",
-  "version": "1.0.0",
-  "description": "NEXUS RPG - Online Cosmic RPG Game with Cloud Save",
+  "version": "4.0.0",
+  "description": "NEXUS RPG - Cosmic Minimalist RPG Game with Time Travel & Multiplayer Cloud Save",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.5.0"
   },
-  "keywords": ["rpg", "game", "epic-rpg", "cloud-save", "online-game"],
+  "keywords": [
+    "rpg",
+    "epic-rpg",
+    "time-travel",
+    "cosmic-rpg",
+    "multiplayer",
+    "cloud-save",
+    "render"
+  ],
   "author": "",
   "license": "MIT"
 }

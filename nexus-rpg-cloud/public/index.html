@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>NEXUS RPG - Cosmic Multiplayer Online</title>
-  <link rel="stylesheet" href="/css/style.css?v=3.5">
+  <title>NEXUS RPG - Cosmic Minimalist Edition</title>
+  <link rel="stylesheet" href="/css/style.css?v=4.0">
 </head>
 <body>
   <canvas id="space-canvas"></canvas>
@@ -18,46 +18,41 @@
         </div>
         <div class="logo-icon">⚔️</div>
         <h1>NEXUS RPG</h1>
-        <p class="tagline" data-i18n="auth_tagline">EPIC MULTIPLAYER COSMIC REALM</p>
+        <p class="tagline">COSMIC RPG ENGINE</p>
       </div>
 
       <div class="auth-toggle">
-        <button class="toggle-btn active" data-tab="login" data-i18n="btn_login_tab">LOGIN</button>
-        <button class="toggle-btn" data-tab="register" data-i18n="btn_reg_tab">DAFTAR BARU</button>
+        <button class="toggle-btn active" data-tab="login">LOGIN</button>
+        <button class="toggle-btn" data-tab="register">DAFTAR</button>
       </div>
 
       <form id="login-form" class="auth-form">
         <div class="form-group">
-          <label data-i18n="lbl_username">Username</label>
-          <input type="text" id="login-username" placeholder="Masukkan username" required autocomplete="username">
+          <input type="text" id="login-username" placeholder="Username" required autocomplete="username">
         </div>
         <div class="form-group">
-          <label data-i18n="lbl_password">Password</label>
-          <input type="password" id="login-password" placeholder="Masukkan password" required autocomplete="current-password">
+          <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
         </div>
-        <button type="submit" class="glow-button" data-i18n="btn_login_submit">⚔️ MASUK KE PERMAINAN</button>
+        <button type="submit" class="glow-button">⚔️ MASUK</button>
         <div id="login-error" class="error-text"></div>
       </form>
 
       <form id="register-form" class="auth-form" style="display:none">
         <div class="form-group">
-          <label data-i18n="lbl_reg_username">Pilih Username</label>
-          <input type="text" id="reg-username" placeholder="3-20 karakter" required autocomplete="username">
+          <input type="text" id="reg-username" placeholder="Username (3-20 huruf)" required autocomplete="username">
         </div>
         <div class="form-group">
-          <label data-i18n="lbl_reg_password">Pilih Password</label>
-          <input type="password" id="reg-password" placeholder="Minimal 4 karakter" required autocomplete="new-password">
+          <input type="password" id="reg-password" placeholder="Password (min 4)" required autocomplete="new-password">
         </div>
         <div class="form-group">
-          <label data-i18n="lbl_reg_char">Nama Gelar Hero</label>
-          <input type="text" id="reg-character" placeholder="Contoh: Arthur Pendragon" required>
+          <input type="text" id="reg-character" placeholder="Gelar Hero" required>
         </div>
-        <button type="submit" class="glow-button register-btn" data-i18n="btn_reg_submit">✨ BUAT KARAKTER</button>
+        <button type="submit" class="glow-button register-btn">✨ BUAT KARAKTER</button>
         <div id="register-error" class="error-text"></div>
       </form>
 
       <div class="auth-hint">
-        <span data-i18n="auth_vault_hint">☁️ Auto-Save Cloud Aktif • Lintas HP & Desktop</span>
+        <span>☁️ Cloud Auto-Save • Time Travel Engine</span>
       </div>
     </div>
   </div>
@@ -65,433 +60,453 @@
   <!-- ================= GAME SCREEN ================= -->
   <div id="game-screen" class="screen" style="display:none">
     
-    <!-- Top Bar Header -->
+    <!-- Top Minimalist HUD Header -->
     <header class="app-header">
-      <div class="header-brand">
-        <span class="brand-title">⚔️ NEXUS RPG</span>
-        <div class="player-tag">
-          <span id="char-name">Hero</span>
-          <span class="level-pill">Lv.<span id="char-level">1</span></span>
+      <div class="header-left">
+        <span class="brand-title">⚔️ NEXUS</span>
+        <div class="hero-chip" id="hero-chip-btn">
+          <span class="hero-avatar">🧙‍♂️</span>
+          <span id="char-name" class="hero-name">Hero</span>
+          <span class="level-badge">Lv.<span id="char-level">1</span></span>
         </div>
       </div>
-      <div class="header-status">
-        <div class="gold-capsule">💰 <span id="gold-display">0</span></div>
-        <button type="button" class="lang-toggle-btn" id="header-lang-btn" onclick="window.NexusRPG.toggleLanguage()" title="Ganti Bahasa / Switch Language">🌐 <span class="lang-current">ID</span></button>
-        <button id="social-btn" class="icon-action-btn" title="Multiplayer & Teman">👥</button>
-        <button id="logout-btn" class="icon-action-btn" title="Keluar">🚪</button>
+
+      <!-- Quick Resource Chips -->
+      <div class="header-center">
+        <div class="hud-chip hp-chip" title="Darah (HP)">
+          <span>❤️</span>
+          <span id="hud-hp-text">100/100</span>
+          <div class="micro-bar"><div id="hud-hp-bar" class="micro-fill hp"></div></div>
+        </div>
+        <div class="hud-chip xp-chip" title="Pengalaman (EXP)">
+          <span>⭐</span>
+          <span id="hud-xp-text">0/100</span>
+          <div class="micro-bar"><div id="hud-xp-bar" class="micro-fill xp"></div></div>
+        </div>
+        <div class="hud-chip gold-chip" title="Koin Berjalan">
+          <span>💰</span>
+          <span id="gold-display">0</span>
+        </div>
+        <div class="hud-chip bank-chip" title="Bank Kosmik (Aman dari Time Travel)">
+          <span>🏦</span>
+          <span id="bank-display">0</span>
+        </div>
+        <div class="hud-chip tt-chip" title="Time Travel Status & Kapsul">
+          <span>⏳</span>
+          <span id="tt-rank-display">TT 0</span>
+          <span class="capsule-sub">(<span id="capsule-display">0</span> 🔮)</span>
+        </div>
+        <div class="hud-chip area-chip" id="area-chip-btn" title="Ganti / Lihat Zona Area">
+          <span>📍</span>
+          <span id="area-display">Area 1</span>
+        </div>
+      </div>
+
+      <!-- Right Action Icons -->
+      <div class="header-right">
+        <button type="button" class="icon-hud-btn" id="header-lang-btn" onclick="window.NexusRPG.toggleLanguage()" title="Ganti Bahasa">🌐</button>
+        <button type="button" class="icon-hud-btn" id="social-btn" title="Multiplayer, Teman & Peringkat">👥</button>
+        <button type="button" class="icon-hud-btn danger" id="logout-btn" title="Keluar">🚪</button>
       </div>
     </header>
 
-    <!-- Main Workspace (Desktop Split / Mobile Stack) -->
+    <!-- Main Dynamic Workspace -->
     <div class="app-workspace">
+      
+      <!-- Minimalist Icon-Driven Navigation Dock -->
+      <nav class="icon-dock" id="icon-dock">
+        <button class="dock-btn active" data-tab="combat" title="Pertarungan (Hunt, Adventure, Dungeon, Train)">
+          <span class="dock-icon">⚔️</span>
+          <span class="dock-label">Tempur</span>
+        </button>
+        <button class="dock-btn" data-tab="gather" title="Panen (Chop, Fish, Mine, Farm, Pickup)">
+          <span class="dock-icon">🪓</span>
+          <span class="dock-label">Panen</span>
+        </button>
+        <button class="dock-btn" data-tab="forge" title="Tempa & Enchant (Craft, Enchant, Refine, Dismantle)">
+          <span class="dock-icon">🔮</span>
+          <span class="dock-label">Tempa</span>
+        </button>
+        <button class="dock-btn" data-tab="bag" title="Tas & Pasar (Inventory, Crates, Shop, Bank)">
+          <span class="dock-icon">🎒</span>
+          <span class="dock-label">Tas</span>
+        </button>
+        <button class="dock-btn special-tt" data-tab="timetravel" title="Altar Time Travel (Prestige & Kapsul Waktu)">
+          <span class="dock-icon">⏳</span>
+          <span class="dock-label">Waktu</span>
+        </button>
+        <button class="dock-btn" data-tab="mount" title="Cyber Mount & Drone">
+          <span class="dock-icon">🐎</span>
+          <span class="dock-label">Mount</span>
+        </button>
+        <button class="dock-btn" data-tab="casino" title="Kasino Kosmik (Judi Koin)">
+          <span class="dock-icon">🎰</span>
+          <span class="dock-label">Judi</span>
+        </button>
+        <button class="dock-btn" data-tab="profile" title="Statistik & Status Lengkap">
+          <span class="dock-icon">👤</span>
+          <span class="dock-label">Profil</span>
+        </button>
+      </nav>
 
-      <!-- Left Sidebar (Desktop Only Permanent Profile, Hidden on Mobile in favor of Tab) -->
-      <aside class="desktop-sidebar">
-        <div class="panel-card hero-summary-card">
-          <div class="avatar-circle">🧙‍♂️</div>
-          <h3 id="side-char-name">Hero</h3>
-          <div class="area-badge">📍 <span id="side-area-name">Area 1</span></div>
-          
-          <div class="stat-bars">
-            <div class="bar-unit">
-              <div class="bar-legend"><span>❤️ HP</span><span id="side-hp-text">100/100</span></div>
-              <div class="bar-track"><div id="side-hp-bar" class="bar-fill hp" style="width:100%"></div></div>
-            </div>
-            <div class="bar-unit">
-              <div class="bar-legend"><span>⭐ EXP</span><span id="side-xp-text">0/100</span></div>
-              <div class="bar-track"><div id="side-xp-bar" class="bar-fill xp" style="width:0%"></div></div>
-            </div>
-          </div>
+      <!-- Center Dynamic Action Viewport -->
+      <main class="viewport-card">
 
-          <div class="mini-stats-grid">
-            <div class="m-stat">⚔️ ATK <strong id="side-stat-atk">10</strong></div>
-            <div class="m-stat">🛡️ DEF <strong id="side-stat-def">5</strong></div>
-            <div class="m-stat">💥 CRIT <strong id="side-stat-crit">5%</strong></div>
-            <div class="m-stat">💰 GOLD <strong id="side-gold">100</strong></div>
-          </div>
-
-          <div class="gear-slot-list">
-            <div class="g-slot">🗡️ <span id="side-weapon">Wooden Sword</span></div>
-            <div class="g-slot">🛡️ <span id="side-armor">Cloth Armor</span></div>
-            <div class="g-slot">💍 <span id="side-accessory">None</span></div>
+        <!-- 1. TAB COMBAT -->
+        <div id="tab-combat" class="tab-pane active">
+          <div class="grid-actions-6">
+            <button class="action-tile btn-hunt" data-action="hunt">
+              <span class="tile-icon">⚔️</span>
+              <span class="tile-name">Hunt</span>
+              <span class="tile-status" id="cd-hunt">Siap</span>
+            </button>
+            <button class="action-tile btn-hardmode" data-action="hardmode">
+              <span class="tile-icon">⚡</span>
+              <span class="tile-name">Hardmode</span>
+              <span class="tile-status" id="cd-hardmode">2x Hadiah</span>
+            </button>
+            <button class="action-tile btn-adventure" data-action="adventure">
+              <span class="tile-icon">🗺️</span>
+              <span class="tile-name">Adventure</span>
+              <span class="tile-status" id="cd-adventure">3 Ronde</span>
+            </button>
+            <button class="action-tile btn-dungeon" data-action="dungeon">
+              <span class="tile-icon">🏰</span>
+              <span class="tile-name">Dungeon</span>
+              <span class="tile-status" id="cd-dungeon">Boss Area</span>
+            </button>
+            <button class="action-tile btn-training" data-action="training">
+              <span class="tile-icon">🎯</span>
+              <span class="tile-name">Training</span>
+              <span class="tile-status" id="cd-training">Latih Stat</span>
+            </button>
+            <button class="action-tile btn-heal" data-action="heal">
+              <span class="tile-icon">❤️</span>
+              <span class="tile-name">Heal</span>
+              <span class="tile-status" id="heal-cost-badge">100% HP</span>
+            </button>
           </div>
         </div>
-      </aside>
 
-      <!-- Center & Right Area: Dynamic Views & Live Feed -->
-      <main class="main-content">
-
-        <!-- Mobile Top Mini Status (Only visible on small screens) -->
-        <div class="mobile-mini-status">
-          <div class="mobile-bars">
-            <div class="m-bar-row">
-              <span>❤️ <strong id="mob-hp-text">100/100</strong></span>
-              <div class="bar-track"><div id="mob-hp-bar" class="bar-fill hp" style="width:100%"></div></div>
-            </div>
-            <div class="m-bar-row">
-              <span>⭐ <strong id="mob-xp-text">0/100</strong></span>
-              <div class="bar-track"><div id="mob-xp-bar" class="bar-fill xp" style="width:0%"></div></div>
-            </div>
-          </div>
-          <div class="mobile-pills">
-            <span>⚔️ <b id="mob-atk">10</b></span>
-            <span>🛡️ <b id="mob-def">5</b></span>
-            <span>📍 <b id="mob-area">Area 1</b></span>
+        <!-- 2. TAB GATHERING (WORK) -->
+        <div id="tab-gather" class="tab-pane" style="display:none">
+          <div class="grid-actions-5">
+            <button class="action-tile btn-chop" data-action="chop">
+              <span class="tile-icon">🪓</span>
+              <span class="tile-name">Chop</span>
+              <span class="tile-status" id="cd-chop">Kayu & Apel</span>
+            </button>
+            <button class="action-tile btn-fish" data-action="fish">
+              <span class="tile-icon">🎣</span>
+              <span class="tile-name">Fish</span>
+              <span class="tile-status" id="cd-fish">Ikan & Ruby</span>
+            </button>
+            <button class="action-tile btn-mine" data-action="mine">
+              <span class="tile-icon">⛏️</span>
+              <span class="tile-name">Mine</span>
+              <span class="tile-status" id="cd-mine">Mineral & Koin</span>
+            </button>
+            <button class="action-tile btn-farm" data-action="farm">
+              <span class="tile-icon">🌾</span>
+              <span class="tile-name">Farm</span>
+              <span class="tile-status" id="cd-farm">Bibit & Sayur</span>
+            </button>
+            <button class="action-tile btn-pickup" data-action="pickup">
+              <span class="tile-icon">🍎</span>
+              <span class="tile-name">Pickup</span>
+              <span class="tile-status" id="cd-pickup">Buah Kosmik</span>
+            </button>
           </div>
         </div>
 
-        <!-- Desktop Navigation Tabs (Hidden on Mobile) -->
-        <nav class="desktop-nav-tabs">
-          <button class="d-tab active" data-tab="combat">⚔️ Pertarungan</button>
-          <button class="d-tab" data-tab="farming">🌲 Panen Kayu & Ikan</button>
-          <button class="d-tab" data-tab="gambling">🎰 Kasino / Judi</button>
-          <button class="d-tab" data-tab="bag">🎒 Tas & Pasar</button>
-          <button class="d-tab" data-tab="profile">👤 Profil & Stats</button>
-        </nav>
-
-        <!-- Dynamic Action Sections -->
-        <section class="tab-viewport">
-
-          <!-- 1. TAB COMBAT -->
-          <div id="tab-combat" class="tab-content active">
-            <div class="action-grid-4">
-              <button class="game-btn btn-hunt" data-action="hunt">
-                <span class="btn-emoji">⚔️</span>
-                <span class="btn-title">Hunt</span>
-                <span class="btn-desc">Lawan Monster Area</span>
-              </button>
-              <button class="game-btn btn-adventure" data-action="adventure">
-                <span class="btn-emoji">🗺️</span>
-                <span class="btn-title">Adventure</span>
-                <span class="btn-desc">Ekspedisi 3 Ronde (+50%)</span>
-              </button>
-              <button class="game-btn btn-dungeon" data-action="dungeon">
-                <span class="btn-emoji">🏰</span>
-                <span class="btn-title">Dungeon</span>
-                <span class="btn-desc">Tantang Boss Area</span>
-              </button>
-              <button class="game-btn btn-heal" data-action="heal">
-                <span class="btn-emoji">❤️</span>
-                <span class="btn-title">Heal</span>
-                <span class="btn-desc">Pulihkan Darah Penuh</span>
-              </button>
-              <button class="game-btn btn-training" data-action="training" style="border-bottom: 3px solid #ffaa00;">
-                <span class="btn-emoji">🎯</span>
-                <span class="btn-title">Training</span>
-                <span class="btn-desc">Latih ATK & DEF</span>
-              </button>
-              <button class="game-btn btn-miniboss" data-action="miniboss" style="border-bottom: 3px solid #ff0055;">
-                <span class="btn-emoji">👹</span>
-                <span class="btn-title">Miniboss</span>
-                <span class="btn-desc">Tantangan Berhadiah Elite</span>
-              </button>
-            </div>
+        <!-- 3. TAB FORGE & ENCHANT -->
+        <div id="tab-forge" class="tab-pane" style="display:none">
+          <div class="grid-actions-6">
+            <button class="action-tile btn-enchant" data-action="enchant">
+              <span class="tile-icon">✨</span>
+              <span class="tile-name">Enchant</span>
+              <span class="tile-status">1x Roll</span>
+            </button>
+            <button class="action-tile btn-refine" data-action="refine">
+              <span class="tile-icon">🔮</span>
+              <span class="tile-name">Refine</span>
+              <span class="tile-status">10x Roll</span>
+            </button>
+            <button class="action-tile btn-transmute" data-action="transmute">
+              <span class="tile-icon">🌌</span>
+              <span class="tile-name">Transmute</span>
+              <span class="tile-status">100x Roll</span>
+            </button>
+            <button class="action-tile btn-transcend" data-action="transcend">
+              <span class="tile-icon">🌀</span>
+              <span class="tile-name">Transcend</span>
+              <span class="tile-status">1000x Roll</span>
+            </button>
+            <button class="action-tile btn-craft" data-action="craft">
+              <span class="tile-icon">🔨</span>
+              <span class="tile-name">Crafting</span>
+              <span class="tile-status">Tempa Gear</span>
+            </button>
+            <button class="action-tile btn-dismantle" data-action="dismantle">
+              <span class="tile-icon">♻️</span>
+              <span class="tile-name">Dismantle</span>
+              <span class="tile-status">Bongkar Gear</span>
+            </button>
           </div>
+        </div>
 
-          <!-- 2. TAB FARMING -->
-          <div id="tab-farming" class="tab-content" style="display:none">
-            <div class="action-grid-2">
-              <button class="game-btn btn-chop" data-action="chop">
-                <span class="btn-emoji">🪓</span>
-                <span class="btn-title">Chop Wood</span>
-                <span class="btn-desc">Tebang Kayu, Apel & Peti</span>
-              </button>
-              <button class="game-btn btn-fish" data-action="fish">
-                <span class="btn-emoji">🎣</span>
-                <span class="btn-title">Fish Net</span>
-                <span class="btn-desc">Pancing Ikan Emas & Ruby</span>
-              </button>
-            </div>
+        <!-- 4. TAB BAG & BANK -->
+        <div id="tab-bag" class="tab-pane" style="display:none">
+          <div class="grid-actions-5">
+            <button class="action-tile btn-inventory" data-action="inventory">
+              <span class="tile-icon">🎒</span>
+              <span class="tile-name">Inventory</span>
+              <span class="tile-status">Buka Tas</span>
+            </button>
+            <button class="action-tile btn-crate" data-action="crate">
+              <span class="tile-icon">📦</span>
+              <span class="tile-name">Lootbox</span>
+              <span class="tile-status">Buka Peti</span>
+            </button>
+            <button class="action-tile btn-shop" data-action="shop">
+              <span class="tile-icon">🛒</span>
+              <span class="tile-name">Shop</span>
+              <span class="tile-status">Toko Potion</span>
+            </button>
+            <button class="action-tile btn-bank" data-action="bank">
+              <span class="tile-icon">🏦</span>
+              <span class="tile-name">Bank Vault</span>
+              <span class="tile-status">Koin Aman TT</span>
+            </button>
+            <button class="action-tile btn-trade" data-action="trade">
+              <span class="tile-icon">⚖️</span>
+              <span class="tile-name">Market</span>
+              <span class="tile-status">Tukar Bahan</span>
+            </button>
           </div>
+        </div>
 
-          <!-- 3. TAB GAMBLING (JUDI) -->
-          <div id="tab-gambling" class="tab-content" style="display:none">
-            <div class="gambling-panel">
-              <h3 class="sec-title" data-i18n="casino_title">🎰 KASINO KOSMIK (JUDI KOIN)</h3>
-              <p class="sec-desc" data-i18n="casino_desc">Lipatgandakan koin Anda dengan keberuntungan! Hati-hati jangan sampai bangkrut!</p>
+        <!-- 5. TAB TIME TRAVEL (PRESTIGE) -->
+        <div id="tab-timetravel" class="tab-pane" style="display:none">
+          <div class="tt-altar-container">
+            <div class="tt-header-badge">
+              <span class="tt-icon-ring">🌀</span>
+              <h2>CHRONO NEXUS GATEWAY</h2>
+              <p class="tt-sub">Reset dimensi untuk melipatgandakan kekuatan secara abadi!</p>
+            </div>
 
-              <div class="gamble-cards-grid">
-                <!-- Coinflip -->
-                <div class="gamble-card">
-                  <div class="gamble-header" data-i18n="coinflip_title">🪙 COINFLIP (2X MULTIPLIER)</div>
-                  <p class="gamble-info" data-i18n="coinflip_info">Pilih Kepala atau Ekor (50% Chance menang 2x lipat)</p>
+            <div class="tt-stats-row">
+              <div class="tt-box">
+                <span class="tt-label">Time Travel Rank</span>
+                <strong id="tt-card-level" class="accent-cyan">TT 0</strong>
+              </div>
+              <div class="tt-box">
+                <span class="tt-label">Time Capsules</span>
+                <strong id="tt-card-capsules" class="accent-purple">0 🔮</strong>
+              </div>
+              <div class="tt-box">
+                <span class="tt-label">Bonus Multiplier</span>
+                <strong id="tt-card-mult" class="accent-gold">+0% All</strong>
+              </div>
+            </div>
 
-                  <div class="bet-controller">
-                    <div class="bet-input-box">
-                      <span class="bet-coin-badge">💰</span>
-                      <input type="text" id="bet-coinflip" class="bet-free-input" placeholder="Jumlah koin..." value="50">
-                    </div>
-                    <div class="bet-chips-row">
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'min')">Min</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+50')">+50</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+100')">+100</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', '+500')">+500</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'half')">½ Half</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'double')">2× Double</button>
-                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('coinflip', 'max')">🔥 MAX</button>
-                    </div>
-                  </div>
+            <!-- Requirement Progress Card -->
+            <div class="tt-req-card">
+              <div class="tt-req-header">
+                <span>Syarat Time Travel Berikutnya (<span id="tt-next-rank">TT 1</span>):</span>
+                <span id="tt-ready-tag" class="req-tag locked">BELUM SIAP</span>
+              </div>
+              <div class="tt-req-list">
+                <div class="req-item" id="req-dungeon-status">🏰 Taklukkan Boss Dungeon 10: ❌</div>
+                <div class="req-item" id="req-level-status">⭐ Capai Level 100: ❌</div>
+              </div>
+              <button class="tt-trigger-btn" id="btn-initiate-tt" onclick="window.NexusRPG.triggerTimeTravel()" disabled>
+                ⏳ JALANKAN TIME TRAVEL (REBIRTH)
+              </button>
+              <p class="tt-notes">⚠️ <em>Time Travel mereset level & gear standar ke Lv. 1, namun <strong>Koin di Bank (🏦)</strong>, <strong>Mount (🐎)</strong>, <strong>Kapsul Waktu (🔮)</strong>, dan <strong>Perk Abadi</strong> tetap aman!</em></p>
+            </div>
 
-                  <div class="gamble-actions-row">
-                    <button class="sub-btn glow-gold-btn" onclick="window.NexusRPG.playCoinflip('heads')">🪙 <span data-i18n="btn_heads">Kepala</span></button>
-                    <button class="sub-btn glow-gold-btn" onclick="window.NexusRPG.playCoinflip('tails')">🪙 <span data-i18n="btn_tails">Ekor</span></button>
-                  </div>
-                </div>
-
-                <!-- Cosmic Slot -->
-                <div class="gamble-card">
-                  <div class="gamble-header" data-i18n="slots_title">🎰 COSMIC SLOTS (UP TO 10X)</div>
-                  <p class="gamble-info" data-i18n="slots_info">Putar 3 rel kosmik! 3 simbol sama = 10x, 2 simbol = 3x jackpot!</p>
-                  
-                  <div class="slot-display" id="slot-reels">🍒 | 💎 | 🔔</div>
-
-                  <div class="bet-controller">
-                    <div class="bet-input-box">
-                      <span class="bet-coin-badge">💰</span>
-                      <input type="text" id="bet-slot" class="bet-free-input" placeholder="Jumlah koin..." value="100">
-                    </div>
-                    <div class="bet-chips-row">
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'min')">Min</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+50')">+50</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+100')">+100</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', '+500')">+500</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'half')">½ Half</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'double')">2× Double</button>
-                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('slot', 'max')">🔥 MAX</button>
-                    </div>
-                  </div>
-
-                  <button class="glow-button slot-spin-btn" onclick="window.NexusRPG.playSlots()" data-i18n="btn_spin_slot">🎰 Putar Mesin Slot!</button>
-                </div>
-
-                <!-- Dice Duel -->
-                <div class="gamble-card">
-                  <div class="gamble-header" data-i18n="dice_title">🎲 DADU DUEL (2.5X)</div>
-                  <p class="gamble-info" data-i18n="dice_info">Adu lempar dadu lawan bandar! Dadu Anda lebih tinggi = menang 2.5x!</p>
-
-                  <div class="bet-controller">
-                    <div class="bet-input-box">
-                      <span class="bet-coin-badge">💰</span>
-                      <input type="text" id="bet-dice" class="bet-free-input" placeholder="Jumlah koin..." value="50">
-                    </div>
-                    <div class="bet-chips-row">
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'min')">Min</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+50')">+50</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+100')">+100</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', '+500')">+500</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'half')">½ Half</button>
-                      <button type="button" class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'double')">2× Double</button>
-                      <button type="button" class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('dice', 'max')">🔥 MAX</button>
-                    </div>
-                  </div>
-
-                  <button class="sub-btn glow-gold-btn" style="width:100%;" onclick="window.NexusRPG.playDice()">🎲 <span data-i18n="btn_roll_dice">Lempar Dadu Duel!</span></button>
-                </div>
+            <!-- Chrono Perk Tree -->
+            <div class="tt-perks-section">
+              <h3>🔮 CHRONO PERKS (PERMANEN MULTIPLIER)</h3>
+              <div class="perks-grid" id="chrono-perks-grid">
+                <!-- Dynamically populated perks -->
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- 4. TAB BAG & MARKET -->
-          <div id="tab-bag" class="tab-content" style="display:none">
-            <div class="action-grid-4">
-              <button class="game-btn btn-inventory" data-action="inventory">
-                <span class="btn-emoji">🎒</span>
-                <span class="btn-title">Inventory & Jual</span>
-                <span class="btn-desc">Buka Tas, Pakai & Jual Item</span>
-              </button>
-              <button class="game-btn btn-enchant" data-action="enchant" style="border-bottom: 3px solid #b055ff;">
-                <span class="btn-emoji">✨</span>
-                <span class="btn-title">Altar Enchant</span>
-                <span class="btn-desc">Tingkatkan Senjata & Zirah</span>
-              </button>
-              <button class="game-btn btn-craft" data-action="craft">
-                <span class="btn-emoji">🔨</span>
-                <span class="btn-title">Mystic Forge</span>
-                <span class="btn-desc">Tempa Senjata & Zirah</span>
-              </button>
-              <button class="game-btn btn-crate" data-action="crate">
-                <span class="btn-emoji">📦</span>
-                <span class="btn-title">Buka Lootbox</span>
-                <span class="btn-desc">Buka Peti Hadiah</span>
-              </button>
-              <button class="game-btn btn-shop" data-action="shop">
-                <span class="btn-emoji">🛒</span>
-                <span class="btn-title">Cosmic Shop</span>
-                <span class="btn-desc">Toko Potion & Crate</span>
-              </button>
-              <button class="game-btn btn-rewards" data-action="rewards" style="border-bottom: 3px solid #ffd700;">
-                <span class="btn-emoji">🎁</span>
-                <span class="btn-title">Hadiah Harian</span>
-                <span class="btn-desc">Daily & Weekly Reward</span>
-              </button>
+        <!-- 6. TAB MOUNT & DRONE -->
+        <div id="tab-mount" class="tab-pane" style="display:none">
+          <div class="mount-grid-layout">
+            <!-- Mount Card -->
+            <div class="companion-card">
+              <div class="comp-icon">🐎</div>
+              <h3>CYBER STEED</h3>
+              <div class="comp-tier" id="mount-tier-display">Tier 1 • Novice</div>
+              <p class="comp-desc">Meningkatkan Kecepatan, +ATK/DEF %, dan meningkatkan peluang mendapatkan Enchant tingkatan tinggi (OMEGA/GODLY/VOID)!</p>
+              <div class="comp-perks" id="mount-perks-text">+5% Stats • +2% Enchant Luck</div>
+              <button class="glow-button" onclick="window.NexusRPG.trainMount()">🥕 LATIH MOUNT (500 💰 & 5 🥕)</button>
             </div>
-            <div style="margin-top: 10px;">
-              <button class="game-btn btn-trade" style="width:100%; flex-direction:row; gap:10px;" data-action="trade">
-                <span class="btn-emoji">⚖️</span>
-                <span class="btn-title">Pasar Tukar Kayu / Ikan / Ruby</span>
-              </button>
+
+            <!-- Drone Companion Card -->
+            <div class="companion-card">
+              <div class="comp-icon">🤖</div>
+              <h3>GATHERING DRONE</h3>
+              <div class="comp-tier" id="drone-tier-display">Tier 1 • Harvester</div>
+              <p class="comp-desc">Otomatis mengumpulkan Kayu, Ikan, dan Koin secara berkala setiap 60 detik di latar belakang!</p>
+              <div class="comp-perks" id="drone-perks-text">Panen otomatis +5 Kayu & +5 Ikan / menit</div>
+              <button class="glow-button register-btn" onclick="window.NexusRPG.upgradeDrone()">⚙️ UPGRADE DRONE (1,000 💰 & 10 🪵)</button>
             </div>
           </div>
+        </div>
 
-          <!-- 5. TAB PROFILE -->
-          <div id="tab-profile" class="tab-content" style="display:none">
-            <div class="profile-view-box">
-              <div class="profile-hero-banner">
-                <div class="p-avatar">🧙‍♂️</div>
-                <div class="p-hero-meta">
-                  <h2 id="prof-char-name">Hero</h2>
-                  <div class="p-badge-line">
-                    <span class="p-badge">Level <strong id="prof-level">1</strong></span>
-                    <span class="p-badge gold">💰 <strong id="prof-gold">100</strong> Gold</span>
-                    <span class="p-badge area">📍 <strong id="prof-area">Area 1</strong></span>
-                  </div>
-                </div>
+        <!-- 7. TAB CASINO -->
+        <div id="tab-casino" class="tab-pane" style="display:none">
+          <div class="casino-minimal-grid">
+            <!-- Coinflip -->
+            <div class="mini-gamble-card">
+              <div class="gamble-title">🪙 COINFLIP (2X)</div>
+              <div class="bet-chip-strip">
+                <input type="number" id="bet-coinflip" value="50" min="10">
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'half')">½</button>
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('coinflip', 'double')">2×</button>
+                <button class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('coinflip', 'max')">MAX</button>
               </div>
-
-              <div class="profile-sub-grid">
-                <!-- Combat Statistics -->
-                <div class="p-box">
-                  <h4>⚔️ STATISTIK TEMPUR</h4>
-                  <ul class="stats-list">
-                    <li>Total Monster Dibunuh: <b id="stat-m-kills">0</b></li>
-                    <li>Boss Dungeon Dikalahkan: <b id="stat-b-kills">0</b></li>
-                    <li>Total Damage Diberikan: <b id="stat-dmg">0</b></li>
-                    <li>Pernah Tumbang / Mati: <b id="stat-deaths">0</b></li>
-                  </ul>
-                </div>
-
-                <!-- Gathering Statistics -->
-                <div class="p-box">
-                  <h4>🌲 STATISTIK PANEN & PETI</h4>
-                  <ul class="stats-list">
-                    <li>Penebangan Kayu (Chop): <b id="stat-chops">0</b> kali</li>
-                    <li>Menangkap Ikan (Fish): <b id="stat-fish">0</b> kali</li>
-                    <li>Peti Hadiah Dibuka: <b id="stat-crates">0</b> buah</li>
-                    <li>Total Gold Diperoleh: <b id="stat-earned">0</b> 💰</li>
-                  </ul>
-                </div>
+              <div class="btn-group-2">
+                <button class="glow-gold-btn" onclick="window.NexusRPG.playCoinflip('heads')">👑 Kepala</button>
+                <button class="glow-gold-btn" onclick="window.NexusRPG.playCoinflip('tails')">🪙 Ekor</button>
               </div>
+            </div>
 
-              <!-- Area Preview -->
-              <div class="p-box area-preview-box">
-                <h4>🗺️ INFORMASI ZONA TERKINI</h4>
-                <p id="prof-area-desc" style="color:var(--text-sub); font-size:13px; margin: 4px 0 10px;">Zona petualangan Anda.</p>
-                <div class="area-boss-banner">
-                  <span>🏰 Boss Penjaga Dungeon:</span>
-                  <strong id="prof-boss-name" style="color:var(--accent-red)">Boss</strong>
+            <!-- Slots -->
+            <div class="mini-gamble-card">
+              <div class="gamble-title">🎰 SLOTS (UP TO 10X)</div>
+              <div class="slot-reel-strip" id="slot-reels">🍒 | 💎 | 🔔</div>
+              <div class="bet-chip-strip">
+                <input type="number" id="bet-slot" value="100" min="20">
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'half')">½</button>
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('slot', 'double')">2×</button>
+                <button class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('slot', 'max')">MAX</button>
+              </div>
+              <button class="glow-button" onclick="window.NexusRPG.playSlots()">🎰 PUTAR SLOT</button>
+            </div>
+
+            <!-- Dice Duel -->
+            <div class="mini-gamble-card">
+              <div class="gamble-title">🎲 DICE DUEL (2.5X)</div>
+              <p class="dice-sub">Adu dadu lawan bandar!</p>
+              <div class="bet-chip-strip">
+                <input type="number" id="bet-dice" value="50" min="10">
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'half')">½</button>
+                <button class="chip-btn" onclick="window.NexusRPG.adjustBet('dice', 'double')">2×</button>
+                <button class="chip-btn chip-max" onclick="window.NexusRPG.adjustBet('dice', 'max')">MAX</button>
+              </div>
+              <button class="glow-gold-btn" onclick="window.NexusRPG.playDice()">🎲 LEMPAR DADU</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. TAB PROFILE & STATS -->
+        <div id="tab-profile" class="tab-pane" style="display:none">
+          <div class="profile-compact-view">
+            <div class="profile-header-strip">
+              <div class="p-avatar-big">🧙‍♂️</div>
+              <div class="p-hero-info">
+                <h2 id="prof-char-name">Hero</h2>
+                <div class="p-pills-row">
+                  <span class="p-pill">Lv.<strong id="prof-level">1</strong></span>
+                  <span class="p-pill gold">💰 <strong id="prof-gold">0</strong></span>
+                  <span class="p-pill bank">🏦 <strong id="prof-bank">0</strong></span>
+                  <span class="p-pill tt">⏳ <strong id="prof-tt">TT 0</strong></span>
+                  <span class="p-pill area">📍 <strong id="prof-area">Area 1</strong></span>
                 </div>
               </div>
             </div>
-          </div>
 
-        </section>
+            <div class="stats-icon-grid">
+              <div class="stat-cell"><span>⚔️ Monster Slain:</span> <strong id="stat-m-kills">0</strong></div>
+              <div class="stat-cell"><span>🏰 Boss Defeated:</span> <strong id="stat-b-kills">0</strong></div>
+              <div class="stat-cell"><span>🪓 Wood Chopped:</span> <strong id="stat-chops">0</strong></div>
+              <div class="stat-cell"><span>🎣 Fish Caught:</span> <strong id="stat-fish">0</strong></div>
+              <div class="stat-cell"><span>⛏️ Mine Trips:</span> <strong id="stat-mines">0</strong></div>
+              <div class="stat-cell"><span>🌾 Crops Farmed:</span> <strong id="stat-farms">0</strong></div>
+              <div class="stat-cell"><span>📦 Crates Opened:</span> <strong id="stat-crates">0</strong></div>
+              <div class="stat-cell"><span>💀 Times Defeated:</span> <strong id="stat-deaths">0</strong></div>
+              <div class="stat-cell"><span>💥 Total Damage:</span> <strong id="stat-dmg">0</strong></div>
+              <div class="stat-cell"><span>💰 Lifetime Gold:</span> <strong id="stat-earned">0</strong></div>
+            </div>
 
-        <!-- Realtime Live Combat & Event Log (Resizable & Minimalist Cards) -->
-        <section class="live-feed-card" id="live-feed-box">
-          <div class="feed-header">
-            <span>📜 COMBAT LOG & AKTIVITAS REALM</span>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="resize-hint" title="Tarik tepi bawah kotak ini untuk memperbesar/memperkecil tinggi log">↕️ TARIK LOG KE BAWAH/ATAS</span>
-              <span class="pulse-indicator">● LIVE</span>
+            <div class="equipped-gear-strip">
+              <h4>🛡️ PERLENGKAPAN SAAT INI</h4>
+              <div class="gear-chips-row">
+                <div class="gear-chip">🗡️ <span id="prof-weapon">Wooden Sword</span></div>
+                <div class="gear-chip">🛡️ <span id="prof-armor">Cloth Armor</span></div>
+                <div class="gear-chip">💍 <span id="prof-acc">None</span></div>
+              </div>
             </div>
           </div>
-          <div id="game-log" class="feed-scroll"></div>
-        </section>
+        </div>
 
       </main>
-    </div>
 
-    <!-- Mobile Bottom Navigation Bar (Thumb-Friendly, Fixed Bottom) -->
-    <nav class="mobile-bottom-bar">
-      <button class="m-nav-item active" data-tab="combat">
-        <span class="m-icon">⚔️</span>
-        <span class="m-text">Combat</span>
-      </button>
-      <button class="m-nav-item" data-tab="farming">
-        <span class="m-icon">🌲</span>
-        <span class="m-text">Panen</span>
-      </button>
-      <button class="m-nav-item" data-tab="gambling">
-        <span class="m-icon">🎰</span>
-        <span class="m-text">Judi</span>
-      </button>
-      <button class="m-nav-item" data-tab="bag">
-        <span class="m-icon">🎒</span>
-        <span class="m-text">Tas/Toko</span>
-      </button>
-      <button class="m-nav-item" data-tab="profile">
-        <span class="m-icon">👤</span>
-        <span class="m-text">Profil</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- ================= MULTIPLAYER SOCIAL MODAL ================= -->
-  <div id="social-modal" class="modal" style="display:none">
-    <div class="modal-overlay"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>👥 Multiplayer: Teman & Transfer Koin</h2>
-        <button class="modal-close" onclick="window.NexusRPG.closeSocialModal()">✕</button>
-      </div>
-      <div class="modal-body-scroll">
-        
-        <!-- Add Friend & Send Coin Actions -->
-        <div class="social-actions-grid">
-          <div class="social-action-card">
-            <h4>➕ TAMBAH TEMAN</h4>
-            <div class="input-inline">
-              <input type="text" id="add-friend-input" placeholder="Ketik username teman">
-              <button class="glow-button" onclick="window.NexusRPG.addFriend()">Tambah</button>
-            </div>
-          </div>
-
-          <div class="social-action-card">
-            <h4>💸 TRANSFER KOIN KE PEMAIN LAIN</h4>
-            <div class="input-inline">
-              <input type="text" id="transfer-target" placeholder="Username penerima" style="flex:1.2">
-              <input type="number" id="transfer-amount" placeholder="Jumlah 💰" style="flex:0.8" min="1">
-              <button class="glow-button" onclick="window.NexusRPG.sendCoin()">Kirim 💰</button>
-            </div>
+      <!-- Live Minimalist Combat & Realm Feed -->
+      <section class="minimal-feed-card" id="live-feed-box">
+        <div class="feed-header-bar">
+          <span class="feed-title">📜 AKTIVITAS REALM</span>
+          <div class="feed-tools">
+            <span class="pulse-indicator">● LIVE</span>
           </div>
         </div>
+        <div id="game-log" class="feed-scroll-box"></div>
+      </section>
 
-        <!-- Friend List -->
-        <div class="social-section">
-          <h3>🌟 DAFTAR TEMAN SAYA</h3>
-          <div id="friend-list-container" class="player-list-grid">
-            <p style="color:var(--text-sub); font-size:12px;">Memuat daftar teman...</p>
-          </div>
-        </div>
-
-        <!-- Global Leaderboard -->
-        <div class="social-section" style="margin-top:20px;">
-          <h3>🏆 PAPAN PERINGKAT GLOBAL (LEADERBOARD)</h3>
-          <div id="leaderboard-container" class="player-list-grid">
-            <p style="color:var(--text-sub); font-size:12px;">Memuat leaderboard...</p>
-          </div>
-        </div>
-
-      </div>
     </div>
   </div>
 
-  <!-- General Purpose Modal (Inventory, Shop, Craft, Skills, Crates) -->
+  <!-- ================= UNIVERSAL MODAL ================= -->
   <div id="modal" class="modal" style="display:none">
-    <div class="modal-overlay"></div>
+    <div class="modal-overlay" onclick="window.NexusRPG.closeModal()"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="modal-title">Menu</h2>
-        <button class="modal-close" id="modal-close">✕</button>
+        <h3 id="modal-title">Menu</h3>
+        <button class="modal-close-btn" onclick="window.NexusRPG.closeModal()">✕</button>
       </div>
       <div id="modal-body" class="modal-body-scroll"></div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Social Multiplayer Modal -->
+  <div id="social-modal" class="modal" style="display:none">
+    <div class="modal-overlay" onclick="window.NexusRPG.closeSocialModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>👥 Multiplayer: Teman & Peringkat</h3>
+        <button class="modal-close-btn" onclick="window.NexusRPG.closeSocialModal()">✕</button>
+      </div>
+      <div class="modal-body-scroll">
+        <div class="social-input-row">
+          <input type="text" id="add-friend-input" placeholder="Username teman...">
+          <button class="glow-button" onclick="window.NexusRPG.addFriend()">➕ Tambah Teman</button>
+        </div>
+        <div class="social-input-row">
+          <input type="text" id="transfer-target" placeholder="Kirim koin ke username..." style="flex:1.2">
+          <input type="number" id="transfer-amount" placeholder="Jumlah 💰" style="flex:0.8" min="1">
+          <button class="glow-button" onclick="window.NexusRPG.sendCoin()">💸 Kirim</button>
+        </div>
+        
+        <h4 style="margin:12px 0 6px; font-size:12px; color:var(--accent-cyan)">🌟 DAFTAR TEMAN</h4>
+        <div id="friend-list-container" class="player-mini-list"></div>
+
+        <h4 style="margin:16px 0 6px; font-size:12px; color:var(--accent-gold)">🏆 LEADERBOARD GLOBAL</h4>
+        <div id="leaderboard-container" class="player-mini-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
   <div id="toast" class="toast"></div>
 
-  <script src="/js/app.js?v=3.5"></script>
+  <script src="/js/app.js?v=4.0"></script>
 </body>
 </html>

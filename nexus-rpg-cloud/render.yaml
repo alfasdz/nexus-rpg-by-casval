@@ -3,8 +3,12 @@ services:
     name: nexus-rpg
     env: node
     plan: free
-    buildCommand: echo "Ready to deploy"
+    buildCommand: echo "Ready for deployment"
     startCommand: node server.js
     envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
       - key: NODE_ENV
         value: production
+      - key: TOKEN_SECRET
+        generateValue: true
