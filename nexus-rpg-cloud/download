@@ -1,0 +1,8 @@
+node_modules/
+*.db
+*.db-shm
+*.db-wal
+nexus_data_backup.json
+.DS_Store
+Thumbs.db
+*.log
