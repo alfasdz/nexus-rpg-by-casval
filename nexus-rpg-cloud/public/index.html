@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS RPG</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="particles"></div>
+  
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="screen">
+    <div class="auth-container">
+      <div class="logo">
+        <div class="logo-icon">⚔</div>
+        <h1>NEXUS RPG</h1>
+        <p class="tagline">Enter the Cosmic Realm</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="tab active" data-tab="login">Login</button>
+        <button class="tab" data-tab="register">Register</button>
+      </div>
+      <form id="login-form" class="auth-form">
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" id="login-username" placeholder="Enter username" required>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn-primary">⚔ Enter the Nexus</button>
+        <div id="login-error" class="error-msg"></div>
+      </form>
+      <form id="register-form" class="auth-form" style="display:none">
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" id="reg-username" placeholder="Choose username (3-20 chars)" required>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="reg-password" placeholder="Choose password (4+ chars)" required>
+        </div>
+        <div class="input-group">
+          <label>Hero Name</label>
+          <input type="text" id="reg-character" placeholder="Name your hero" required>
+        </div>
+        <button type="submit" class="btn-primary">✨ Create Hero</button>
+        <div id="register-error" class="error-msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen" style="display:none">
+    <header class="game-header">
+      <div class="header-left">
+        <span class="game-title">⚔ NEXUS RPG</span>
+      </div>
+      <div class="header-center">
+        <span id="char-name" class="char-name">Hero</span>
+        <span class="level-badge">Lv.<span id="char-level">1</span></span>
+      </div>
+      <div class="header-right">
+        <span class="gold-display">💰 <span id="gold-display">0</span></span>
+        <button id="save-btn" class="btn-icon" title="Save Game">💾</button>
+        <button id="logout-btn" class="btn-icon" title="Logout">🚪</button>
+      </div>
+    </header>
+
+    <div class="game-body">
+      <div class="stats-panel">
+        <div class="bar-section">
+          <div class="bar-row">
+            <span class="bar-label">❤️ HP</span>
+            <div class="bar-container">
+              <div class="bar hp-bar" id="hp-bar" style="width:100%"></div>
+            </div>
+            <span class="bar-text" id="hp-text">100/100</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">⭐ XP</span>
+            <div class="bar-container">
+              <div class="bar xp-bar" id="xp-bar" style="width:0%"></div>
+            </div>
+            <span class="bar-text" id="xp-text">0/100</span>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-item">⚔️ ATK <span id="stat-atk">10</span></div>
+          <div class="stat-item">🛡️ DEF <span id="stat-def">5</span></div>
+          <div class="stat-item">💥 CRIT <span id="stat-crit">5</span>%</div>
+          <div class="stat-item">📍 <span id="stat-area">Misty Forest</span></div>
+        </div>
+        <div class="equipment-summary">
+          <div class="equip-slot">🗡️ <span id="equip-weapon">Wooden Sword</span></div>
+          <div class="equip-slot">🛡️ <span id="equip-armor">Cloth Armor</span></div>
+          <div class="equip-slot">💍 <span id="equip-accessory">None</span></div>
+        </div>
+      </div>
+
+      <div class="game-main">
+        <div id="game-log" class="game-log"></div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <div class="action-row">
+        <button class="action-btn btn-hunt" data-action="hunt">⚔️ Hunt</button>
+        <button class="action-btn btn-adventure" data-action="adventure">🗺️ Adventure</button>
+        <button class="action-btn btn-dungeon" data-action="dungeon">🏰 Dungeon</button>
+        <button class="action-btn btn-heal" data-action="heal">❤️ Heal</button>
+      </div>
+      <div class="action-row">
+        <button class="action-btn btn-inventory" data-action="inventory">🎒 Inventory</button>
+        <button class="action-btn btn-shop" data-action="shop">🛒 Shop</button>
+        <button class="action-btn btn-craft" data-action="craft">🔨 Craft</button>
+        <button class="action-btn btn-skills" data-action="skills">⭐ Skills</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal" style="display:none">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title"></h2>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
