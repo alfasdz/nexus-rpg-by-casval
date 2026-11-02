@@ -1,0 +1,15 @@
+{
+  "name": "nexus-rpg",
+  "version": "1.0.0",
+  "description": "NEXUS RPG - Online Cosmic RPG Game with Cloud Save",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": ["rpg", "game", "epic-rpg", "cloud-save", "online-game"],
+  "author": "",
+  "license": "MIT"
+}
